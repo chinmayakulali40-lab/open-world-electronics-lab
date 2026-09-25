@@ -78,11 +78,12 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Start Server
 const startServer = async () => {
   await connectDB();
-  app.listen(PORT, () => {
+  const portNumber = Number(PORT) || 5000;
+  app.listen(portNumber, '0.0.0.0', () => {
     console.log(`=======================================================`);
     console.log(`⚡ Open-World Electronics Lab Backend Service Running`);
-    console.log(`🚀 Port: http://localhost:${PORT}`);
-    console.log(`🩺 Healthcheck: http://localhost:${PORT}/api/health`);
+    console.log(`🚀 Port: http://0.0.0.0:${portNumber} (http://localhost:${portNumber})`);
+    console.log(`🩺 Healthcheck: http://localhost:${portNumber}/api/health`);
     console.log(`=======================================================`);
   });
 };
