@@ -759,9 +759,21 @@
     // =========================================================================
     // BACKEND API CLIENT CONFIGURATION (EXPRESS + POSTGRESQL)
     // =========================================================================
-    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? (window.location.port === '5000' ? '/api' : 'http://localhost:5000/api')
-      : '/api';
+    const getApiBaseUrl = () => {
+      // 1. Support VITE_API_URL or environment injection if present
+      const viteUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) ||
+                      (typeof window !== 'undefined' && window.VITE_API_URL);
+      if (viteUrl) {
+        return String(viteUrl).replace(/\/+$/, '');
+      }
+
+      // 2. Localhost vs same-origin production resolution
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (isLocal) {
+        return window.location.port === '5000' ? '' : 'http://localhost:5000';
+      }
+      return '';
+    };
 
     const apiRequest = async (endpoint, method = 'GET', data = null, tokenOverride = null) => {
       const token = tokenOverride || localStorage.getItem('electronics_lab_token');
@@ -773,15 +785,28 @@
         config.body = JSON.stringify(data);
       }
 
+      // Ensure endpoint starts with a slash
+      let cleanPath = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+      // Cleanly construct URL without duplicate slashes or duplicate /api
+      if (!cleanPath.startsWith('/api')) {
+        cleanPath = `/api${cleanPath}`;
+      }
+      // Remove any double /api/api occurrences
+      cleanPath = cleanPath.replace(/^\/api\/api(?=\/|$)/, '/api');
+
+      const baseUrl = getApiBaseUrl();
+      const targetUrl = `${baseUrl}${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
+
       try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+        const response = await fetch(targetUrl, config);
         const json = await response.json().catch(() => ({}));
         if (!response.ok) {
           throw new Error(json.error || `HTTP ${response.status}`);
         }
         return json;
       } catch (err) {
-        console.warn(`API request to ${endpoint} failed:`, err.message);
+        console.warn(`API request to ${targetUrl} failed:`, err.message);
         throw err;
       }
     };
