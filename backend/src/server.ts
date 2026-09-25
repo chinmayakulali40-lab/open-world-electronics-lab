@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import { connectDB } from './config/db';
 
 import authRoutes from './routes/auth.routes';
@@ -65,6 +67,30 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/shares', shareRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
+
+// Static frontend delivery (Serves Proteus Simulator UI in production)
+const frontendCandidates = [
+  path.resolve(__dirname, '../../frontend'),
+  path.resolve(__dirname, '../frontend'),
+  path.resolve(process.cwd(), 'frontend'),
+  path.resolve(process.cwd(), '../frontend'),
+];
+
+const resolvedFrontendPath = frontendCandidates.find((dir) => fs.existsSync(dir));
+
+if (resolvedFrontendPath) {
+  app.use(express.static(resolvedFrontendPath));
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    const indexPath = path.join(resolvedFrontendPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
+    }
+    next();
+  });
+}
 
 // Global Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
