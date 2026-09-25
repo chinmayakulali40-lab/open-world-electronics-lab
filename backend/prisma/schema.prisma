@@ -25,6 +25,8 @@ model User {
   phone         String?        @unique
   passwordHash  String
   role          Role           @default(STUDENT)
+  verifiedEmail Boolean        @default(false)
+  verifiedPhone Boolean        @default(false)
   createdAt     DateTime       @default(now())
   
   projects      Project[]      @relation("UserProjects")
