@@ -5991,7 +5991,8 @@ void loop() {
       destination,
       onVerify,
       onResend,
-      type = 'email'
+      type = 'email',
+      devOtp = null
     }) {
       const [digits, setDigits] = useState(['', '', '', '', '', '']);
       const [timer, setTimer] = useState(60);
@@ -6002,7 +6003,11 @@ void loop() {
 
       useEffect(() => {
         if (isOpen) {
-          setDigits(['', '', '', '', '', '']);
+          if (devOtp && typeof devOtp === 'string' && devOtp.length >= 6) {
+            setDigits(devOtp.split('').slice(0, 6));
+          } else {
+            setDigits(['', '', '', '', '', '']);
+          }
           setTimer(60);
           setError('');
           setVerifying(false);
@@ -6011,7 +6016,7 @@ void loop() {
             if (inputRefs.current[0]) inputRefs.current[0].focus();
           }, 100);
         }
-      }, [isOpen, destination]);
+      }, [isOpen, destination, devOtp]);
 
       useEffect(() => {
         if (!isOpen || timer <= 0) return;
@@ -6151,6 +6156,25 @@ void loop() {
                 )}
               </div>
             </div>
+
+            {/* Dev Mode Banner if devOtp is present */}
+            {devOtp && (
+              <div className="mt-3 p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-start space-x-2.5 shadow-xs">
+                <IconSparkles className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 text-[11px] leading-relaxed">
+                  <div className="font-bold text-amber-900 flex items-center justify-between">
+                    <span>DEV MODE OTP ASSIST</span>
+                    <span className="font-mono bg-amber-200/90 px-2 py-0.5 rounded text-amber-950 font-bold tracking-widest text-xs">{devOtp}</span>
+                  </div>
+                  <div className="text-amber-800 mt-1">
+                    Dev Mode: Your OTP is <strong>[{devOtp}]</strong> (Also logged in backend terminal).
+                  </div>
+                  <div className="text-amber-700 font-medium text-[10px] mt-0.5">
+                    ✓ Code has been automatically filled into the boxes below. Click <strong>Verify Code</strong> to proceed.
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* 6 Digit Input Boxes */}
             <div className="flex justify-center items-center space-x-2 sm:space-x-2.5 my-6">
@@ -8246,24 +8270,41 @@ void loop() {
           phone: cleanPhone,
           countryCode: formattedCountry
         });
+        
+        const devOtp = res.devOtp || null;
+
         setOtpModal({
           isOpen: true,
           destination: `${formattedCountry} ${cleanPhone}`,
           type: 'phone',
-          pendingData: { countryCode: formattedCountry, phone: cleanPhone, phoneNumber: fullPhoneNumber }
+          pendingData: { countryCode: formattedCountry, phone: cleanPhone, phoneNumber: fullPhoneNumber },
+          devOtp: devOtp
         });
-        showToast(res.message || `Verification code sent via SMS to ${formattedCountry} ${cleanPhone}`, 'info');
+
+        if (devOtp) {
+          showToast(`Dev Mode: Your OTP is [${devOtp}] (Also logged in backend terminal)`, 'info');
+        } else {
+          showToast(res.message || `Verification code sent via SMS to ${formattedCountry} ${cleanPhone}`, 'info');
+        }
       };
 
       const handleTriggerGmailOtp = async (userData) => {
         const res = await apiRequest('/auth/email/send-otp', 'POST', { email: userData.email });
+        const devOtp = res.devOtp || null;
+
         setOtpModal({
           isOpen: true,
           destination: userData.email,
           type: 'email',
-          pendingData: userData
+          pendingData: userData,
+          devOtp: devOtp
         });
-        showToast(res.message || `Verification code sent to ${userData.email}`, 'info');
+
+        if (devOtp) {
+          showToast(`Dev Mode: Your OTP is [${devOtp}] (Also logged in backend terminal)`, 'info');
+        } else {
+          showToast(res.message || `Verification code sent to ${userData.email}`, 'info');
+        }
       };
 
       const handleVerifyOtpCode = async (enteredOtp) => {
@@ -8338,12 +8379,24 @@ void loop() {
             phone: pData.phone,
             countryCode: pData.countryCode
           });
-          showToast(res.message || `New code sent via SMS to ${otpModal.destination}`, 'info');
+          const devOtp = res.devOtp || null;
+          setOtpModal(prev => ({ ...prev, devOtp }));
+          if (devOtp) {
+            showToast(`Dev Mode: Your OTP is [${devOtp}] (Also logged in backend terminal)`, 'info');
+          } else {
+            showToast(res.message || `New code sent via SMS to ${otpModal.destination}`, 'info');
+          }
         } else {
           const res = await apiRequest('/auth/email/send-otp', 'POST', {
             email: otpModal.pendingData.email
           });
-          showToast(res.message || `New code sent to ${otpModal.destination}`, 'info');
+          const devOtp = res.devOtp || null;
+          setOtpModal(prev => ({ ...prev, devOtp }));
+          if (devOtp) {
+            showToast(`Dev Mode: Your OTP is [${devOtp}] (Also logged in backend terminal)`, 'info');
+          } else {
+            showToast(res.message || `New code sent to ${otpModal.destination}`, 'info');
+          }
         }
       };
 
@@ -8406,6 +8459,7 @@ void loop() {
             onVerify={handleVerifyOtpCode}
             onResend={handleResendOtpCode}
             type={otpModal.type}
+            devOtp={otpModal.devOtp}
           />
 
           {/* Screen Router */}

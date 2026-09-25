@@ -205,9 +205,9 @@ export const sendPhoneOtp = async (req: Request, res: Response): Promise<void> =
       }
     }
 
-    // Prominently log in the backend terminal console for dev mode
+    // Prominently log in the backend terminal console as requested:
     console.log(`\n========================================================================`);
-    console.log(`[DEV MODE] OTP for ${fullPhoneNumber} is: ${otpCode}`);
+    console.log(`>>> [SMS OTP] Verification code for ${fullPhoneNumber} is: ${otpCode} <<<`);
     console.log(`========================================================================\n`);
 
     // Dispatch SMS via provider (Twilio or Fast2SMS) with safety try/catch
@@ -219,7 +219,8 @@ export const sendPhoneOtp = async (req: Request, res: Response): Promise<void> =
 
     res.status(200).json({
       success: true,
-      message: 'OTP sent successfully',
+      message: 'OTP dispatched',
+      ...(isDev ? { devOtp: otpCode } : {}),
       destination: fullPhoneNumber,
     });
   } catch (error: any) {
@@ -377,7 +378,7 @@ export const sendEmailOtp = async (req: Request, res: Response): Promise<void> =
 
     // Prominently log in the terminal console for dev mode
     console.log(`\n========================================================================`);
-    console.log(`[DEV MODE] OTP for ${cleanEmail} is: ${otpCode}`);
+    console.log(`>>> [EMAIL OTP] Verification code for ${cleanEmail} is: ${otpCode} <<<`);
     console.log(`========================================================================\n`);
 
     // Dispatch email via Nodemailer with safety try/catch
@@ -389,7 +390,8 @@ export const sendEmailOtp = async (req: Request, res: Response): Promise<void> =
 
     res.status(200).json({
       success: true,
-      message: 'OTP sent successfully',
+      message: 'OTP dispatched',
+      ...(isDev ? { devOtp: otpCode } : {}),
       destination: cleanEmail,
     });
   } catch (error: any) {
