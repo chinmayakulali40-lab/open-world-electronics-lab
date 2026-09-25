@@ -1,0 +1,20 @@
+{
+  "name": "open-world-electronics-lab-frontend",
+  "version": "1.0.0",
+  "description": "Interactive 2D schematic wiring canvas & 3D virtual electronics lab",
+  "main": "index.html",
+  "scripts": {
+    "start": "node ../serve.js"
+  },
+  "keywords": [
+    "electronics",
+    "schematic-editor",
+    "threejs",
+    "circuit-simulation",
+    "iot",
+    "arduino",
+    "esp32"
+  ],
+  "author": "Open-World Electronics Lab Contributors",
+  "license": "MIT"
+}

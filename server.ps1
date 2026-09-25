@@ -33,7 +33,11 @@ while ($listener.IsListening) {
             $urlPath = "/index.html"
         }
         
-        $filePath = Join-Path $root ($urlPath.TrimStart('/') -replace '/', '\')
+        $relPath = $urlPath.TrimStart('/') -replace '/', '\'
+        $filePath = Join-Path (Join-Path $root "frontend") $relPath
+        if (-not (Test-Path $filePath -PathType Leaf)) {
+            $filePath = Join-Path $root $relPath
+        }
 
         if (Test-Path $filePath -PathType Leaf) {
             $bytes = [System.IO.File]::ReadAllBytes($filePath)

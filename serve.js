@@ -16,7 +16,10 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let reqPath = req.url.split('?')[0];
   if (reqPath === '/' || !reqPath) reqPath = '/index.html';
-  const filePath = path.join(__dirname, reqPath);
+  let filePath = path.join(__dirname, 'frontend', reqPath);
+  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    filePath = path.join(__dirname, reqPath);
+  }
 
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     const ext = path.extname(filePath).toLowerCase();
