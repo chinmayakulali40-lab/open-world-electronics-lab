@@ -930,37 +930,1350 @@
     // COMPREHENSIVE PROTEUS COMPONENT CATALOG
     // =========================================================================
     const COMPONENT_LIBRARY = [
-      // 1. Microcontrollers
-      { id: 'arduino_uno', name: 'Arduino Uno R3', category: 'Microcontrollers', tag: 'MCU', icon: IconCpu, desc: 'ATmega328P with D0-D13, A0-A5, Power' },
-      { id: 'esp32', name: 'ESP32 NodeMCU / DevKit V1', category: 'Microcontrollers', tag: 'MCU', icon: IconCpu, desc: 'Tensilica Dual-Core, WiFi/BT, 12-bit ADC' },
-      
-      // 2. Sensors
-      { id: 'ldr', name: 'LDR Photoresistor', category: 'Sensors', tag: 'SENS', icon: IconRadio, desc: 'Light Dependent Resistor (linked to sun)' },
-      { id: 'dht11', name: 'DHT11 Temp & Humidity', category: 'Sensors', tag: 'SENS', icon: IconThermometer, desc: 'Digital Temp/Humidity Sensor' },
-      { id: 'ultrasonic', name: 'HC-SR04 Ultrasonic', category: 'Sensors', tag: 'SENS', icon: IconRadio, desc: 'Sonar Distance Sensor (VCC, TRIG, ECHO, GND)' },
-      { id: 'pir', name: 'PIR Motion Sensor', category: 'Sensors', tag: 'SENS', icon: IconRadio, desc: 'Pyroelectric Infrared Detector' },
+      // =======================================================================
+      // 1. MICROPROCESSORS / MCUS (MCU.LIB)
+      // =======================================================================
+      {
+        id: 'arduino_uno',
+        name: 'Arduino Uno R3',
+        category: 'Microprocessors/MCUs',
+        subcategory: 'AVR / Arduino',
+        tag: 'MCU',
+        library: 'ARDUINO.LIB',
+        package: 'MODULE',
+        icon: IconCpu,
+        desc: 'ATmega328P 16MHz MCU Development Board with USB & Headers',
+        pins: [
+          { id: 'D13', name: 'D13', label: '13', side: 'top', relX: 30, relY: 0, type: 'output' },
+          { id: 'D12', name: 'D12', label: '12', side: 'top', relX: 50, relY: 0, type: 'input' },
+          { id: 'D11', name: 'D11', label: '11~', side: 'top', relX: 70, relY: 0, type: 'output' },
+          { id: 'D10', name: 'D10', label: '10~', side: 'top', relX: 90, relY: 0, type: 'output' },
+          { id: 'D9', name: 'D9', label: '9~', side: 'top', relX: 110, relY: 0, type: 'output' },
+          { id: 'D8', name: 'D8', label: '8', side: 'top', relX: 130, relY: 0, type: 'input' },
+          { id: 'D7', name: 'D7', label: '7', side: 'top', relX: 160, relY: 0, type: 'input' },
+          { id: 'D6', name: 'D6', label: '6~', side: 'top', relX: 180, relY: 0, type: 'output' },
+          { id: 'D5', name: 'D5', label: '5~', side: 'top', relX: 200, relY: 0, type: 'output' },
+          { id: 'GND_TOP', name: 'GND', label: 'GND', side: 'top', relX: 230, relY: 0, type: 'power' },
+          { id: '5V', name: '5V', label: '5V', side: 'bottom', relX: 40, relY: 210, type: 'power' },
+          { id: '3V3', name: '3V3', label: '3.3V', side: 'bottom', relX: 65, relY: 210, type: 'power' },
+          { id: 'GND_1', name: 'GND', label: 'GND', side: 'bottom', relX: 90, relY: 210, type: 'power' },
+          { id: 'GND_2', name: 'GND', label: 'GND', side: 'bottom', relX: 115, relY: 210, type: 'power' },
+          { id: 'VIN', name: 'VIN', label: 'VIN', side: 'bottom', relX: 140, relY: 210, type: 'power' },
+          { id: 'A0', name: 'A0', label: 'A0', side: 'bottom', relX: 175, relY: 210, type: 'input' },
+          { id: 'A1', name: 'A1', label: 'A1', side: 'bottom', relX: 195, relY: 210, type: 'input' },
+          { id: 'A2', name: 'A2', label: 'A2', side: 'bottom', relX: 215, relY: 210, type: 'input' },
+          { id: 'A3', name: 'A3', label: 'A3', side: 'bottom', relX: 235, relY: 210, type: 'input' }
+        ]
+      },
+      {
+        id: 'arduino_nano',
+        name: 'Arduino Nano V3.0',
+        category: 'Microprocessors/MCUs',
+        subcategory: 'AVR / Arduino',
+        tag: 'MCU',
+        library: 'ARDUINO.LIB',
+        package: 'DIP30',
+        icon: IconCpu,
+        desc: 'ATmega328P Compact Breadboard-Friendly 30-Pin MCU Board',
+        pins: [
+          { id: 'D13', name: 'D13', label: 'D13', side: 'left', relX: 0, relY: 30, type: 'output' },
+          { id: '3V3', name: '3V3', label: '3V3', side: 'left', relX: 0, relY: 55, type: 'power' },
+          { id: 'REF', name: 'REF', label: 'REF', side: 'left', relX: 0, relY: 80, type: 'input' },
+          { id: 'A0', name: 'A0', label: 'A0', side: 'left', relX: 0, relY: 105, type: 'input' },
+          { id: 'A1', name: 'A1', label: 'A1', side: 'left', relX: 0, relY: 130, type: 'input' },
+          { id: 'A2', name: 'A2', label: 'A2', side: 'left', relX: 0, relY: 155, type: 'input' },
+          { id: 'GND_L', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 180, type: 'power' },
+          { id: 'VIN', name: 'VIN', label: 'VIN', side: 'right', relX: 140, relY: 30, type: 'power' },
+          { id: '5V', name: '5V', label: '5V', side: 'right', relX: 140, relY: 55, type: 'power' },
+          { id: 'RST', name: 'RST', label: 'RST', side: 'right', relX: 140, relY: 80, type: 'input' },
+          { id: 'D2', name: 'D2', label: 'D2', side: 'right', relX: 140, relY: 105, type: 'input' },
+          { id: 'D3', name: 'D3', label: 'D3~', side: 'right', relX: 140, relY: 130, type: 'output' },
+          { id: 'D4', name: 'D4', label: 'D4', side: 'right', relX: 140, relY: 155, type: 'input' },
+          { id: 'GND_R', name: 'GND', label: 'GND', side: 'right', relX: 140, relY: 180, type: 'power' }
+        ]
+      },
+      {
+        id: 'at89c51',
+        name: 'AT89C51 / 8051 MCU',
+        category: 'Microprocessors/MCUs',
+        subcategory: '8051 Family',
+        tag: 'MCU',
+        library: 'INTEL.LIB',
+        package: 'DIP40',
+        icon: IconCpu,
+        desc: '8051 Architecture 8-bit Microcontroller with 4K Flash, 40-Pin DIP',
+        pins: [
+          { id: 'P1_0', name: 'P1.0', label: 'P1.0', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'P1_1', name: 'P1.1', label: 'P1.1', side: 'left', relX: 0, relY: 55, type: 'input' },
+          { id: 'P1_2', name: 'P1.2', label: 'P1.2', side: 'left', relX: 0, relY: 80, type: 'input' },
+          { id: 'P1_3', name: 'P1.3', label: 'P1.3', side: 'left', relX: 0, relY: 105, type: 'input' },
+          { id: 'P1_4', name: 'P1.4', label: 'P1.4', side: 'left', relX: 0, relY: 130, type: 'input' },
+          { id: 'RST', name: 'RST', label: 'RST', side: 'left', relX: 0, relY: 160, type: 'input' },
+          { id: 'P3_0', name: 'RXD', label: 'P3.0/RXD', side: 'left', relX: 0, relY: 190, type: 'input' },
+          { id: 'P3_1', name: 'TXD', label: 'P3.1/TXD', side: 'left', relX: 0, relY: 215, type: 'output' },
+          { id: 'XTAL1', name: 'XTAL1', label: 'XTAL1', side: 'left', relX: 0, relY: 245, type: 'input' },
+          { id: 'GND', name: 'GND', label: 'VSS', side: 'left', relX: 0, relY: 280, type: 'power' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'right', relX: 220, relY: 30, type: 'power' },
+          { id: 'P0_0', name: 'P0.0', label: 'P0.0', side: 'right', relX: 220, relY: 55, type: 'output' },
+          { id: 'P0_1', name: 'P0.1', label: 'P0.1', side: 'right', relX: 220, relY: 80, type: 'output' },
+          { id: 'P0_2', name: 'P0.2', label: 'P0.2', side: 'right', relX: 220, relY: 105, type: 'output' },
+          { id: 'EA', name: 'EA/VPP', label: 'EA', side: 'right', relX: 220, relY: 135, type: 'input' },
+          { id: 'ALE', name: 'ALE/PROG', label: 'ALE', side: 'right', relX: 220, relY: 160, type: 'output' },
+          { id: 'P2_0', name: 'P2.0', label: 'P2.0', side: 'right', relX: 220, relY: 190, type: 'output' },
+          { id: 'P2_1', name: 'P2.1', label: 'P2.1', side: 'right', relX: 220, relY: 215, type: 'output' },
+          { id: 'P2_2', name: 'P2.2', label: 'P2.2', side: 'right', relX: 220, relY: 240, type: 'output' },
+          { id: 'P2_7', name: 'P2.7', label: 'P2.7', side: 'right', relX: 220, relY: 280, type: 'output' }
+        ]
+      },
+      {
+        id: 'esp32',
+        name: 'ESP32 NodeMCU / DevKit V1',
+        category: 'Microprocessors/MCUs',
+        subcategory: 'ESP32 / IoT',
+        tag: 'MCU',
+        library: 'ESPRESSIF.LIB',
+        package: 'MODULE',
+        icon: IconCpu,
+        desc: 'Tensilica Dual-Core 240MHz, WiFi, Bluetooth 4.2 BLE, 12-bit ADC',
+        pins: [
+          { id: '3V3', name: '3V3', label: '3V3', side: 'left', relX: 0, relY: 34, type: 'power' },
+          { id: 'GND_L', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 58, type: 'power' },
+          { id: 'D15', name: 'D15', label: 'D15', side: 'left', relX: 0, relY: 82, type: 'input' },
+          { id: 'D2', name: 'D2', label: 'D2~', side: 'left', relX: 0, relY: 106, type: 'output' },
+          { id: 'D4', name: 'D4', label: 'D4', side: 'left', relX: 0, relY: 130, type: 'input' },
+          { id: 'D32', name: 'D32', label: 'D32', side: 'left', relX: 0, relY: 154, type: 'input' },
+          { id: 'D33', name: 'D33', label: 'D33', side: 'left', relX: 0, relY: 178, type: 'input' },
+          { id: 'D34', name: 'D34', label: 'D34', side: 'left', relX: 0, relY: 202, type: 'input' },
+          { id: 'D35', name: 'D35', label: 'D35', side: 'left', relX: 0, relY: 226, type: 'input' },
+          { id: 'VN', name: 'VN', label: 'VN', side: 'left', relX: 0, relY: 250, type: 'input' },
+          { id: 'VIN', name: 'VIN', label: 'VIN', side: 'right', relX: 200, relY: 34, type: 'power' },
+          { id: 'GND_R', name: 'GND', label: 'GND', side: 'right', relX: 200, relY: 58, type: 'power' },
+          { id: 'D23', name: 'D23', label: 'D23', side: 'right', relX: 200, relY: 82, type: 'output' },
+          { id: 'D22', name: 'D22', label: 'D22', side: 'right', relX: 200, relY: 106, type: 'output' },
+          { id: 'D21', name: 'D21', label: 'D21', side: 'right', relX: 200, relY: 130, type: 'output' },
+          { id: 'D19', name: 'D19', label: 'D19', side: 'right', relX: 200, relY: 154, type: 'input' },
+          { id: 'D18', name: 'D18', label: 'D18', side: 'right', relX: 200, relY: 178, type: 'input' },
+          { id: 'D5', name: 'D5', label: 'D5', side: 'right', relX: 200, relY: 202, type: 'output' },
+          { id: 'VP', name: 'VP', label: 'VP', side: 'right', relX: 200, relY: 226, type: 'input' },
+          { id: 'EN', name: 'EN', label: 'EN', side: 'right', relX: 200, relY: 250, type: 'input' }
+        ]
+      },
+      {
+        id: 'pic16f877a',
+        name: 'PIC16F877A Microcontroller',
+        category: 'Microprocessors/MCUs',
+        subcategory: 'PIC Microchip',
+        tag: 'MCU',
+        library: 'MICROCHIP.LIB',
+        package: 'DIP40',
+        icon: IconCpu,
+        desc: '8-Bit CMOS FLASH-Based Microcontroller with 10-Bit ADC, 40-Pin DIP',
+        pins: [
+          { id: 'MCLR', name: 'MCLR', label: 'MCLR/VPP', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'RA0', name: 'RA0', label: 'RA0/AN0', side: 'left', relX: 0, relY: 60, type: 'input' },
+          { id: 'RA1', name: 'RA1', label: 'RA1/AN1', side: 'left', relX: 0, relY: 90, type: 'input' },
+          { id: 'RA2', name: 'RA2', label: 'RA2/AN2', side: 'left', relX: 0, relY: 120, type: 'input' },
+          { id: 'VDD', name: 'VDD', label: 'VDD (5V)', side: 'left', relX: 0, relY: 160, type: 'power' },
+          { id: 'VSS', name: 'VSS', label: 'VSS (0V)', side: 'left', relX: 0, relY: 190, type: 'power' },
+          { id: 'RC0', name: 'RC0', label: 'RC0/T1OSO', side: 'left', relX: 0, relY: 230, type: 'output' },
+          { id: 'RC1', name: 'RC1', label: 'RC1/T1OSI', side: 'left', relX: 0, relY: 260, type: 'output' },
+          { id: 'RB0', name: 'RB0', label: 'RB0/INT', side: 'right', relX: 220, relY: 30, type: 'input' },
+          { id: 'RB1', name: 'RB1', label: 'RB1', side: 'right', relX: 220, relY: 60, type: 'input' },
+          { id: 'RB2', name: 'RB2', label: 'RB2', side: 'right', relX: 220, relY: 90, type: 'output' },
+          { id: 'RB7', name: 'RB7', label: 'RB7/PGD', side: 'right', relX: 220, relY: 130, type: 'output' },
+          { id: 'RD0', name: 'RD0', label: 'RD0/PSP0', side: 'right', relX: 220, relY: 170, type: 'output' },
+          { id: 'RD1', name: 'RD1', label: 'RD1/PSP1', side: 'right', relX: 220, relY: 200, type: 'output' },
+          { id: 'RD7', name: 'RD7', label: 'RD7/PSP7', side: 'right', relX: 220, relY: 240, type: 'output' }
+        ]
+      },
 
-      // 3. Passives & Discrete
-      { id: 'resistor', name: 'Resistor (10kΩ)', category: 'Passives & Discrete', tag: 'PASS', icon: IconSliders, desc: 'Configurable Current Limiter' },
-      { id: 'potentiometer', name: 'Potentiometer (10kΩ)', category: 'Passives & Discrete', tag: 'PASS', icon: IconSliders, desc: 'Variable Resistor with Wiper (0-100%)' },
-      { id: 'capacitor', name: 'Capacitor (10µF)', category: 'Passives & Discrete', tag: 'PASS', icon: IconLayers, desc: 'Electrolytic Filter Capacitor' },
+      // =======================================================================
+      // 2. TTL 74 SERIES (TTL.LIB)
+      // =======================================================================
+      {
+        id: '7400',
+        name: '7400 Quad 2-Input NAND Gate',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Quadruple 2-Input Positive-NAND Gates (Y = ~(A & B))',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 22, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 48, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 100, relY: 35, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 70, type: 'power' }
+        ]
+      },
+      {
+        id: '7402',
+        name: '7402 Quad 2-Input NOR Gate',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Quadruple 2-Input Positive-NOR Gates (Y = ~(A | B))',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 22, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 48, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 100, relY: 35, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 70, type: 'power' }
+        ]
+      },
+      {
+        id: '7404',
+        name: '7404 Hex Inverter (NOT)',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Hex Inverter Logic Gates (Y = ~A)',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 90, relY: 30, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 45, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 45, relY: 60, type: 'power' }
+        ]
+      },
+      {
+        id: '7408',
+        name: '7408 Quad 2-Input AND Gate',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Quadruple 2-Input Positive-AND Gates (Y = A & B)',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 22, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 48, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 100, relY: 35, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 70, type: 'power' }
+        ]
+      },
+      {
+        id: '7432',
+        name: '7432 Quad 2-Input OR Gate',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Quadruple 2-Input Positive-OR Gates (Y = A | B)',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 22, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 48, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 100, relY: 35, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 70, type: 'power' }
+        ]
+      },
+      {
+        id: '7486',
+        name: '7486 Quad 2-Input XOR Gate',
+        category: 'TTL 74 series',
+        subcategory: 'Logic Gates',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Quadruple 2-Input Exclusive-OR Gates (Y = A ^ B)',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 22, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 48, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 100, relY: 35, type: 'output' },
+          { id: 'VCC', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'GND', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 70, type: 'power' }
+        ]
+      },
+      {
+        id: '7474',
+        name: '7474 Dual D Flip-Flop',
+        category: 'TTL 74 series',
+        subcategory: 'Flip-Flops',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP14',
+        icon: IconZap,
+        desc: 'Dual D-Type Positive-Edge-Triggered Flip-Flop with Preset & Clear',
+        pins: [
+          { id: 'D', name: 'D', label: '1D', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'CLK', name: 'CLK', label: '1CLK', side: 'left', relX: 0, relY: 70, type: 'input' },
+          { id: 'PRE', name: 'PRE', label: '~1PRE', side: 'top', relX: 60, relY: 0, type: 'input' },
+          { id: 'CLR', name: 'CLR', label: '~1CLR', side: 'bottom', relX: 60, relY: 100, type: 'input' },
+          { id: 'Q', name: 'Q', label: '1Q', side: 'right', relX: 120, relY: 30, type: 'output' },
+          { id: 'Q_BAR', name: 'Q_BAR', label: '~1Q', side: 'right', relX: 120, relY: 70, type: 'output' }
+        ]
+      },
+      {
+        id: '7476',
+        name: '7476 Dual JK Flip-Flop',
+        category: 'TTL 74 series',
+        subcategory: 'Flip-Flops',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP16',
+        icon: IconZap,
+        desc: 'Dual J-K Flip-Flop with Set and Clear Inputs',
+        pins: [
+          { id: 'J', name: 'J', label: '1J', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'CLK', name: 'CLK', label: '1CLK', side: 'left', relX: 0, relY: 50, type: 'input' },
+          { id: 'K', name: 'K', label: '1K', side: 'left', relX: 0, relY: 75, type: 'input' },
+          { id: 'Q', name: 'Q', label: '1Q', side: 'right', relX: 120, relY: 30, type: 'output' },
+          { id: 'Q_BAR', name: 'Q_BAR', label: '~1Q', side: 'right', relX: 120, relY: 70, type: 'output' }
+        ]
+      },
+      {
+        id: '74138',
+        name: '74138 3-to-8 Line Decoder',
+        category: 'TTL 74 series',
+        subcategory: 'Decoders & Mux',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP16',
+        icon: IconLayers,
+        desc: '3-Line to 8-Line Inverting Decoder / Demultiplexer',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 50, type: 'input' },
+          { id: 'C', name: 'C', label: 'C', side: 'left', relX: 0, relY: 75, type: 'input' },
+          { id: 'G1', name: 'G1', label: 'G1', side: 'left', relX: 0, relY: 105, type: 'input' },
+          { id: 'G2A', name: 'G2A', label: '~G2A', side: 'left', relX: 0, relY: 125, type: 'input' },
+          { id: 'Y0', name: 'Y0', label: '~Y0', side: 'right', relX: 140, relY: 20, type: 'output' },
+          { id: 'Y1', name: 'Y1', label: '~Y1', side: 'right', relX: 140, relY: 35, type: 'output' },
+          { id: 'Y2', name: 'Y2', label: '~Y2', side: 'right', relX: 140, relY: 50, type: 'output' },
+          { id: 'Y3', name: 'Y3', label: '~Y3', side: 'right', relX: 140, relY: 65, type: 'output' },
+          { id: 'Y4', name: 'Y4', label: '~Y4', side: 'right', relX: 140, relY: 80, type: 'output' },
+          { id: 'Y5', name: 'Y5', label: '~Y5', side: 'right', relX: 140, relY: 95, type: 'output' },
+          { id: 'Y6', name: 'Y6', label: '~Y6', side: 'right', relX: 140, relY: 110, type: 'output' },
+          { id: 'Y7', name: 'Y7', label: '~Y7', side: 'right', relX: 140, relY: 125, type: 'output' }
+        ]
+      },
+      {
+        id: '74151',
+        name: '74151 8-to-1 Multiplexer',
+        category: 'TTL 74 series',
+        subcategory: 'Decoders & Mux',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP16',
+        icon: IconLayers,
+        desc: '8-Channel Data Selector / Multiplexer with Strobe',
+        pins: [
+          { id: 'D0', name: 'D0', label: 'D0', side: 'left', relX: 0, relY: 20, type: 'input' },
+          { id: 'D1', name: 'D1', label: 'D1', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'D2', name: 'D2', label: 'D2', side: 'left', relX: 0, relY: 50, type: 'input' },
+          { id: 'D3', name: 'D3', label: 'D3', side: 'left', relX: 0, relY: 65, type: 'input' },
+          { id: 'D4', name: 'D4', label: 'D4', side: 'left', relX: 0, relY: 80, type: 'input' },
+          { id: 'S0', name: 'S0', label: 'S0', side: 'bottom', relX: 35, relY: 140, type: 'input' },
+          { id: 'S1', name: 'S1', label: 'S1', side: 'bottom', relX: 70, relY: 140, type: 'input' },
+          { id: 'S2', name: 'S2', label: 'S2', side: 'bottom', relX: 105, relY: 140, type: 'input' },
+          { id: 'Y', name: 'Y', label: 'Y', side: 'right', relX: 140, relY: 50, type: 'output' },
+          { id: 'W', name: 'W', label: '~W', side: 'right', relX: 140, relY: 90, type: 'output' }
+        ]
+      },
+      {
+        id: '74193',
+        name: '74193 4-Bit Up/Down Counter',
+        category: 'TTL 74 series',
+        subcategory: 'Counters & Arithmetic',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP16',
+        icon: IconActivity,
+        desc: 'Synchronous 4-Bit Up/Down Binary Counter (Dual Clock)',
+        pins: [
+          { id: 'UP', name: 'COUNT_UP', label: 'UP', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'DOWN', name: 'COUNT_DOWN', label: 'DN', side: 'left', relX: 0, relY: 60, type: 'input' },
+          { id: 'CLR', name: 'CLEAR', label: 'CLR', side: 'left', relX: 0, relY: 90, type: 'input' },
+          { id: 'LOAD', name: 'LOAD', label: '~LD', side: 'left', relX: 0, relY: 115, type: 'input' },
+          { id: 'QA', name: 'QA', label: 'QA', side: 'right', relX: 140, relY: 30, type: 'output' },
+          { id: 'QB', name: 'QB', label: 'QB', side: 'right', relX: 140, relY: 60, type: 'output' },
+          { id: 'QC', name: 'QC', label: 'QC', side: 'right', relX: 140, relY: 90, type: 'output' },
+          { id: 'QD', name: 'QD', label: 'QD', side: 'right', relX: 140, relY: 120, type: 'output' }
+        ]
+      },
+      {
+        id: '7447',
+        name: '7447 BCD to 7-Segment Decoder',
+        category: 'TTL 74 series',
+        subcategory: 'Decoders & Mux',
+        tag: '74xx',
+        library: '74XX.LIB',
+        package: 'DIP16',
+        icon: IconLayers,
+        desc: 'BCD to 7-Segment Decoder / Driver with Active-LOW Outputs',
+        pins: [
+          { id: 'A', name: 'A', label: 'A', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'B', name: 'B', label: 'B', side: 'left', relX: 0, relY: 60, type: 'input' },
+          { id: 'C', name: 'C', label: 'C', side: 'left', relX: 0, relY: 90, type: 'input' },
+          { id: 'D', name: 'D', label: 'D', side: 'left', relX: 0, relY: 120, type: 'input' },
+          { id: 'a', name: 'a', label: 'a', side: 'right', relX: 140, relY: 20, type: 'output' },
+          { id: 'b', name: 'b', label: 'b', side: 'right', relX: 140, relY: 38, type: 'output' },
+          { id: 'c', name: 'c', label: 'c', side: 'right', relX: 140, relY: 56, type: 'output' },
+          { id: 'd', name: 'd', label: 'd', side: 'right', relX: 140, relY: 74, type: 'output' },
+          { id: 'e', name: 'e', label: 'e', side: 'right', relX: 140, relY: 92, type: 'output' },
+          { id: 'f', name: 'f', label: 'f', side: 'right', relX: 140, relY: 110, type: 'output' },
+          { id: 'g', name: 'g', label: 'g', side: 'right', relX: 140, relY: 128, type: 'output' }
+        ]
+      },
 
-      // 4. Semiconductors & Actuators
-      { id: 'led', name: 'LED (Red 5mm)', category: 'Semiconductors & Actuators', tag: 'SEMI', icon: IconZap, desc: 'Light Emitting Diode with glow state' },
-      { id: 'led_green', name: 'LED (Green 5mm)', category: 'Semiconductors & Actuators', tag: 'SEMI', icon: IconZap, desc: 'High-Efficiency Green Indicator' },
-      { id: 'buzzer', name: 'Piezo Buzzer', category: 'Semiconductors & Actuators', tag: 'ACT', icon: IconVolume2, desc: 'Audible Frequency Alarm Beeper' },
-      { id: 'servo', name: 'SG90 Micro Servo', category: 'Semiconductors & Actuators', tag: 'ACT', icon: IconSliders, desc: 'Pulsed Servo Motor (0°-180° Indicator)' },
-      { id: 'lcd16x2', name: '16x2 I2C LCD Display', category: 'Semiconductors & Actuators', tag: 'ACT', icon: IconLayers, desc: 'Alphanumeric Liquid Crystal Screen' },
-      { id: 'relay', name: 'Relay Module (SPDT)', category: 'Semiconductors & Actuators', tag: 'ACT', icon: IconZap, desc: '5V Optocoupled Mechanical Relay' },
+      // =======================================================================
+      // 3. CMOS 4000 SERIES (CMOS.LIB)
+      // =======================================================================
+      {
+        id: '4017',
+        name: '4017 Decade Counter / Divider',
+        category: 'CMOS 4000 series',
+        subcategory: 'Counters & Dividers',
+        tag: '40xx',
+        library: '4000.LIB',
+        package: 'DIP16',
+        icon: IconActivity,
+        desc: '5-Stage Johnson Decade Counter with 10 Decoded Outputs & Carry',
+        pins: [
+          { id: 'CLK', name: 'CLK', label: 'CLK', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'INH', name: 'INH', label: 'INH', side: 'left', relX: 0, relY: 70, type: 'input' },
+          { id: 'RST', name: 'RST', label: 'RST', side: 'left', relX: 0, relY: 105, type: 'input' },
+          { id: 'Q0', name: 'Q0', label: 'Q0', side: 'right', relX: 140, relY: 15, type: 'output' },
+          { id: 'Q1', name: 'Q1', label: 'Q1', side: 'right', relX: 140, relY: 28, type: 'output' },
+          { id: 'Q2', name: 'Q2', label: 'Q2', side: 'right', relX: 140, relY: 41, type: 'output' },
+          { id: 'Q3', name: 'Q3', label: 'Q3', side: 'right', relX: 140, relY: 54, type: 'output' },
+          { id: 'Q4', name: 'Q4', label: 'Q4', side: 'right', relX: 140, relY: 67, type: 'output' },
+          { id: 'Q5', name: 'Q5', label: 'Q5', side: 'right', relX: 140, relY: 80, type: 'output' },
+          { id: 'Q6', name: 'Q6', label: 'Q6', side: 'right', relX: 140, relY: 93, type: 'output' },
+          { id: 'Q7', name: 'Q7', label: 'Q7', side: 'right', relX: 140, relY: 106, type: 'output' },
+          { id: 'Q8', name: 'Q8', label: 'Q8', side: 'right', relX: 140, relY: 119, type: 'output' },
+          { id: 'Q9', name: 'Q9', label: 'Q9', side: 'right', relX: 140, relY: 132, type: 'output' }
+        ]
+      },
+      {
+        id: '4066',
+        name: '4066 Quad Bilateral Switch',
+        category: 'CMOS 4000 series',
+        subcategory: 'Analog Switches',
+        tag: '40xx',
+        library: '4000.LIB',
+        package: 'DIP14',
+        icon: IconSliders,
+        desc: 'Quad Bilateral Analog & Digital Multiplexing Transmission Switch',
+        pins: [
+          { id: 'IN1', name: 'IN1', label: '1_IN', side: 'left', relX: 0, relY: 30, type: 'passive' },
+          { id: 'CTL1', name: 'CTL1', label: '1_CTL', side: 'left', relX: 0, relY: 60, type: 'input' },
+          { id: 'IN2', name: 'IN2', label: '2_IN', side: 'left', relX: 0, relY: 90, type: 'passive' },
+          { id: 'OUT1', name: 'OUT1', label: '1_OUT', side: 'right', relX: 140, relY: 30, type: 'passive' },
+          { id: 'OUT2', name: 'OUT2', label: '2_OUT', side: 'right', relX: 140, relY: 90, type: 'passive' }
+        ]
+      },
 
-      // 5. Power Sources
-      { id: 'solar', name: 'Solar PV Panel', category: 'Power', tag: 'PWR', icon: IconSun, desc: 'Photovoltaic Voltage Generator (Voc: 0-5V)' },
-      { id: 'power_supply', name: 'DC Power Supply (5V/12V)', category: 'Power', tag: 'PWR', icon: IconZap, desc: 'Regulated Bench Voltage Source' },
-      { id: 'gnd', name: 'Ground (GND)', category: 'Power', tag: 'PWR', icon: IconCable, desc: '0V Circuit Reference Datum' },
+      // =======================================================================
+      // 4. ANALOG ICS (ANALOG.LIB)
+      // =======================================================================
+      {
+        id: 'lm741',
+        name: 'LM741 Operational Amplifier',
+        category: 'Analog ICs',
+        subcategory: 'Operational Amplifiers',
+        tag: 'ANLG',
+        library: 'OPAMP.LIB',
+        package: 'DIP8',
+        icon: IconActivity,
+        desc: 'High Gain General Purpose Operational Amplifier with Offset Null',
+        pins: [
+          { id: 'in_neg', name: 'IN-', label: '-', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'in_pos', name: 'IN+', label: '+', side: 'left', relX: 0, relY: 55, type: 'input' },
+          { id: 'out', name: 'OUT', label: 'OUT', side: 'right', relX: 100, relY: 40, type: 'output' },
+          { id: 'v_pos', name: 'V+', label: 'V+', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'v_neg', name: 'V-', label: 'V-', side: 'bottom', relX: 50, relY: 80, type: 'power' }
+        ]
+      },
+      {
+        id: 'lm358',
+        name: 'LM358 Dual Low-Power Op-Amp',
+        category: 'Analog ICs',
+        subcategory: 'Operational Amplifiers',
+        tag: 'ANLG',
+        library: 'OPAMP.LIB',
+        package: 'DIP8',
+        icon: IconActivity,
+        desc: 'Dual Operational Amplifier with Internal Frequency Compensation',
+        pins: [
+          { id: 'in_neg', name: '1IN-', label: '-', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'in_pos', name: '1IN+', label: '+', side: 'left', relX: 0, relY: 55, type: 'input' },
+          { id: 'out', name: '1OUT', label: 'OUT', side: 'right', relX: 100, relY: 40, type: 'output' },
+          { id: 'v_pos', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'v_neg', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 80, type: 'power' }
+        ]
+      },
+      {
+        id: 'tl072',
+        name: 'TL072 Dual JFET-Input Op-Amp',
+        category: 'Analog ICs',
+        subcategory: 'Operational Amplifiers',
+        tag: 'ANLG',
+        library: 'OPAMP.LIB',
+        package: 'DIP8',
+        icon: IconActivity,
+        desc: 'Low-Noise JFET-Input High Slew-Rate Audio Operational Amplifier',
+        pins: [
+          { id: 'in_neg', name: '1IN-', label: '-', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'in_pos', name: '1IN+', label: '+', side: 'left', relX: 0, relY: 55, type: 'input' },
+          { id: 'out', name: '1OUT', label: 'OUT', side: 'right', relX: 100, relY: 40, type: 'output' },
+          { id: 'v_pos', name: 'V+', label: 'V+', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'v_neg', name: 'V-', label: 'V-', side: 'bottom', relX: 50, relY: 80, type: 'power' }
+        ]
+      },
+      {
+        id: 'ne555',
+        name: 'NE555 Precision Timer',
+        category: 'Analog ICs',
+        subcategory: 'Timers',
+        tag: 'ANLG',
+        library: 'ANALOG.LIB',
+        package: 'DIP8',
+        icon: IconActivity,
+        desc: 'Industry Standard Precision Timing & Pulse Generation IC',
+        pins: [
+          { id: 'gnd', name: 'GND', label: '1:GND', side: 'left', relX: 0, relY: 20, type: 'power' },
+          { id: 'trig', name: 'TRIG', label: '2:TRG', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'out', name: 'OUT', label: '3:OUT', side: 'left', relX: 0, relY: 70, type: 'output' },
+          { id: 'reset', name: 'RESET', label: '4:RST', side: 'left', relX: 0, relY: 95, type: 'input' },
+          { id: 'vcc', name: 'VCC', label: '8:VCC', side: 'right', relX: 120, relY: 20, type: 'power' },
+          { id: 'disch', name: 'DISCH', label: '7:DIS', side: 'right', relX: 120, relY: 45, type: 'passive' },
+          { id: 'thres', name: 'THRES', label: '6:THR', side: 'right', relX: 120, relY: 70, type: 'input' },
+          { id: 'cont', name: 'CONT', label: '5:CTL', side: 'right', relX: 120, relY: 95, type: 'passive' }
+        ]
+      },
+      {
+        id: 'lm317',
+        name: 'LM317 Adjustable Regulator',
+        category: 'Analog ICs',
+        subcategory: 'Voltage Regulators',
+        tag: 'ANLG',
+        library: 'POWER.LIB',
+        package: 'TO-220',
+        icon: IconZap,
+        desc: '1.2V to 37V 1.5A Adjustable Positive Linear Voltage Regulator',
+        pins: [
+          { id: 'vin', name: 'VIN', label: 'VIN', side: 'left', relX: 0, relY: 35, type: 'power' },
+          { id: 'adj', name: 'ADJ', label: 'ADJ', side: 'bottom', relX: 45, relY: 70, type: 'input' },
+          { id: 'vout', name: 'VOUT', label: 'VOUT', side: 'right', relX: 90, relY: 35, type: 'power' }
+        ]
+      },
+      {
+        id: 'lm7805',
+        name: 'LM7805 +5V Regulator',
+        category: 'Analog ICs',
+        subcategory: 'Voltage Regulators',
+        tag: 'ANLG',
+        library: 'POWER.LIB',
+        package: 'TO-220',
+        icon: IconZap,
+        desc: 'Fixed +5V 1.5A Positive Voltage Regulator IC (TO-220)',
+        pins: [
+          { id: 'vin', name: 'IN', label: 'IN', side: 'left', relX: 0, relY: 35, type: 'power' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'bottom', relX: 45, relY: 70, type: 'power' },
+          { id: 'vout', name: 'OUT', label: 'OUT', side: 'right', relX: 90, relY: 35, type: 'power' }
+        ]
+      },
+      {
+        id: 'lm7812',
+        name: 'LM7812 +12V Regulator',
+        category: 'Analog ICs',
+        subcategory: 'Voltage Regulators',
+        tag: 'ANLG',
+        library: 'POWER.LIB',
+        package: 'TO-220',
+        icon: IconZap,
+        desc: 'Fixed +12V 1.5A Positive Voltage Regulator IC (TO-220)',
+        pins: [
+          { id: 'vin', name: 'IN', label: 'IN', side: 'left', relX: 0, relY: 35, type: 'power' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'bottom', relX: 45, relY: 70, type: 'power' },
+          { id: 'vout', name: 'OUT', label: 'OUT', side: 'right', relX: 90, relY: 35, type: 'power' }
+        ]
+      },
+      {
+        id: 'lm393',
+        name: 'LM393 Dual Comparator',
+        category: 'Analog ICs',
+        subcategory: 'Comparators',
+        tag: 'ANLG',
+        library: 'ANALOG.LIB',
+        package: 'DIP8',
+        icon: IconActivity,
+        desc: 'Dual Differential Voltage Comparator (Open-Collector Outputs)',
+        pins: [
+          { id: 'in_neg', name: '1IN-', label: '-', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'in_pos', name: '1IN+', label: '+', side: 'left', relX: 0, relY: 55, type: 'input' },
+          { id: 'out', name: '1OUT', label: 'OUT', side: 'right', relX: 100, relY: 40, type: 'output' },
+          { id: 'v_pos', name: 'VCC', label: 'VCC', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'v_neg', name: 'GND', label: 'GND', side: 'bottom', relX: 50, relY: 80, type: 'power' }
+        ]
+      },
 
-      // 6. Instruments
-      { id: 'dmm', name: 'Digital Multimeter (DMM)', category: 'Instruments', tag: 'IP', icon: IconSliders, desc: 'Auto-ranging V/A/Ω Seven-Segment Tool' },
-      { id: 'scope', name: '2-CH Oscilloscope', category: 'Instruments', tag: 'IP', icon: IconActivity, desc: 'Dual-Trace Realtime Signal Monitor' }
+      // =======================================================================
+      // 5. SEMICONDUCTORS & ACTIVES (ACTIVE.LIB)
+      // =======================================================================
+      {
+        id: '1n4007',
+        name: '1N4007 Rectifier Diode',
+        category: 'Semiconductors & Actives',
+        subcategory: 'Diodes & Rectifiers',
+        tag: 'SEMI',
+        library: 'DIODE.LIB',
+        package: 'DO-41',
+        icon: IconZap,
+        desc: '1000V 1A Silicon General-Purpose Rectifier Diode',
+        pins: [
+          { id: 'anode', name: 'A', label: 'A', side: 'left', relX: 0, relY: 25, type: 'passive' },
+          { id: 'cathode', name: 'K', label: 'K', side: 'right', relX: 80, relY: 25, type: 'passive' }
+        ]
+      },
+      {
+        id: '1n4148',
+        name: '1N4148 Fast Switching Diode',
+        category: 'Semiconductors & Actives',
+        subcategory: 'Diodes & Rectifiers',
+        tag: 'SEMI',
+        library: 'DIODE.LIB',
+        package: 'DO-35',
+        icon: IconZap,
+        desc: '100V 200mA High-Speed Silicon Switching Diode (trr 4ns)',
+        pins: [
+          { id: 'anode', name: 'A', label: 'A', side: 'left', relX: 0, relY: 25, type: 'passive' },
+          { id: 'cathode', name: 'K', label: 'K', side: 'right', relX: 80, relY: 25, type: 'passive' }
+        ]
+      },
+      {
+        id: 'zener_5v1',
+        name: 'Zener Diode 5.1V 0.5W',
+        category: 'Semiconductors & Actives',
+        subcategory: 'Diodes & Rectifiers',
+        tag: 'SEMI',
+        library: 'DIODE.LIB',
+        package: 'DO-35',
+        icon: IconZap,
+        desc: '5.1V 500mW Silicon Voltage Regulator Zener Diode',
+        pins: [
+          { id: 'anode', name: 'A', label: 'A', side: 'left', relX: 0, relY: 25, type: 'passive' },
+          { id: 'cathode', name: 'K', label: 'K', side: 'right', relX: 80, relY: 25, type: 'passive' }
+        ]
+      },
+      {
+        id: 'bridge_rectifier',
+        name: 'Bridge Rectifier (W04M)',
+        category: 'Semiconductors & Actives',
+        subcategory: 'Diodes & Rectifiers',
+        tag: 'SEMI',
+        library: 'DIODE.LIB',
+        package: 'WOM',
+        icon: IconZap,
+        desc: '1.5A 400V Single-Phase Full-Wave Bridge Rectifier',
+        pins: [
+          { id: 'ac1', name: 'AC1', label: '~', side: 'left', relX: 0, relY: 25, type: 'passive' },
+          { id: 'ac2', name: 'AC2', label: '~', side: 'left', relX: 0, relY: 55, type: 'passive' },
+          { id: 'pos', name: '+', label: '+', side: 'right', relX: 90, relY: 25, type: 'power' },
+          { id: 'neg', name: '-', label: '-', side: 'right', relX: 90, relY: 55, type: 'power' }
+        ]
+      },
+      {
+        id: 'bc547',
+        name: 'BC547 NPN Transistor',
+        category: 'Semiconductors & Actives',
+        subcategory: 'BJT Transistors',
+        tag: 'SEMI',
+        library: 'TRANS.LIB',
+        package: 'TO-92',
+        icon: IconZap,
+        desc: '45V 100mA NPN General Purpose Bipolar Junction Transistor',
+        pins: [
+          { id: 'b', name: 'B', label: 'B', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'c', name: 'C', label: 'C', side: 'top', relX: 55, relY: 0, type: 'passive' },
+          { id: 'e', name: 'E', label: 'E', side: 'bottom', relX: 55, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: '2n2222',
+        name: '2N2222 NPN High Current Switch',
+        category: 'Semiconductors & Actives',
+        subcategory: 'BJT Transistors',
+        tag: 'SEMI',
+        library: 'TRANS.LIB',
+        package: 'TO-92',
+        icon: IconZap,
+        desc: '40V 800mA High-Speed Switching NPN BJT Transistor',
+        pins: [
+          { id: 'b', name: 'B', label: 'B', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'c', name: 'C', label: 'C', side: 'top', relX: 55, relY: 0, type: 'passive' },
+          { id: 'e', name: 'E', label: 'E', side: 'bottom', relX: 55, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: 'bc557',
+        name: 'BC557 PNP Transistor',
+        category: 'Semiconductors & Actives',
+        subcategory: 'BJT Transistors',
+        tag: 'SEMI',
+        library: 'TRANS.LIB',
+        package: 'TO-92',
+        icon: IconZap,
+        desc: '-45V -100mA PNP General Purpose Bipolar Junction Transistor',
+        pins: [
+          { id: 'b', name: 'B', label: 'B', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'c', name: 'C', label: 'C', side: 'bottom', relX: 55, relY: 70, type: 'passive' },
+          { id: 'e', name: 'E', label: 'E', side: 'top', relX: 55, relY: 0, type: 'passive' }
+        ]
+      },
+      {
+        id: '2n7000',
+        name: '2N7000 N-Channel MOSFET',
+        category: 'Semiconductors & Actives',
+        subcategory: 'MOSFETs',
+        tag: 'SEMI',
+        library: 'FET.LIB',
+        package: 'TO-92',
+        icon: IconZap,
+        desc: '60V 200mA 5Ω Small Signal N-Channel Enhancement MOSFET',
+        pins: [
+          { id: 'g', name: 'G', label: 'G', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'd', name: 'D', label: 'D', side: 'top', relX: 55, relY: 0, type: 'passive' },
+          { id: 's', name: 'S', label: 'S', side: 'bottom', relX: 55, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: 'irf540n',
+        name: 'IRF540N Power N-MOSFET',
+        category: 'Semiconductors & Actives',
+        subcategory: 'MOSFETs',
+        tag: 'SEMI',
+        library: 'FET.LIB',
+        package: 'TO-220',
+        icon: IconZap,
+        desc: '100V 33A 44mΩ N-Channel HEXFET Power MOSFET (TO-220)',
+        pins: [
+          { id: 'g', name: 'G', label: 'G', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 'd', name: 'D', label: 'D', side: 'top', relX: 55, relY: 0, type: 'passive' },
+          { id: 's', name: 'S', label: 'S', side: 'bottom', relX: 55, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: 'irf9540',
+        name: 'IRF9540 Power P-MOSFET',
+        category: 'Semiconductors & Actives',
+        subcategory: 'MOSFETs',
+        tag: 'SEMI',
+        library: 'FET.LIB',
+        package: 'TO-220',
+        icon: IconZap,
+        desc: '-100V -19A 117mΩ P-Channel HEXFET Power MOSFET (TO-220)',
+        pins: [
+          { id: 'g', name: 'G', label: 'G', side: 'left', relX: 0, relY: 35, type: 'input' },
+          { id: 's', name: 'S', label: 'S', side: 'top', relX: 55, relY: 0, type: 'passive' },
+          { id: 'd', name: 'D', label: 'D', side: 'bottom', relX: 55, relY: 70, type: 'passive' }
+        ]
+      },
+
+      // =======================================================================
+      // 6. PASSIVES & DISCRETE (DEVICE.LIB)
+      // =======================================================================
+      {
+        id: 'resistor',
+        name: 'Resistor (10kΩ)',
+        category: 'Passives & Discrete',
+        subcategory: 'Resistors',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'AXIAL-0.4',
+        icon: IconSliders,
+        desc: 'Configurable Carbon Film / Metal Film Current Limiter (10kΩ)',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'top', relX: 40, relY: 0, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'bottom', relX: 40, relY: 80, type: 'passive' }
+        ]
+      },
+      {
+        id: 'potentiometer',
+        name: 'POT-HG Potentiometer (10kΩ)',
+        category: 'Passives & Discrete',
+        subcategory: 'Resistors',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'POT-TRIM',
+        icon: IconSliders,
+        desc: 'Variable Resistor with Adjustable Wiper Terminal (0-100%)',
+        pins: [
+          { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35, type: 'passive' },
+          { id: 'wiper', name: '2', label: 'W', side: 'right', relX: 144, relY: 50, type: 'output' },
+          { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65, type: 'passive' }
+        ]
+      },
+      {
+        id: 'ldr',
+        name: 'LDR Photoresistor',
+        category: 'Passives & Discrete',
+        subcategory: 'Resistors',
+        tag: 'SENS',
+        library: 'DEVICE.LIB',
+        package: 'RAD-0.2',
+        icon: IconRadio,
+        desc: 'Light-Dependent Resistor with Solar Simulation Coupling',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'top', relX: 40, relY: 0, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'bottom', relX: 40, relY: 90, type: 'passive' }
+        ]
+      },
+      {
+        id: 'thermistor',
+        name: 'NTC Thermistor (10kΩ)',
+        category: 'Passives & Discrete',
+        subcategory: 'Resistors',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'RAD-0.2',
+        icon: IconThermometer,
+        desc: 'Negative Temperature Coefficient Thermal Resistor (25°C 10kΩ)',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'top', relX: 40, relY: 0, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'bottom', relX: 40, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: 'capacitor',
+        name: 'Electrolytic Cap (10µF CAP-POL)',
+        category: 'Passives & Discrete',
+        subcategory: 'Capacitors',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'CAP-RAD-2.5',
+        icon: IconLayers,
+        desc: 'Polarized Aluminum Electrolytic Decoupling & Filter Capacitor',
+        pins: [
+          { id: 'pos', name: '+', label: '+', side: 'top', relX: 40, relY: 0, type: 'passive' },
+          { id: 'neg', name: '-', label: '-', side: 'bottom', relX: 40, relY: 80, type: 'passive' }
+        ]
+      },
+      {
+        id: 'cap_ceramic',
+        name: 'Ceramic Capacitor (0.1µF)',
+        category: 'Passives & Discrete',
+        subcategory: 'Capacitors',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'RAD-0.1',
+        icon: IconLayers,
+        desc: 'Non-Polarized Ceramic Disc High-Frequency Bypass Capacitor (100nF)',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'top', relX: 40, relY: 0, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'bottom', relX: 40, relY: 70, type: 'passive' }
+        ]
+      },
+      {
+        id: 'inductor',
+        name: 'Inductor (10mH)',
+        category: 'Passives & Discrete',
+        subcategory: 'Inductors & Transformers',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'IND-AXIAL',
+        icon: IconSliders,
+        desc: 'Ferrite Core Fixed Inductor for LC Filtering & Storage',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'left', relX: 0, relY: 35, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'right', relX: 80, relY: 35, type: 'passive' }
+        ]
+      },
+      {
+        id: 'transformer',
+        name: 'Step-Down Transformer (230V:12V)',
+        category: 'Passives & Discrete',
+        subcategory: 'Inductors & Transformers',
+        tag: 'PASS',
+        library: 'DEVICE.LIB',
+        package: 'TRANS-4P',
+        icon: IconZap,
+        desc: 'Iron Core AC Mains Step-Down Power Transformer with Center Tap',
+        pins: [
+          { id: 'pri1', name: 'PRI1', label: 'P1', side: 'left', relX: 0, relY: 20, type: 'passive' },
+          { id: 'pri2', name: 'PRI2', label: 'P2', side: 'left', relX: 0, relY: 55, type: 'passive' },
+          { id: 'sec1', name: 'SEC1', label: 'S1', side: 'right', relX: 90, relY: 20, type: 'passive' },
+          { id: 'sec2', name: 'SEC2', label: 'S2', side: 'right', relX: 90, relY: 55, type: 'passive' }
+        ]
+      },
+
+      // =======================================================================
+      // 7. SWITCHES & RELAYS (ELECTRO.LIB)
+      // =======================================================================
+      {
+        id: 'push_button',
+        name: 'SPST Push Button (NO)',
+        category: 'Switches & Relays',
+        subcategory: 'Switches',
+        tag: 'SW',
+        library: 'SWITCH.LIB',
+        package: 'SW-PB',
+        icon: IconZap,
+        desc: 'Normally Open Momentary Tactile Push Button Switch',
+        pins: [
+          { id: 'p1', name: '1', label: '1', side: 'left', relX: 0, relY: 30, type: 'passive' },
+          { id: 'p2', name: '2', label: '2', side: 'right', relX: 80, relY: 30, type: 'passive' }
+        ]
+      },
+      {
+        id: 'toggle_switch',
+        name: 'SPDT Toggle Switch',
+        category: 'Switches & Relays',
+        subcategory: 'Switches',
+        tag: 'SW',
+        library: 'SWITCH.LIB',
+        package: 'SW-SPDT',
+        icon: IconSliders,
+        desc: 'Single-Pole Double-Throw Latching Toggle Switch',
+        pins: [
+          { id: 'com', name: 'COM', label: 'COM', side: 'left', relX: 0, relY: 30, type: 'passive' },
+          { id: 'no', name: 'NO', label: 'NO', side: 'right', relX: 80, relY: 18, type: 'passive' },
+          { id: 'nc', name: 'NC', label: 'NC', side: 'right', relX: 80, relY: 42, type: 'passive' }
+        ]
+      },
+      {
+        id: 'relay',
+        name: 'Relay Module (5V SPDT)',
+        category: 'Switches & Relays',
+        subcategory: 'Relays',
+        tag: 'ACT',
+        library: 'ELECTRO.LIB',
+        package: 'RELAY-SPDT',
+        icon: IconZap,
+        desc: '5V Optocoupled Mechanical Relay Module with NO/NC Contacts',
+        pins: [
+          { id: 'vcc', name: 'VCC', label: 'VCC', side: 'left', relX: 0, relY: 25, type: 'power' },
+          { id: 'in', name: 'IN', label: 'IN', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 65, type: 'power' },
+          { id: 'com', name: 'COM', label: 'COM', side: 'right', relX: 110, relY: 25, type: 'passive' },
+          { id: 'no', name: 'NO', label: 'NO', side: 'right', relX: 110, relY: 45, type: 'passive' },
+          { id: 'nc', name: 'NC', label: 'NC', side: 'right', relX: 110, relY: 65, type: 'passive' }
+        ]
+      },
+      {
+        id: 'motor_dc',
+        name: 'DC Motor (12V)',
+        category: 'Switches & Relays',
+        subcategory: 'Motors',
+        tag: 'ACT',
+        library: 'MOTOR.LIB',
+        package: 'MOTOR-2P',
+        icon: IconActivity,
+        desc: 'Permanent Magnet DC Brush Motor with Visual RPM Indicator',
+        pins: [
+          { id: 'pos', name: '+', label: '+', side: 'left', relX: 0, relY: 40, type: 'power' },
+          { id: 'neg', name: '-', label: '-', side: 'right', relX: 90, relY: 40, type: 'power' }
+        ]
+      },
+      {
+        id: 'servo',
+        name: 'SG90 Micro Servo',
+        category: 'Switches & Relays',
+        subcategory: 'Motors',
+        tag: 'ACT',
+        library: 'SERVO.LIB',
+        package: 'SERVO-3P',
+        icon: IconSliders,
+        desc: 'Pulsed Servo Motor with Positional Indicator (0°-180°)',
+        pins: [
+          { id: 'sig', name: 'SIG', label: 'SIG', side: 'left', relX: 0, relY: 30, type: 'input' },
+          { id: 'vcc', name: '5V', label: '5V', side: 'left', relX: 0, relY: 55, type: 'power' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 80, type: 'power' }
+        ]
+      },
+      {
+        id: 'stepper',
+        name: '4-Phase Stepper Motor',
+        category: 'Switches & Relays',
+        subcategory: 'Motors',
+        tag: 'ACT',
+        library: 'MOTOR.LIB',
+        package: 'STEPPER-4P',
+        icon: IconActivity,
+        desc: 'Unipolar 5V/12V 4-Phase Stepper Motor (28BYJ-48)',
+        pins: [
+          { id: 'in1', name: 'IN1', label: '1', side: 'left', relX: 0, relY: 20, type: 'input' },
+          { id: 'in2', name: 'IN2', label: '2', side: 'left', relX: 0, relY: 38, type: 'input' },
+          { id: 'in3', name: 'IN3', label: '3', side: 'left', relX: 0, relY: 56, type: 'input' },
+          { id: 'in4', name: 'IN4', label: '4', side: 'left', relX: 0, relY: 74, type: 'input' },
+          { id: 'com', name: 'COM', label: 'VCC', side: 'right', relX: 90, relY: 45, type: 'power' }
+        ]
+      },
+
+      // =======================================================================
+      // 8. DISPLAY & AUDIO (DISP.LIB)
+      // =======================================================================
+      {
+        id: 'led',
+        name: 'LED (Red 5mm)',
+        category: 'Display & Audio',
+        subcategory: 'LEDs',
+        tag: 'SEMI',
+        library: 'OPTO.LIB',
+        package: 'LED-5MM',
+        icon: IconZap,
+        desc: 'Light Emitting Diode with Realistic Luminous Glow Feedback',
+        pins: [
+          { id: 'anode', name: 'A (+)', label: '+', side: 'left', relX: 0, relY: 45, type: 'passive' },
+          { id: 'cathode', name: 'K (-)', label: '-', side: 'right', relX: 80, relY: 45, type: 'passive' }
+        ]
+      },
+      {
+        id: 'led_green',
+        name: 'LED (Green 5mm)',
+        category: 'Display & Audio',
+        subcategory: 'LEDs',
+        tag: 'SEMI',
+        library: 'OPTO.LIB',
+        package: 'LED-5MM',
+        icon: IconZap,
+        desc: 'High-Efficiency Green Indicator Diode (Vf: 2.2V)',
+        pins: [
+          { id: 'anode', name: 'A (+)', label: '+', side: 'left', relX: 0, relY: 45, type: 'passive' },
+          { id: 'cathode', name: 'K (-)', label: '-', side: 'right', relX: 80, relY: 45, type: 'passive' }
+        ]
+      },
+      {
+        id: 'led_blue',
+        name: 'LED (Blue 5mm)',
+        category: 'Display & Audio',
+        subcategory: 'LEDs',
+        tag: 'SEMI',
+        library: 'OPTO.LIB',
+        package: 'LED-5MM',
+        icon: IconZap,
+        desc: 'High-Intensity Blue Indicator Diode (Vf: 3.1V)',
+        pins: [
+          { id: 'anode', name: 'A (+)', label: '+', side: 'left', relX: 0, relY: 45, type: 'passive' },
+          { id: 'cathode', name: 'K (-)', label: '-', side: 'right', relX: 80, relY: 45, type: 'passive' }
+        ]
+      },
+      {
+        id: 'led_yellow',
+        name: 'LED (Yellow 5mm)',
+        category: 'Display & Audio',
+        subcategory: 'LEDs',
+        tag: 'SEMI',
+        library: 'OPTO.LIB',
+        package: 'LED-5MM',
+        icon: IconZap,
+        desc: 'Amber-Yellow Luminous Indicator Diode (Vf: 2.0V)',
+        pins: [
+          { id: 'anode', name: 'A (+)', label: '+', side: 'left', relX: 0, relY: 45, type: 'passive' },
+          { id: 'cathode', name: 'K (-)', label: '-', side: 'right', relX: 80, relY: 45, type: 'passive' }
+        ]
+      },
+      {
+        id: '7seg_ca',
+        name: '7-Segment Display (Common Anode)',
+        category: 'Display & Audio',
+        subcategory: '7-Segment Displays',
+        tag: 'DISP',
+        library: 'DISP.LIB',
+        package: '7SEG-10PIN',
+        icon: IconLayers,
+        desc: 'Single Digit Common Anode 7-Segment LED Display (Active LOW)',
+        pins: [
+          { id: 'ca', name: 'CA', label: 'VCC', side: 'top', relX: 45, relY: 0, type: 'power' },
+          { id: 'a', name: 'a', label: 'a', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'b', name: 'b', label: 'b', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'c', name: 'c', label: 'c', side: 'left', relX: 0, relY: 65, type: 'input' },
+          { id: 'd', name: 'd', label: 'd', side: 'left', relX: 0, relY: 85, type: 'input' },
+          { id: 'e', name: 'e', label: 'e', side: 'right', relX: 90, relY: 25, type: 'input' },
+          { id: 'f', name: 'f', label: 'f', side: 'right', relX: 90, relY: 45, type: 'input' },
+          { id: 'g', name: 'g', label: 'g', side: 'right', relX: 90, relY: 65, type: 'input' },
+          { id: 'dp', name: 'dp', label: 'dp', side: 'right', relX: 90, relY: 85, type: 'input' }
+        ]
+      },
+      {
+        id: '7seg_cc',
+        name: '7-Segment Display (Common Cathode)',
+        category: 'Display & Audio',
+        subcategory: '7-Segment Displays',
+        tag: 'DISP',
+        library: 'DISP.LIB',
+        package: '7SEG-10PIN',
+        icon: IconLayers,
+        desc: 'Single Digit Common Cathode 7-Segment LED Display (Active HIGH)',
+        pins: [
+          { id: 'cc', name: 'CC', label: 'GND', side: 'bottom', relX: 45, relY: 110, type: 'power' },
+          { id: 'a', name: 'a', label: 'a', side: 'left', relX: 0, relY: 25, type: 'input' },
+          { id: 'b', name: 'b', label: 'b', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'c', name: 'c', label: 'c', side: 'left', relX: 0, relY: 65, type: 'input' },
+          { id: 'd', name: 'd', label: 'd', side: 'left', relX: 0, relY: 85, type: 'input' },
+          { id: 'e', name: 'e', label: 'e', side: 'right', relX: 90, relY: 25, type: 'input' },
+          { id: 'f', name: 'f', label: 'f', side: 'right', relX: 90, relY: 45, type: 'input' },
+          { id: 'g', name: 'g', label: 'g', side: 'right', relX: 90, relY: 65, type: 'input' },
+          { id: 'dp', name: 'dp', label: 'dp', side: 'right', relX: 90, relY: 85, type: 'input' }
+        ]
+      },
+      {
+        id: 'lcd16x2',
+        name: '16x2 I2C LCD Display',
+        category: 'Display & Audio',
+        subcategory: 'LCD Displays',
+        tag: 'ACT',
+        library: 'LCD.LIB',
+        package: 'LCD-16PIN',
+        icon: IconLayers,
+        desc: 'Alphanumeric Liquid Crystal Screen (I2C PCF8574 Backpack)',
+        pins: [
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'bottom', relX: 40, relY: 100, type: 'power' },
+          { id: 'vcc', name: 'VCC', label: 'VCC', side: 'bottom', relX: 70, relY: 100, type: 'power' },
+          { id: 'sda', name: 'SDA', label: 'SDA', side: 'bottom', relX: 100, relY: 100, type: 'input' },
+          { id: 'scl', name: 'SCL', label: 'SCL', side: 'bottom', relX: 130, relY: 100, type: 'input' }
+        ]
+      },
+      {
+        id: 'buzzer',
+        name: 'Piezo Buzzer (2.4kHz)',
+        category: 'Display & Audio',
+        subcategory: 'Buzzers & Audio',
+        tag: 'ACT',
+        library: 'AUDIO.LIB',
+        package: 'BUZZER-2P',
+        icon: IconVolume2,
+        desc: 'Audible Piezoelectric Transducer with Dynamic Tone Output',
+        pins: [
+          { id: 'pos', name: '+', label: '+', side: 'left', relX: 0, relY: 40, type: 'power' },
+          { id: 'neg', name: '-', label: '-', side: 'right', relX: 80, relY: 40, type: 'power' }
+        ]
+      },
+      {
+        id: 'speaker',
+        name: '8Ω Dynamic Speaker',
+        category: 'Display & Audio',
+        subcategory: 'Buzzers & Audio',
+        tag: 'ACT',
+        library: 'AUDIO.LIB',
+        package: 'SPEAKER-2P',
+        icon: IconVolume2,
+        desc: '0.5W 8-Ohm Dynamic Voice Coil Audio Speaker',
+        pins: [
+          { id: 'pos', name: '+', label: '+', side: 'left', relX: 0, relY: 40, type: 'passive' },
+          { id: 'neg', name: '-', label: '-', side: 'right', relX: 80, relY: 40, type: 'passive' }
+        ]
+      },
+
+      // =======================================================================
+      // 9. VIRTUAL INSTRUMENTS & TERMINALS (INSTR.LIB)
+      // =======================================================================
+      {
+        id: 'logic_state',
+        name: 'Logic State (Interactive 0/1)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'IP',
+        library: 'ACTIVE.LIB',
+        package: 'VIRTUAL',
+        icon: IconZap,
+        desc: 'Interactive Digital Logic Source with Clickable 0/1 Toggle Button',
+        state: 0,
+        pins: [
+          { id: 'out', name: 'OUT', label: 'Q', side: 'right', relX: 70, relY: 22, type: 'output' }
+        ]
+      },
+      {
+        id: 'logic_probe',
+        name: 'Logic Probe (Digital Level)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'IP',
+        library: 'ACTIVE.LIB',
+        package: 'VIRTUAL',
+        icon: IconActivity,
+        desc: 'Virtual Logic Indicator: Red=HIGH (1), Blue=LOW (0), Grey=Float',
+        pins: [
+          { id: 'in', name: 'IN', label: 'D', side: 'left', relX: 0, relY: 22, type: 'input' }
+        ]
+      },
+      {
+        id: 'dmm',
+        name: 'DC Voltmeter (Digital DMM)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Meters',
+        tag: 'IP',
+        library: 'VIRTUAL.LIB',
+        package: 'VIRTUAL',
+        icon: IconSliders,
+        desc: 'Auto-Ranging DC Voltage & Current Digital Display Tool',
+        pins: [
+          { id: 'dmm_v', name: 'V_IN', label: 'VΩ', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'dmm_com', name: 'COM', label: 'COM', side: 'left', relX: 0, relY: 85, type: 'power' }
+        ]
+      },
+      {
+        id: 'ammeter',
+        name: 'DC Ammeter (0-5A)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Meters',
+        tag: 'IP',
+        library: 'VIRTUAL.LIB',
+        package: 'VIRTUAL',
+        icon: IconSliders,
+        desc: 'In-Line DC Shunt Ammeter with Milliampere Resolution',
+        pins: [
+          { id: 'pos', name: '+', label: '+', side: 'left', relX: 0, relY: 45, type: 'input' },
+          { id: 'neg', name: '-', label: '-', side: 'right', relX: 130, relY: 45, type: 'output' }
+        ]
+      },
+      {
+        id: 'scope',
+        name: '2-CH Oscilloscope',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Meters',
+        tag: 'IP',
+        library: 'VIRTUAL.LIB',
+        package: 'VIRTUAL',
+        icon: IconActivity,
+        desc: 'Dual-Trace Realtime Timebase Signal Oscilloscope Screen',
+        pins: [
+          { id: 'ch1', name: 'CH1', label: 'CH1', side: 'left', relX: 0, relY: 40, type: 'input' },
+          { id: 'ch2', name: 'CH2', label: 'CH2', side: 'left', relX: 0, relY: 70, type: 'input' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'right', relX: 160, relY: 55, type: 'power' }
+        ]
+      },
+      {
+        id: 'signal_gen',
+        name: 'Signal Generator (Sine/Sq/Tri)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'IP',
+        library: 'VIRTUAL.LIB',
+        package: 'VIRTUAL',
+        icon: IconActivity,
+        desc: 'Synthesized Function Generator: 1Hz-100kHz Sine, Square, Triangle',
+        pins: [
+          { id: 'out', name: 'OUT', label: 'OUT', side: 'right', relX: 140, relY: 35, type: 'output' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'right', relX: 140, relY: 65, type: 'power' }
+        ]
+      },
+      {
+        id: 'vcc',
+        name: 'VCC (+5V Power Rail)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Power Terminals',
+        tag: 'PWR',
+        library: 'DEFAULT.LIB',
+        package: 'TERMINAL',
+        icon: IconZap,
+        desc: '+5.0V Regulated Schematic DC Voltage Terminal',
+        pins: [
+          { id: 'vcc', name: 'VCC', label: '+5V', side: 'bottom', relX: 30, relY: 45, type: 'power' }
+        ]
+      },
+      {
+        id: 'gnd',
+        name: 'Ground (GND 0V Reference)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Power Terminals',
+        tag: 'PWR',
+        library: 'DEFAULT.LIB',
+        package: 'TERMINAL',
+        icon: IconCable,
+        desc: '0V Circuit Datum Reference Ground Terminal',
+        pins: [
+          { id: 'gnd_pin', name: 'GND', label: 'GND', side: 'top', relX: 40, relY: 0, type: 'power' }
+        ]
+      },
+      {
+        id: 'solar',
+        name: 'Solar PV Panel (0-5V Voc)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Power Terminals',
+        tag: 'PWR',
+        library: 'PHOTO.LIB',
+        package: 'PANEL',
+        icon: IconSun,
+        desc: 'Photovoltaic Panel with Realtime Atmospheric Irradiance Coupling',
+        pins: [
+          { id: 'v_pos', name: 'V+', label: 'V+', side: 'right', relX: 176, relY: 42, type: 'power' },
+          { id: 'v_neg', name: 'GND', label: 'V-', side: 'right', relX: 176, relY: 82, type: 'power' }
+        ]
+      },
+      {
+        id: 'power_supply',
+        name: 'DC Power Supply (5V/12V)',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Power Terminals',
+        tag: 'PWR',
+        library: 'VIRTUAL.LIB',
+        package: 'BENCH',
+        icon: IconZap,
+        desc: 'Regulated Dual-Channel Bench Power Supply (5V & 12V DC)',
+        pins: [
+          { id: 'v5', name: '+5V', label: '+5V', side: 'right', relX: 120, relY: 25, type: 'power' },
+          { id: 'v12', name: '+12V', label: '+12V', side: 'right', relX: 120, relY: 50, type: 'power' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'right', relX: 120, relY: 75, type: 'power' }
+        ]
+      },
+
+      // =======================================================================
+      // 10. SENSORS (SENSOR.LIB)
+      // =======================================================================
+      {
+        id: 'dht11',
+        name: 'DHT11 Temp & Humidity Sensor',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'SENS',
+        library: 'SENSOR.LIB',
+        package: 'MODULE',
+        icon: IconThermometer,
+        desc: 'Single-Bus Digital Temperature & Relative Humidity Sensor',
+        pins: [
+          { id: 'vcc', name: 'VCC', label: 'VCC', side: 'left', relX: 0, relY: 30, type: 'power' },
+          { id: 'data', name: 'DATA', label: 'DATA', side: 'left', relX: 0, relY: 55, type: 'output' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 80, type: 'power' }
+        ]
+      },
+      {
+        id: 'ultrasonic',
+        name: 'HC-SR04 Ultrasonic Sonar',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'SENS',
+        library: 'SENSOR.LIB',
+        package: 'MODULE',
+        icon: IconRadio,
+        desc: 'Ultrasonic Distance Sensor with Trig Pulse & Echo Return Pinout',
+        pins: [
+          { id: 'vcc', name: 'VCC', label: 'VCC', side: 'bottom', relX: 30, relY: 90, type: 'power' },
+          { id: 'trig', name: 'TRIG', label: 'TRIG', side: 'bottom', relX: 60, relY: 90, type: 'input' },
+          { id: 'echo', name: 'ECHO', label: 'ECHO', side: 'bottom', relX: 90, relY: 90, type: 'output' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'bottom', relX: 120, relY: 90, type: 'power' }
+        ]
+      },
+      {
+        id: 'pir',
+        name: 'PIR Motion Sensor',
+        category: 'Virtual Instruments & Terminals',
+        subcategory: 'Generators & Probes',
+        tag: 'SENS',
+        library: 'SENSOR.LIB',
+        package: 'MODULE',
+        icon: IconRadio,
+        desc: 'Pyroelectric Infrared Motion Detector with Digital Trigger Output',
+        pins: [
+          { id: 'vcc', name: 'VCC', label: 'VCC', side: 'left', relX: 0, relY: 25, type: 'power' },
+          { id: 'out', name: 'OUT', label: 'OUT', side: 'left', relX: 0, relY: 50, type: 'output' },
+          { id: 'gnd', name: 'GND', label: 'GND', side: 'left', relX: 0, relY: 75, type: 'power' }
+        ]
+      }
     ];
 
     // =========================================================================
@@ -2280,21 +3593,78 @@
     // =========================================================================
     const COMPONENT_DIMENSIONS = {
       arduino_uno: { w: 270, h: 210 },
+      arduino_nano: { w: 140, h: 210 },
+      at89c51: { w: 220, h: 310 },
+      pic16f877a: { w: 220, h: 290 },
       esp32: { w: 200, h: 280 },
       solar: { w: 176, h: 130 },
+      power_supply: { w: 120, h: 100 },
       ldr: { w: 80, h: 90 },
+      thermistor: { w: 80, h: 70 },
       resistor: { w: 80, h: 80 },
       potentiometer: { w: 144, h: 90 },
+      capacitor: { w: 80, h: 80 },
+      cap_ceramic: { w: 80, h: 70 },
+      inductor: { w: 80, h: 70 },
+      transformer: { w: 90, h: 80 },
+      push_button: { w: 80, h: 60 },
+      toggle_switch: { w: 80, h: 60 },
+      relay: { w: 110, h: 90 },
+      motor_dc: { w: 90, h: 80 },
+      servo: { w: 128, h: 90 },
+      stepper: { w: 90, h: 90 },
       led: { w: 80, h: 90 },
       led_green: { w: 80, h: 90 },
+      led_blue: { w: 80, h: 90 },
+      led_yellow: { w: 80, h: 90 },
+      '7seg_ca': { w: 90, h: 110 },
+      '7seg_cc': { w: 90, h: 110 },
       buzzer: { w: 80, h: 80 },
-      servo: { w: 128, h: 90 },
+      speaker: { w: 80, h: 80 },
       lcd16x2: { w: 176, h: 100 },
       dmm: { w: 160, h: 110 },
+      ammeter: { w: 130, h: 90 },
       scope: { w: 160, h: 100 },
+      signal_gen: { w: 140, h: 90 },
+      logic_state: { w: 70, h: 45 },
+      logic_probe: { w: 70, h: 45 },
+      vcc: { w: 60, h: 45 },
       gnd: { w: 80, h: 50 },
       dht11: { w: 80, h: 90 },
-      ultrasonic: { w: 150, h: 90 }
+      ultrasonic: { w: 150, h: 90 },
+      pir: { w: 80, h: 90 },
+      '7400': { w: 100, h: 70 },
+      '7402': { w: 100, h: 70 },
+      '7404': { w: 90, h: 60 },
+      '7408': { w: 100, h: 70 },
+      '7432': { w: 100, h: 70 },
+      '7486': { w: 100, h: 70 },
+      '7474': { w: 120, h: 100 },
+      '7476': { w: 120, h: 100 },
+      '74138': { w: 140, h: 140 },
+      '74151': { w: 140, h: 140 },
+      '74193': { w: 140, h: 140 },
+      '7447': { w: 140, h: 140 },
+      '4017': { w: 140, h: 145 },
+      '4066': { w: 140, h: 110 },
+      lm741: { w: 100, h: 80 },
+      lm358: { w: 100, h: 80 },
+      tl072: { w: 100, h: 80 },
+      ne555: { w: 120, h: 115 },
+      lm317: { w: 90, h: 70 },
+      lm7805: { w: 90, h: 70 },
+      lm7812: { w: 90, h: 70 },
+      lm393: { w: 100, h: 80 },
+      '1n4007': { w: 80, h: 50 },
+      '1n4148': { w: 80, h: 50 },
+      zener_5v1: { w: 80, h: 50 },
+      bridge_rectifier: { w: 90, h: 80 },
+      bc547: { w: 80, h: 70 },
+      '2n2222': { w: 80, h: 70 },
+      bc557: { w: 80, h: 70 },
+      '2n7000': { w: 80, h: 70 },
+      irf540n: { w: 80, h: 70 },
+      irf9540: { w: 80, h: 70 }
     };
 
     // =========================================================================
@@ -2393,6 +3763,681 @@
     }
 
     // =========================================================================
+    // PROTEUS SCHEMATIC SYMBOL PREVIEW COMPONENT
+    // =========================================================================
+    function ProteusSymbolPreview({ part }) {
+      if (!part) return <div className="w-full h-36 bg-[#070e1b] rounded-lg border border-slate-800 flex items-center justify-center text-xs text-slate-500 font-mono">No Device Selected</div>;
+
+      const id = part.id;
+      const isGate = ['7400', '7402', '7404', '7408', '7432', '7486'].includes(id);
+      const isOpAmp = ['lm741', 'lm358', 'tl072', 'lm393'].includes(id);
+      const isDiode = ['1n4007', '1n4148', 'zener_5v1', 'led', 'led_green', 'led_blue', 'led_yellow'].includes(id);
+      const isTransistor = ['bc547', '2n2222', 'bc557', '2n7000', 'irf540n', 'irf9540'].includes(id);
+      const isPassive = ['resistor', 'potentiometer', 'ldr', 'thermistor', 'capacitor', 'cap_ceramic', 'inductor'].includes(id);
+
+      return (
+        <div className="w-full h-36 bg-[#070e1b] rounded-lg border border-slate-800 relative select-none flex flex-col justify-between overflow-hidden shadow-inner">
+          <div className="absolute top-1.5 left-2 text-[9px] font-mono text-cyan-400 font-bold tracking-wider z-10">
+            SCHEMATIC SYMBOL
+          </div>
+          <div className="absolute top-1.5 right-2 text-[9px] font-mono text-slate-500 z-10">
+            {part.pins?.length || 2} PINS
+          </div>
+
+          <svg viewBox="0 0 240 140" className="w-full h-full">
+            {/* Grid Pattern */}
+            <defs>
+              <pattern id="symGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="0.6" fill="#1e293b" />
+              </pattern>
+            </defs>
+            <rect width="240" height="140" fill="url(#symGrid)" />
+
+            {/* 1. LOGIC GATES */}
+            {isGate && (
+              <g>
+                {/* Inputs */}
+                {id !== '7404' && (
+                  <>
+                    <line x1="35" y1="52" x2="80" y2="52" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                    <line x1="35" y1="88" x2="80" y2="88" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="35" cy="52" r="3" fill="#0284c7" />
+                    <circle cx="35" cy="88" r="3" fill="#0284c7" />
+                    <text x="42" y="47" fill="#94a3b8" fontSize="8" fontFamily="monospace">A</text>
+                    <text x="42" y="83" fill="#94a3b8" fontSize="8" fontFamily="monospace">B</text>
+                  </>
+                )}
+                {id === '7404' && (
+                  <>
+                    <line x1="45" y1="70" x2="85" y2="70" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="45" cy="70" r="3" fill="#0284c7" />
+                    <text x="52" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">A</text>
+                  </>
+                )}
+
+                {/* Gate Shapes */}
+                {(id === '7408' || id === '7400') && (
+                  <path d="M 80 40 H 115 A 30 30 0 0 1 115 100 H 80 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2.5" />
+                )}
+                {(id === '7432' || id === '7402') && (
+                  <path d="M 80 40 Q 100 70 80 100 Q 125 100 150 70 Q 125 40 80 40 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2.5" />
+                )}
+                {id === '7486' && (
+                  <g>
+                    <path d="M 70 40 Q 90 70 70 100" fill="none" stroke="#38bdf8" strokeWidth="2.5" />
+                    <path d="M 80 40 Q 100 70 80 100 Q 125 100 150 70 Q 125 40 80 40 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2.5" />
+                  </g>
+                )}
+                {id === '7404' && (
+                  <path d="M 85 45 L 140 70 L 85 95 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2.5" />
+                )}
+
+                {/* Inversion Bubble for NAND, NOR, NOT */}
+                {(id === '7400' || id === '7402') && (
+                  <circle cx="150" cy="70" r="5" fill="#070e1b" stroke="#38bdf8" strokeWidth="2" />
+                )}
+                {id === '7404' && (
+                  <circle cx="146" cy="70" r="5" fill="#070e1b" stroke="#38bdf8" strokeWidth="2" />
+                )}
+
+                {/* Output */}
+                <line x1={['7400', '7402', '7404'].includes(id) ? "152" : (id === '7408' ? "145" : "150")} y1="70" x2="195" y2="70" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="195" cy="70" r="3" fill="#0284c7" />
+                <text x="180" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">Y</text>
+                <text x="110" y="74" fill="#38bdf8" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{part.id}</text>
+              </g>
+            )}
+
+            {/* 2. OPERATIONAL AMPLIFIERS */}
+            {isOpAmp && (
+              <g>
+                <path d="M 75 35 L 155 70 L 75 105 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2.5" />
+                <line x1="35" y1="50" x2="75" y2="50" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <line x1="35" y1="90" x2="75" y2="90" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="35" cy="50" r="3" fill="#0284c7" />
+                <circle cx="35" cy="90" r="3" fill="#0284c7" />
+                <line x1="155" y1="70" x2="200" y2="70" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="200" cy="70" r="3" fill="#0284c7" />
+                <line x1="115" y1="18" x2="115" y2="52" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3,2" />
+                <line x1="115" y1="88" x2="115" y2="122" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3,2" />
+                <text x="82" y="54" fill="#ef4444" fontSize="12" fontFamily="monospace" fontWeight="bold">-</text>
+                <text x="82" y="94" fill="#38bdf8" fontSize="12" fontFamily="monospace" fontWeight="bold">+</text>
+                <text x="115" y="74" fill="#e2e8f0" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{part.name.split(' ')[0]}</text>
+                <text x="180" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">OUT</text>
+              </g>
+            )}
+
+            {/* 3. DIODES & LEDS */}
+            {isDiode && (
+              <g>
+                <line x1="45" y1="70" x2="105" y2="70" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="45" cy="70" r="3" fill="#0284c7" />
+                <path d="M 105 48 L 135 70 L 105 92 Z" fill="#0284c7" stroke="#38bdf8" strokeWidth="2" />
+                <line x1="135" y1="46" x2="135" y2="94" stroke="#38bdf8" strokeWidth="2.5" />
+                {id === 'zener_5v1' && (
+                  <>
+                    <line x1="130" y1="46" x2="135" y2="46" stroke="#38bdf8" strokeWidth="2" />
+                    <line x1="135" y1="94" x2="140" y2="94" stroke="#38bdf8" strokeWidth="2" />
+                  </>
+                )}
+                {part.id.startsWith('led') && (
+                  <g stroke="#f59e0b" strokeWidth="1.5">
+                    <line x1="120" y1="42" x2="135" y2="28" markerEnd="url(#arrow)" />
+                    <line x1="130" y1="46" x2="145" y2="32" />
+                  </g>
+                )}
+                <line x1="135" y1="70" x2="195" y2="70" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="195" cy="70" r="3" fill="#0284c7" />
+                <text x="50" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">A</text>
+                <text x="180" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">K</text>
+                <text x="120" y="112" fill="#38bdf8" fontSize="8" fontFamily="monospace" textAnchor="middle">{part.name.split(' ')[0]}</text>
+              </g>
+            )}
+
+            {/* 4. TRANSISTORS */}
+            {isTransistor && (
+              <g>
+                <circle cx="120" cy="70" r="32" fill="#0b2447" fillOpacity="0.4" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="4,3" />
+                <line x1="45" y1="70" x2="105" y2="70" stroke="#38bdf8" strokeWidth="2" />
+                <circle cx="45" cy="70" r="3" fill="#0284c7" />
+                <line x1="105" y1="50" x2="105" y2="90" stroke="#38bdf8" strokeWidth="3" />
+                <line x1="105" y1="60" x2="135" y2="45" stroke="#38bdf8" strokeWidth="2" />
+                <line x1="135" y1="45" x2="175" y2="45" stroke="#38bdf8" strokeWidth="2" />
+                <circle cx="175" cy="45" r="3" fill="#0284c7" />
+                <line x1="105" y1="80" x2="135" y2="95" stroke="#38bdf8" strokeWidth="2" />
+                <line x1="135" y1="95" x2="175" y2="95" stroke="#38bdf8" strokeWidth="2" />
+                <circle cx="175" cy="95" r="3" fill="#0284c7" />
+                <polygon points="122,86 132,94 125,97" fill="#38bdf8" />
+                <text x="52" y="64" fill="#94a3b8" fontSize="8" fontFamily="monospace">B/G</text>
+                <text x="160" y="38" fill="#94a3b8" fontSize="8" fontFamily="monospace">C/D</text>
+                <text x="160" y="110" fill="#94a3b8" fontSize="8" fontFamily="monospace">E/S</text>
+              </g>
+            )}
+
+            {/* 5. PASSIVES (Resistor, Cap, Inductor) */}
+            {isPassive && (
+              <g>
+                <line x1="40" y1="70" x2="70" y2="70" stroke="#38bdf8" strokeWidth="2" />
+                <circle cx="40" cy="70" r="3" fill="#0284c7" />
+                {part.id === 'capacitor' || part.id === 'cap_ceramic' ? (
+                  <>
+                    <line x1="100" y1="45" x2="100" y2="95" stroke="#38bdf8" strokeWidth="3" />
+                    <line x1="120" y1="45" x2="120" y2="95" stroke="#38bdf8" strokeWidth="3" />
+                    <line x1="120" y1="70" x2="180" y2="70" stroke="#38bdf8" strokeWidth="2" />
+                    <circle cx="180" cy="70" r="3" fill="#0284c7" />
+                    <text x="92" y="55" fill="#f59e0b" fontSize="10" fontFamily="monospace">+</text>
+                  </>
+                ) : (
+                  <>
+                    <path d="M 70 70 L 80 50 L 95 90 L 110 50 L 125 90 L 140 50 L 150 70 H 180" fill="none" stroke="#38bdf8" strokeWidth="2.5" />
+                    <circle cx="180" cy="70" r="3" fill="#0284c7" />
+                    {part.id === 'potentiometer' && (
+                      <polygon points="110,40 105,25 115,25" fill="#38bdf8" />
+                    )}
+                  </>
+                )}
+                <text x="110" y="110" fill="#38bdf8" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{part.name.split(' ')[0]}</text>
+              </g>
+            )}
+
+            {/* 6. GENERIC IC / MCU / INSTRUMENTS FALLBACK */}
+            {!isGate && !isOpAmp && !isDiode && !isTransistor && !isPassive && (
+              <g>
+                <rect x="55" y="25" width="130" height="90" rx="3" fill="#0b1b33" stroke="#38bdf8" strokeWidth="2" />
+                <path d="M 112 25 A 8 8 0 0 0 128 25" fill="none" stroke="#38bdf8" strokeWidth="2" />
+                {/* Pin Stubs */}
+                {[0, 1, 2, 3].map(i => (
+                  <g key={i}>
+                    <line x1="30" y1={40 + i * 18} x2="55" y2={40 + i * 18} stroke="#38bdf8" strokeWidth="1.5" />
+                    <circle cx="30" cy={40 + i * 18} r="2.5" fill="#0284c7" />
+                    <line x1="185" y1={40 + i * 18} x2="210" y2={40 + i * 18} stroke="#38bdf8" strokeWidth="1.5" />
+                    <circle cx="210" cy={40 + i * 18} r="2.5" fill="#0284c7" />
+                  </g>
+                ))}
+                <text x="120" y="65" fill="#38bdf8" fontSize="10" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{part.id.toUpperCase()}</text>
+                <text x="120" y="80" fill="#94a3b8" fontSize="8" fontFamily="monospace" textAnchor="middle">{part.package || 'IC'}</text>
+              </g>
+            )}
+          </svg>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // PROTEUS PCB FOOTPRINT PREVIEW COMPONENT
+    // =========================================================================
+    function ProteusFootprintPreview({ part }) {
+      if (!part) return <div className="w-full h-36 bg-[#042417] rounded-lg border border-emerald-900/60 flex items-center justify-center text-xs text-emerald-600 font-mono">No Package Selected</div>;
+
+      const pkg = part.package || 'DIP14';
+
+      return (
+        <div className="w-full h-36 bg-[#042417] rounded-lg border border-emerald-800/60 relative select-none flex flex-col justify-between overflow-hidden shadow-inner">
+          <div className="absolute top-1.5 left-2 text-[9px] font-mono text-emerald-400 font-bold tracking-wider z-10">
+            PCB FOOTPRINT
+          </div>
+          <div className="absolute top-1.5 right-2 text-[9px] font-mono text-emerald-500 z-10">
+            {pkg}
+          </div>
+
+          <svg viewBox="0 0 240 140" className="w-full h-full">
+            {/* PCB Texture */}
+            <rect width="240" height="140" fill="#042014" />
+
+            {/* DIP PACKAGES (DIP8, DIP14, DIP16, DIP30, DIP40) */}
+            {pkg.startsWith('DIP') && (() => {
+              const count = parseInt(pkg.replace('DIP', '')) || 14;
+              const sideCount = Math.min(8, Math.max(4, Math.floor(count / 2)));
+              const spacing = Math.min(14, 80 / sideCount);
+              const startY = 70 - ((sideCount - 1) * spacing) / 2;
+
+              return (
+                <g>
+                  {/* Silkscreen Outline */}
+                  <rect x="75" y="24" width="90" height="92" rx="2" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                  <path d="M 112 24 A 8 8 0 0 0 128 24" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+
+                  {/* Left Column Pads */}
+                  {[...Array(sideCount)].map((_, i) => (
+                    <g key={`l-${i}`}>
+                      {i === 0 ? (
+                        <rect x="52" y={startY + i * spacing - 5} width="11" height="11" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                      ) : (
+                        <circle cx="58" cy={startY + i * spacing} r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                      )}
+                      <circle cx="58" cy={startY + i * spacing} r="2.2" fill="#042014" />
+                    </g>
+                  ))}
+
+                  {/* Right Column Pads */}
+                  {[...Array(sideCount)].map((_, i) => (
+                    <g key={`r-${i}`}>
+                      <circle cx="182" cy={startY + i * spacing} r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                      <circle cx="182" cy={startY + i * spacing} r="2.2" fill="#042014" />
+                    </g>
+                  ))}
+                  <text x="120" y="74" fill="#a7f3d0" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{pkg}</text>
+                </g>
+              );
+            })()}
+
+            {/* TO-92 (Transistors) */}
+            {pkg === 'TO-92' && (
+              <g>
+                <path d="M 90 85 A 35 35 0 0 1 150 85 Z" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="94" y="66" width="10" height="10" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="99" cy="71" r="2.2" fill="#042014" />
+                <circle cx="120" cy="71" r="5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="120" cy="71" r="2.2" fill="#042014" />
+                <circle cx="141" cy="71" r="5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="141" cy="71" r="2.2" fill="#042014" />
+                <text x="120" y="110" fill="#a7f3d0" fontSize="9" fontFamily="monospace" textAnchor="middle">TO-92 (1-2-3)</text>
+              </g>
+            )}
+
+            {/* TO-220 (Regulators, Power MOSFETs) */}
+            {pkg === 'TO-220' && (
+              <g>
+                <rect x="75" y="35" width="90" height="55" rx="1" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="75" y="35" width="90" height="12" fill="#14532d" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="94" y="65" width="10" height="10" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="99" cy="70" r="2.5" fill="#042014" />
+                <circle cx="120" cy="70" r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="120" cy="70" r="2.5" fill="#042014" />
+                <circle cx="141" cy="70" r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="141" cy="70" r="2.5" fill="#042014" />
+                <text x="120" y="110" fill="#a7f3d0" fontSize="9" fontFamily="monospace" textAnchor="middle">TO-220 Vertical</text>
+              </g>
+            )}
+
+            {/* AXIAL RESISTOR */}
+            {(pkg.includes('AXIAL') || pkg.includes('RES')) && (
+              <g>
+                <rect x="85" y="55" width="70" height="30" rx="3" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="52" y="65" width="10" height="10" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="57" cy="70" r="2.5" fill="#042014" />
+                <line x1="62" y1="70" x2="85" y2="70" stroke="#e2e8f0" strokeWidth="1.5" />
+                <circle cx="183" cy="70" r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="183" cy="70" r="2.5" fill="#042014" />
+                <line x1="155" y1="70" x2="178" y2="70" stroke="#e2e8f0" strokeWidth="1.5" />
+                <text x="120" y="105" fill="#a7f3d0" fontSize="9" fontFamily="monospace" textAnchor="middle">{pkg}</text>
+              </g>
+            )}
+
+            {/* RADIAL / CAPACITOR / LED */}
+            {(pkg.includes('RAD') || pkg.includes('LED') || pkg.includes('DO-')) && (
+              <g>
+                <circle cx="120" cy="70" r="28" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="100" y="65" width="10" height="10" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="105" cy="70" r="2.5" fill="#042014" />
+                <circle cx="135" cy="70" r="5.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                <circle cx="135" cy="70" r="2.5" fill="#042014" />
+                <text x="96" y="58" fill="#f59e0b" fontSize="10" fontFamily="monospace" fontWeight="bold">+</text>
+                <text x="120" y="114" fill="#a7f3d0" fontSize="9" fontFamily="monospace" textAnchor="middle">{pkg}</text>
+              </g>
+            )}
+
+            {/* MODULE / VIRTUAL / OTHER */}
+            {!pkg.startsWith('DIP') && pkg !== 'TO-92' && pkg !== 'TO-220' && !pkg.includes('AXIAL') && !pkg.includes('RES') && !pkg.includes('RAD') && !pkg.includes('LED') && !pkg.includes('DO-') && (
+              <g>
+                <rect x="60" y="30" width="120" height="80" rx="4" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+                {[0, 1, 2, 3, 4, 5].map(i => (
+                  <circle key={i} cx={75 + i * 18} cy="100" r="4.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1.5" />
+                ))}
+                <text x="120" y="65" fill="#a7f3d0" fontSize="10" fontFamily="monospace" fontWeight="bold" textAnchor="middle">{pkg}</text>
+                <text x="120" y="78" fill="#6ee7b7" fontSize="8" fontFamily="monospace" textAnchor="middle">EDA FOOTPRINT</text>
+              </g>
+            )}
+          </svg>
+        </div>
+      );
+    }
+
+    // =========================================================================
+    // PROTEUS "PICK DEVICES" (HOTKEY 'P') 3-COLUMN LIBRARY MODAL
+    // =========================================================================
+    function PickDevicesModal({ isOpen, onClose, onSelectPart }) {
+      if (!isOpen) return null;
+
+      const [selectedCategory, setSelectedCategory] = useState('All');
+      const [selectedSubcategory, setSelectedSubcategory] = useState('All');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedPart, setSelectedPart] = useState(COMPONENT_LIBRARY[0] || null);
+
+      const searchInputRef = useRef(null);
+
+      // Auto-focus search input when opened
+      useEffect(() => {
+        if (isOpen && searchInputRef.current) {
+          setTimeout(() => searchInputRef.current?.focus(), 50);
+        }
+      }, [isOpen]);
+
+      // Category list with counts
+      const CATEGORIES = useMemo(() => {
+        const cats = [
+          'All',
+          'Microprocessors/MCUs',
+          'TTL 74 series',
+          'CMOS 4000 series',
+          'Analog ICs',
+          'Semiconductors & Actives',
+          'Passives & Discrete',
+          'Switches & Relays',
+          'Display & Audio',
+          'Virtual Instruments & Terminals'
+        ];
+        return cats.map(cat => ({
+          name: cat,
+          count: cat === 'All' ? COMPONENT_LIBRARY.length : COMPONENT_LIBRARY.filter(c => c.category === cat).length
+        }));
+      }, []);
+
+      // Available subcategories for the active category
+      const subcategories = useMemo(() => {
+        if (selectedCategory === 'All') return ['All'];
+        const subSet = new Set(
+          COMPONENT_LIBRARY
+            .filter(c => c.category === selectedCategory && c.subcategory)
+            .map(c => c.subcategory)
+        );
+        return ['All', ...Array.from(subSet)];
+      }, [selectedCategory]);
+
+      // Filtered items
+      const filteredParts = useMemo(() => {
+        return COMPONENT_LIBRARY.filter(item => {
+          const matchCat = selectedCategory === 'All' || item.category === selectedCategory;
+          const matchSub = selectedSubcategory === 'All' || item.subcategory === selectedSubcategory;
+          const q = searchQuery.toLowerCase().trim();
+          const matchSearch = !q ||
+            item.name.toLowerCase().includes(q) ||
+            item.desc.toLowerCase().includes(q) ||
+            item.id.toLowerCase().includes(q) ||
+            (item.tag && item.tag.toLowerCase().includes(q)) ||
+            (item.library && item.library.toLowerCase().includes(q)) ||
+            (item.package && item.package.toLowerCase().includes(q));
+          return matchCat && matchSub && matchSearch;
+        });
+      }, [selectedCategory, selectedSubcategory, searchQuery]);
+
+      // Ensure a selected part is always active
+      useEffect(() => {
+        if (filteredParts.length > 0) {
+          if (!filteredParts.some(p => p.id === selectedPart?.id)) {
+            setSelectedPart(filteredParts[0]);
+          }
+        }
+      }, [filteredParts, selectedPart]);
+
+      // Keyboard navigation (Esc, Enter, Up, Down)
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            onClose();
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedPart) {
+              onSelectPart(selectedPart);
+              onClose();
+            }
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const idx = filteredParts.findIndex(p => p.id === selectedPart?.id);
+            if (idx >= 0 && idx < filteredParts.length - 1) {
+              setSelectedPart(filteredParts[idx + 1]);
+            }
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const idx = filteredParts.findIndex(p => p.id === selectedPart?.id);
+            if (idx > 0) {
+              setSelectedPart(filteredParts[idx - 1]);
+            }
+          }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [selectedPart, filteredParts, onClose, onSelectPart]);
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none">
+          <div className="w-full max-w-5xl h-[650px] bg-[#0b1220] border-2 border-cyan-500/40 rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.2)] flex flex-col text-slate-100 overflow-hidden font-sans">
+            
+            {/* Modal Title Bar (Proteus ISIS styling) */}
+            <div className="h-11 bg-gradient-to-r from-slate-900 via-[#0f233f] to-slate-900 border-b border-cyan-500/30 px-4 flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <span className="w-6 h-6 rounded bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm shadow-cyan-500/50">
+                  P
+                </span>
+                <span className="font-mono font-bold text-xs tracking-wider text-cyan-300">
+                  PROTEUS ISIS — PICK DEVICES (VSM EDA LIBRARY)
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-700/50">
+                  {filteredParts.length} Parts Available
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-3 text-xs font-mono">
+                <span className="text-slate-400 text-[11px] hidden sm:inline">Press <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-cyan-300 font-bold">Enter</kbd> to Place • <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-cyan-300 font-bold">Esc</kbd> to Close</span>
+                <button
+                  onClick={onClose}
+                  className="w-7 h-7 rounded hover:bg-rose-600/80 text-slate-400 hover:text-white flex items-center justify-center transition"
+                  title="Close (Esc)"
+                >
+                  <IconX className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* 3-Column Body */}
+            <div className="flex-1 flex overflow-hidden">
+              
+              {/* Column 1: Categories & Sub-Categories */}
+              <div className="w-64 bg-[#080e1a] border-r border-slate-800 flex flex-col p-3 space-y-3">
+                <div className="font-mono font-bold text-[11px] tracking-wider text-slate-400 uppercase flex items-center justify-between pb-1 border-b border-slate-800">
+                  <span>CATEGORIES</span>
+                  <span className="text-[10px] text-cyan-400">{CATEGORIES.length - 1}</span>
+                </div>
+
+                <div className="flex-1 overflow-y-auto space-y-1 pr-1 font-mono text-xs">
+                  {CATEGORIES.map(cat => {
+                    const isSelected = selectedCategory === cat.name;
+                    return (
+                      <button
+                        key={cat.name}
+                        onClick={() => {
+                          setSelectedCategory(cat.name);
+                          setSelectedSubcategory('All');
+                        }}
+                        className={`w-full text-left px-2.5 py-1.5 rounded transition flex items-center justify-between text-xs ${
+                          isSelected
+                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-bold shadow-xs'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                        }`}
+                      >
+                        <span className="truncate">{cat.name}</span>
+                        <span className="text-[10px] opacity-60 ml-1">({cat.count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Subcategory Section */}
+                {subcategories.length > 1 && (
+                  <div className="pt-2 border-t border-slate-800">
+                    <div className="font-mono font-bold text-[10px] tracking-wider text-slate-400 uppercase pb-1 mb-1">
+                      SUBCATEGORIES
+                    </div>
+                    <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto">
+                      {subcategories.map(sub => (
+                        <button
+                          key={sub}
+                          onClick={() => setSelectedSubcategory(sub)}
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded transition ${
+                            selectedSubcategory === sub
+                              ? 'bg-cyan-400 text-slate-950 font-bold'
+                              : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                          }`}
+                        >
+                          {sub}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Column 2: Search Input & Devices Table */}
+              <div className="flex-1 bg-[#091122] flex flex-col p-3 overflow-hidden">
+                {/* Search Bar */}
+                <div className="relative mb-2.5">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search device name, keyword, IC code (e.g. 7408, 8051, LM741, LED)..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-[#050b14] border border-cyan-500/30 focus:border-cyan-400 rounded-lg pl-9 pr-8 py-2 text-xs text-cyan-100 placeholder-slate-500 focus:outline-none font-mono shadow-inner"
+                  />
+                  <IconSearch className="w-4 h-4 text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    >
+                      <IconX className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Devices Table Header */}
+                <div className="grid grid-cols-12 bg-[#060c18] border border-slate-800 px-3 py-1.5 rounded-t text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="col-span-4">Device / Part</div>
+                  <div className="col-span-5">Description</div>
+                  <div className="col-span-3 text-right">Library & Package</div>
+                </div>
+
+                {/* Devices Table Rows */}
+                <div className="flex-1 overflow-y-auto border-x border-b border-slate-800 rounded-b divide-y divide-slate-800/60 bg-[#050b16]">
+                  {filteredParts.length === 0 ? (
+                    <div className="p-8 text-center text-slate-500 font-mono text-xs">
+                      No matching devices found for "{searchQuery}".
+                    </div>
+                  ) : (
+                    filteredParts.map(part => {
+                      const isSelected = selectedPart?.id === part.id;
+                      return (
+                        <div
+                          key={part.id}
+                          onClick={() => setSelectedPart(part)}
+                          onDoubleClick={() => {
+                            setSelectedPart(part);
+                            onSelectPart(part);
+                            onClose();
+                          }}
+                          className={`grid grid-cols-12 px-3 py-2 cursor-pointer transition items-center font-mono text-xs ${
+                            isSelected
+                              ? 'bg-cyan-950/70 border-l-4 border-l-cyan-400 text-cyan-100 shadow-sm'
+                              : 'text-slate-300 hover:bg-slate-900/60 hover:text-white'
+                          }`}
+                        >
+                          <div className="col-span-4 font-bold flex items-center space-x-1.5 truncate">
+                            <span className="text-cyan-400 text-[10px]">■</span>
+                            <span className="truncate">{part.name}</span>
+                          </div>
+                          <div className="col-span-5 text-[11px] text-slate-400 truncate pr-2">
+                            {part.desc}
+                          </div>
+                          <div className="col-span-3 text-right text-[10px] flex items-center justify-end space-x-1.5">
+                            <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                              {part.library || 'EDA'}
+                            </span>
+                            <span className="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                              {part.package || 'DIP'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              {/* Column 3: Schematic Symbol + PCB Footprint Previews */}
+              <div className="w-80 bg-[#080e1a] border-l border-slate-800 flex flex-col p-3 space-y-3 overflow-y-auto">
+                {/* 1. Schematic Symbol Preview */}
+                <ProteusSymbolPreview part={selectedPart} />
+
+                {/* 2. PCB Footprint Preview */}
+                <ProteusFootprintPreview part={selectedPart} />
+
+                {/* 3. Component Details Card */}
+                {selectedPart && (
+                  <div className="bg-[#050b16] rounded-lg p-2.5 border border-slate-800 text-slate-300 font-mono text-xs space-y-1.5 shadow-sm">
+                    <div className="flex items-center justify-between pb-1 border-b border-slate-800">
+                      <span className="font-bold text-cyan-300 text-xs">{selectedPart.name}</span>
+                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                        {selectedPart.tag || 'IC'}
+                      </span>
+                    </div>
+
+                    <div className="text-[11px] text-slate-400 leading-snug">
+                      {selectedPart.desc}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-1 pt-1 text-[10px] text-slate-400">
+                      <div>Category: <strong className="text-slate-200">{selectedPart.category.split(' ')[0]}</strong></div>
+                      <div>Library: <strong className="text-cyan-400">{selectedPart.library || 'DEVICE.LIB'}</strong></div>
+                      <div>Footprint: <strong className="text-emerald-400">{selectedPart.package || 'DIP'}</strong></div>
+                      <div>Terminals: <strong className="text-slate-200">{selectedPart.pins?.length || 2}</strong></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Modal Bottom Action Bar */}
+            <div className="h-14 bg-slate-900 border-t border-slate-800 px-4 flex items-center justify-between text-xs font-mono">
+              <div className="flex items-center space-x-2 text-slate-400">
+                <span>Selected:</span>
+                <span className="font-bold text-cyan-300">
+                  {selectedPart ? `${selectedPart.name} [${selectedPart.package || 'DIP'}]` : 'None'}
+                </span>
+                <span className="text-slate-600">• Double click row or press Enter to add to canvas</span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={onClose}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                >
+                  Cancel (Esc)
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (selectedPart) {
+                      onSelectPart(selectedPart);
+                      onClose();
+                    }
+                  }}
+                  disabled={!selectedPart}
+                  className="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition shadow-md shadow-cyan-600/30 flex items-center space-x-1.5 transform active:scale-95 disabled:opacity-50"
+                >
+                  <IconCheck className="w-4 h-4 text-white" />
+                  <span>Place Component (Enter)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
     // VIEW MODE 1: 2D CIRCUIT LAYER (SCHEMATIC CANVAS ENGINE)
     // =========================================================================
     function SchematicCanvasView({
@@ -2431,6 +4476,7 @@
       currentLocation
     }) {
       const canvasContainerRef = useRef(null);
+      const [pickDevicesOpen, setPickDevicesOpen] = useState(false);
       const [wiringStartPin, setWiringStartPin] = useState(null); // { partId, pinId, x, y, isDragging }
       const [hoveredPin, setHoveredPin] = useState(null); // { partId, pinId, x, y, pinName, partName }
       const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -2441,21 +4487,38 @@
 
       const CATEGORIES = [
         'All',
-        'Microcontrollers',
-        'Power',
-        'Sensors',
+        'Microprocessors/MCUs',
+        'TTL 74 series',
+        'CMOS 4000 series',
+        'Analog ICs',
+        'Semiconductors & Actives',
         'Passives & Discrete',
-        'Semiconductors & Actuators',
-        'Instruments'
+        'Switches & Relays',
+        'Display & Audio',
+        'Virtual Instruments & Terminals'
       ];
 
-      // Add component from library drawer
+      // Add component from library drawer or Pick Devices dialog
       const handleAddComponent = (template, customPos = null) => {
         const newId = `part-${template.id}-${Date.now().toString().slice(-4)}`;
         let newPins = [];
         let extraProps = {};
 
-        if (template.id === 'arduino_uno') {
+        // Preferred: Use template.pins if defined directly on catalog item
+        if (template.pins && Array.isArray(template.pins) && template.pins.length > 0) {
+          newPins = template.pins.map(p => ({ ...p }));
+          if (template.id === 'logic_state') {
+            extraProps.state = 0;
+          } else if (template.id === 'push_button') {
+            extraProps.isPressed = false;
+          } else if (template.id === 'toggle_switch') {
+            extraProps.isClosed = false;
+          }
+          if (template.id === 'led_green') extraProps.color = 'green';
+          else if (template.id === 'led_blue') extraProps.color = 'blue';
+          else if (template.id === 'led_yellow') extraProps.color = 'yellow';
+          else if (template.id === 'led') extraProps.color = 'red';
+        } else if (template.id === 'arduino_uno') {
           newPins = [
             { id: 'D13', name: 'D13', label: '13', side: 'top', relX: 30, relY: 0 },
             { id: 'D12', name: 'D12', label: '12', side: 'top', relX: 50, relY: 0 },
@@ -2591,10 +4654,15 @@
         setSelectedPartId(newId);
       };
 
-      // Keyboard delete wire or part, and Escape to cancel wiring
+      // Keyboard delete wire or part, Escape to cancel wiring, and 'P' to open Pick Devices
       useEffect(() => {
         const handleKeyDown = (e) => {
-          if (e.key === 'Escape') {
+          if (e.key === 'p' || e.key === 'P') {
+            if (!e.target.closest('input') && !e.target.closest('textarea')) {
+              e.preventDefault();
+              setPickDevicesOpen(true);
+            }
+          } else if (e.key === 'Escape') {
             setWiringStartPin(null);
             setHoveredPin(null);
             setSelectedPartId(null);
@@ -3093,6 +5161,23 @@
                 <span className="text-[10px] font-mono text-slate-500">{filteredCatalog.length} Parts</span>
               </div>
 
+              {/* Proteus "Pick Devices" Button (Hotkey P) */}
+              <button
+                onClick={() => setPickDevicesOpen(true)}
+                className="w-full mb-2.5 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs font-mono shadow-md shadow-blue-600/30 flex items-center justify-between transition transform active:scale-98 group cursor-pointer"
+                title="Open Proteus Pick Devices Library (Hotkey P)"
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="w-5 h-5 rounded bg-white/20 text-white font-black text-xs flex items-center justify-center border border-white/30 group-hover:bg-white group-hover:text-blue-600 transition">
+                    P
+                  </span>
+                  <span className="tracking-wide">PICK DEVICES</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-cyan-200 font-mono border border-cyan-400/30">
+                  [ P ]
+                </span>
+              </button>
+
               {/* Search Bar Input */}
               <div className="relative mb-2.5">
                 <input
@@ -3204,8 +5289,89 @@
                     const start = getPinCoord(wire.fromPart, wire.fromPin);
                     const end = getPinCoord(wire.toPart, wire.toPin);
                     const isSelected = selectedWireId === wire.id;
-                    const midX = start.x + (end.x - start.x) * 0.5;
-                    const pathD = `M ${start.x} ${start.y} L ${midX} ${start.y} L ${midX} ${end.y} L ${end.x} ${end.y}`;
+
+                    const fromPartObj = schematicParts.find(p => p.id === wire.fromPart);
+                    const toPartObj = schematicParts.find(p => p.id === wire.toPart);
+                    const fromPinObj = fromPartObj?.pins?.find(p => p.id === wire.fromPin);
+                    const toPinObj = toPartObj?.pins?.find(p => p.id === wire.toPin);
+
+                    // 1. Right-Angle (Orthogonal / Manhattan) Routing
+                    let pathD = '';
+                    if (start.y === end.y || start.x === end.x) {
+                      pathD = `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+                    } else if (fromPinObj?.side === 'top' || fromPinObj?.side === 'bottom') {
+                      const midY = start.y + (end.y - start.y) * 0.5;
+                      pathD = `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
+                    } else {
+                      const midX = start.x + (end.x - start.x) * 0.5;
+                      pathD = `M ${start.x} ${start.y} L ${midX} ${start.y} L ${midX} ${end.y} L ${end.x} ${end.y}`;
+                    }
+
+                    // 2. Dynamic Logic Level Resolution
+                    const getPinLogic = (partId, pinId) => {
+                      const part = schematicParts.find(p => p.id === partId);
+                      if (!part) return null;
+                      const pin = part.pins?.find(p => p.id === pinId);
+                      const pName = (pin?.name || pin?.label || pinId || '').toUpperCase();
+
+                      // Power Rails
+                      if (['5V', '3V3', '3.3V', 'VCC', 'VIN', 'V+', 'VDD', 'PWR'].some(v => pName.includes(v))) return 1;
+                      if (['GND', 'COM', 'V-', 'VSS', '0V'].some(g => pName.includes(g))) return 0;
+
+                      // Microcontroller Digital Pins
+                      if (part.type === 'arduino_uno' && pinId === 'D13') return isD13High ? 1 : 0;
+                      if (part.type === 'esp32' && pinId === 'D2') return isEspD2High ? 1 : 0;
+
+                      // Interactive Digital State Toggle
+                      if (part.type === 'logic_state') return (part.state ?? 0) === 1 ? 1 : 0;
+
+                      // Logic Gates output evaluation
+                      if (['7400', '7402', '7404', '7408', '7432', '7486'].includes(part.type) && pinId === 'Y') {
+                        // Find incoming wires connected to inputs A and B
+                        const aWire = wires.find(w => (w.toPart === part.id && w.toPin === 'A') || (w.fromPart === part.id && w.fromPin === 'A'));
+                        const bWire = wires.find(w => (w.toPart === part.id && w.toPin === 'B') || (w.fromPart === part.id && w.fromPin === 'B'));
+                        const aVal = aWire ? (aWire.fromPart === part.id ? getPinLogic(aWire.toPart, aWire.toPin) : getPinLogic(aWire.fromPart, aWire.fromPin)) : null;
+                        const bVal = bWire ? (bWire.fromPart === part.id ? getPinLogic(bWire.toPart, bWire.toPin) : getPinLogic(bWire.fromPart, bWire.fromPin)) : null;
+
+                        if (part.type === '7404') {
+                          return aVal !== null ? (aVal === 1 ? 0 : 1) : null;
+                        }
+                        if (aVal !== null && bVal !== null) {
+                          if (part.type === '7408') return (aVal === 1 && bVal === 1) ? 1 : 0;
+                          if (part.type === '7400') return (aVal === 1 && bVal === 1) ? 0 : 1;
+                          if (part.type === '7432') return (aVal === 1 || bVal === 1) ? 1 : 0;
+                          if (part.type === '7402') return (aVal === 1 || bVal === 1) ? 0 : 1;
+                          if (part.type === '7486') return (aVal !== bVal) ? 1 : 0;
+                        }
+                      }
+
+                      return null;
+                    };
+
+                    const fromLevel = getPinLogic(wire.fromPart, wire.fromPin);
+                    const toLevel = getPinLogic(wire.toPart, wire.toPin);
+                    const wireLogic = fromLevel !== null ? fromLevel : (toLevel !== null ? toLevel : null);
+
+                    // Color assignment: RED = HIGH (1), BLUE = LOW (0), EMERALD = PASSIVE
+                    let coreColor = '#059669';
+                    let glowColor = '#10b981';
+                    let dotColor = '#34d399';
+
+                    if (wireLogic === 1) {
+                      coreColor = '#ef4444';
+                      glowColor = '#f87171';
+                      dotColor = '#dc2626';
+                    } else if (wireLogic === 0) {
+                      coreColor = '#2563eb';
+                      glowColor = '#60a5fa';
+                      dotColor = '#1d4ed8';
+                    }
+
+                    if (isSelected) {
+                      coreColor = '#38bdf8';
+                      glowColor = '#7dd3fc';
+                      dotColor = '#38bdf8';
+                    }
 
                     return (
                       <g 
@@ -3223,24 +5389,24 @@
                         <path
                           d={pathD}
                           fill="none"
-                          stroke={isSelected ? '#38bdf8' : '#10b981'}
+                          stroke={glowColor}
                           strokeWidth={isSelected ? '7' : '4'}
-                          strokeOpacity={isSelected ? '0.7' : '0.2'}
+                          strokeOpacity={isSelected ? '0.7' : '0.25'}
                           strokeLinecap="round"
                         />
                         {/* Wire core line */}
                         <path
                           d={pathD}
                           fill="none"
-                          stroke={isSelected ? '#2563eb' : '#059669'}
+                          stroke={coreColor}
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
                         {/* Terminal solder dots at endpoints */}
-                        <circle cx={start.x} cy={start.y} r="4" fill="#0f172a" stroke={isSelected ? '#38bdf8' : '#10b981'} strokeWidth="1.5" />
-                        <circle cx={start.x} cy={start.y} r="2" fill={isSelected ? '#38bdf8' : '#34d399'} />
-                        <circle cx={end.x} cy={end.y} r="4" fill="#0f172a" stroke={isSelected ? '#38bdf8' : '#10b981'} strokeWidth="1.5" />
-                        <circle cx={end.x} cy={end.y} r="2" fill={isSelected ? '#38bdf8' : '#34d399'} />
+                        <circle cx={start.x} cy={start.y} r="4" fill="#0f172a" stroke={glowColor} strokeWidth="1.5" />
+                        <circle cx={start.x} cy={start.y} r="2" fill={dotColor} />
+                        <circle cx={end.x} cy={end.y} r="4" fill="#0f172a" stroke={glowColor} strokeWidth="1.5" />
+                        <circle cx={end.x} cy={end.y} r="2" fill={dotColor} />
                       </g>
                     );
                   })}
@@ -3627,8 +5793,230 @@
                         </div>
                       )}
 
+                      {/* 13. INTERACTIVE LOGIC STATE TOGGLE */}
+                      {part.type === 'logic_state' && (
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSchematicParts(prev => prev.map(p => p.id === part.id ? { ...p, state: (p.state ?? 0) === 1 ? 0 : 1 } : p));
+                          }}
+                          className={`w-[70px] h-[45px] rounded-lg border-2 flex items-center justify-between px-2 cursor-pointer transition select-none shadow-md ${
+                            (part.state ?? 0) === 1 
+                              ? 'bg-rose-600 border-white text-white shadow-[0_0_15px_#ef4444]' 
+                              : 'bg-blue-600 border-white text-white shadow-[0_0_15px_#2563eb]'
+                          }`}
+                          title="Click to toggle Logic State (0 / 1)"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-[7px] font-mono font-bold uppercase tracking-wider text-white/80">STATE</span>
+                            <span className="text-[6px] font-mono text-white/60">TOGGLE</span>
+                          </div>
+                          <div className="text-xl font-black font-mono">
+                            {(part.state ?? 0) === 1 ? '1' : '0'}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 14. DYNAMIC LOGIC PROBE */}
+                      {part.type === 'logic_probe' && (() => {
+                        const inWire = wires.find(w => (w.toPart === part.id && w.toPin === 'in') || (w.fromPart === part.id && w.fromPin === 'in'));
+                        let level = null;
+                        if (inWire) {
+                          const otherPart = inWire.toPart === part.id ? inWire.fromPart : inWire.toPart;
+                          const otherPin = inWire.toPart === part.id ? inWire.fromPin : inWire.toPin;
+                          const p = schematicParts.find(x => x.id === otherPart);
+                          if (p) {
+                            const pPin = p.pins?.find(x => x.id === otherPin);
+                            const pName = (pPin?.name || pPin?.label || otherPin || '').toUpperCase();
+                            if (['5V', '3V3', '3.3V', 'VCC', 'VIN', 'V+', 'VDD', 'PWR'].some(v => pName.includes(v))) level = 1;
+                            else if (['GND', 'COM', 'V-', 'VSS', '0V'].some(g => pName.includes(g))) level = 0;
+                            else if (p.type === 'arduino_uno' && otherPin === 'D13') level = isD13High ? 1 : 0;
+                            else if (p.type === 'esp32' && otherPin === 'D2') level = isEspD2High ? 1 : 0;
+                            else if (p.type === 'logic_state') level = (p.state ?? 0) === 1 ? 1 : 0;
+                          }
+                        }
+                        return (
+                          <div className={`w-[70px] h-[45px] rounded-lg border-2 flex items-center justify-between px-2 select-none shadow-md ${
+                            level === 1 ? 'bg-rose-950/90 border-rose-500 text-rose-400 shadow-[0_0_12px_#ef4444]' :
+                            level === 0 ? 'bg-blue-950/90 border-blue-500 text-blue-400 shadow-[0_0_12px_#2563eb]' :
+                            'bg-slate-900 border-slate-700 text-slate-500'
+                          }`}>
+                            <div className="flex flex-col">
+                              <span className="text-[7px] font-mono font-bold uppercase tracking-wider">PROBE</span>
+                              <span className="text-[6px] font-mono text-slate-400">{level === 1 ? 'HIGH' : level === 0 ? 'LOW' : 'HI-Z'}</span>
+                            </div>
+                            <div className="text-xl font-black font-mono">
+                              {level === 1 ? '1' : level === 0 ? '0' : '?'}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* 15. LOGIC GATES (IEEE STANDARD VECTOR SYMBOLS) */}
+                      {['7400', '7402', '7404', '7408', '7432', '7486'].includes(part.type) && (
+                        <div className="w-full h-full bg-[#070e1b] border border-cyan-500/50 rounded-lg p-1 select-none shadow-md relative overflow-hidden flex flex-col justify-between">
+                          <div className="flex justify-between items-center text-[7px] font-mono text-cyan-400 px-1 pt-0.5">
+                            <span className="font-bold">{part.name.split(' ')[0]}</span>
+                            <span className="text-slate-500">{part.tag}</span>
+                          </div>
+                          <svg viewBox="0 0 100 50" className="w-full h-9">
+                            {(part.type === '7408' || part.type === '7400') && (
+                              <path d="M 25 10 H 50 A 15 15 0 0 1 50 40 H 25 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2" />
+                            )}
+                            {(part.type === '7432' || part.type === '7402') && (
+                              <path d="M 25 10 Q 40 25 25 40 Q 60 40 75 25 Q 60 10 25 10 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2" />
+                            )}
+                            {part.type === '7486' && (
+                              <g>
+                                <path d="M 18 10 Q 33 25 18 40" fill="none" stroke="#38bdf8" strokeWidth="2" />
+                                <path d="M 25 10 Q 40 25 25 40 Q 60 40 75 25 Q 60 10 25 10 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2" />
+                              </g>
+                            )}
+                            {part.type === '7404' && (
+                              <path d="M 30 12 L 65 25 L 30 38 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2" />
+                            )}
+                            {['7400', '7402', '7404'].includes(part.type) && (
+                              <circle cx={part.type === '7404' ? '70' : '70'} cy="25" r="3.5" fill="#070e1b" stroke="#38bdf8" strokeWidth="1.5" />
+                            )}
+                          </svg>
+                          <div className="flex justify-between items-center text-[6px] font-mono text-slate-400 px-1 pb-0.5">
+                            <span>IN: A/B</span>
+                            <span>OUT: Y</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 16. OPERATIONAL AMPLIFIERS */}
+                      {['lm741', 'lm358', 'tl072', 'lm393'].includes(part.type) && (
+                        <div className="w-full h-full bg-[#070e1b] border border-cyan-500/50 rounded-lg p-1 select-none shadow-md relative flex flex-col justify-between">
+                          <div className="flex justify-between items-center text-[7px] font-mono text-cyan-400 px-1">
+                            <span className="font-bold">{part.name.split(' ')[0]}</span>
+                            <span className="text-[6px] text-slate-400">OP-AMP</span>
+                          </div>
+                          <svg viewBox="0 0 100 50" className="w-full h-11">
+                            <path d="M 25 8 L 75 25 L 25 42 Z" fill="#0b2447" stroke="#38bdf8" strokeWidth="2" />
+                            <text x="30" y="19" fill="#ef4444" fontSize="10" fontFamily="monospace" fontWeight="bold">-</text>
+                            <text x="30" y="37" fill="#38bdf8" fontSize="10" fontFamily="monospace" fontWeight="bold">+</text>
+                            <text x="50" y="27" fill="#a5f3fc" fontSize="7" fontFamily="monospace" fontWeight="bold">OP</text>
+                          </svg>
+                          <div className="flex justify-between items-center text-[6px] font-mono text-slate-400 px-1">
+                            <span>V- / V+</span>
+                            <span>OUT</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 17. PROTEUS DIP IC BLOCKS (AT89C51, 74138, 74151, NE555, 4017, PIC, ETC) */}
+                      {['at89c51', 'pic16f877a', 'arduino_nano', '7474', '7476', '74138', '74151', '74193', '7447', '4017', '4066', 'ne555', 'lm317', 'lm7805', 'lm7812'].includes(part.type) && (
+                        <div className="w-full h-full bg-[#0b1526] border-2 border-cyan-500/60 rounded-xl p-2 select-none shadow-xl relative flex flex-col justify-between text-slate-200">
+                          {/* IC Top Notch */}
+                          <div className="w-full flex justify-center -mt-2">
+                            <div className="w-6 h-2 bg-[#070e1b] border-b border-x border-cyan-500/40 rounded-b"></div>
+                          </div>
+                          <div className="text-center font-mono my-auto">
+                            <div className="text-xs font-black tracking-wider text-cyan-300">{part.name.split(' ')[0]}</div>
+                            <div className="text-[8px] text-slate-400 truncate max-w-[170px] mx-auto mt-0.5">{part.desc}</div>
+                            <div className="text-[7px] text-cyan-500/80 mt-1 uppercase tracking-widest">{part.package || 'DIP'} • {part.library || 'EDA'}</div>
+                          </div>
+                          <div className="flex justify-between text-[7px] font-mono text-slate-500 border-t border-slate-800 pt-1">
+                            <span>{part.pins?.length || 8} PINS</span>
+                            <span>VSM SIM</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 18. SEMICONDUCTORS (DIODES & TRANSISTORS) */}
+                      {['1n4007', '1n4148', 'zener_5v1', 'bridge_rectifier', 'bc547', '2n2222', 'bc557', '2n7000', 'irf540n', 'irf9540'].includes(part.type) && (
+                        <div className="w-full h-full bg-[#070e1b] border border-cyan-500/40 rounded-lg p-1.5 shadow-md flex flex-col justify-between text-slate-300 select-none">
+                          <div className="flex justify-between text-[7px] font-mono text-cyan-300">
+                            <span className="font-bold">{part.name.split(' ')[0]}</span>
+                            <span className="text-slate-500">{part.package || 'TO-92'}</span>
+                          </div>
+                          <div className="flex items-center justify-center my-0.5">
+                            <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                              {part.tag || 'SEMI'}
+                            </span>
+                          </div>
+                          <div className="text-[6px] font-mono text-slate-400 text-center truncate">
+                            {part.pins?.map(p => p.label).join(' • ')}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 19. BLUE & YELLOW LEDS */}
+                      {(part.type === 'led_blue' || part.type === 'led_yellow') && (
+                        <div className="w-[80px] h-[90px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
+                          <span className="text-[9px] font-mono font-bold text-slate-700">
+                            {part.type === 'led_blue' ? 'LED (BLU)' : 'LED (YEL)'}
+                          </span>
+                          <div className="relative my-0.5">
+                            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
+                              isD13High
+                                ? part.type === 'led_blue'
+                                  ? 'bg-sky-500 border-white shadow-[0_0_16px_#38bdf8]'
+                                  : 'bg-amber-400 border-white shadow-[0_0_16px_#f59e0b]'
+                                : 'bg-slate-200 border-slate-300'
+                            }`}>
+                              <span className={`text-[8px] font-bold ${isD13High ? 'text-white' : 'text-slate-500'}`}>
+                                {isD13High ? 'ON' : 'OFF'}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-[7px] font-mono text-slate-500 font-semibold">
+                            {isD13High ? 'VF: 2.4V' : '0.0V'}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* 20. 7-SEGMENT DISPLAY */}
+                      {(part.type === '7seg_ca' || part.type === '7seg_cc') && (
+                        <div className="w-[90px] h-[110px] bg-[#090d16] border-2 border-cyan-500/50 rounded-xl p-2 shadow-xl flex flex-col justify-between text-slate-300 select-none">
+                          <div className="text-[7px] font-mono text-cyan-400 text-center font-bold">
+                            7-SEG ({part.type === '7seg_ca' ? 'CA' : 'CC'})
+                          </div>
+                          <div className="w-10 h-16 mx-auto bg-black rounded border border-slate-800 flex items-center justify-center shadow-inner">
+                            <span className="text-3xl font-mono font-black text-rose-500 shadow-[0_0_8px_#ef4444]">
+                              8
+                            </span>
+                          </div>
+                          <div className="text-[6px] font-mono text-slate-500 text-center">a b c d e f g dp</div>
+                        </div>
+                      )}
+
+                      {/* 21. INTERACTIVE SWITCHES & BUTTONS */}
+                      {(part.type === 'push_button' || part.type === 'toggle_switch') && (
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSchematicParts(prev => prev.map(p => p.id === part.id ? { ...p, isClosed: !p.isClosed } : p));
+                          }}
+                          className={`w-[80px] h-[60px] rounded-lg border-2 p-1.5 flex flex-col justify-between cursor-pointer select-none shadow-md transition ${
+                            part.isClosed ? 'bg-emerald-50 border-emerald-500 text-emerald-800' : 'bg-white border-slate-300 text-slate-700'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center text-[7px] font-mono font-bold">
+                            <span>{part.type === 'push_button' ? 'BUTTON' : 'SWITCH'}</span>
+                            <span className={`px-1 rounded text-[6px] ${part.isClosed ? 'bg-emerald-200 text-emerald-900 font-bold' : 'bg-slate-200 text-slate-600'}`}>
+                              {part.isClosed ? 'CLOSED' : 'OPEN'}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-center my-0.5">
+                            <span className="text-lg">{part.isClosed ? '🔘' : '⚪'}</span>
+                          </div>
+                          <div className="text-[6px] font-mono text-slate-500 text-center">Click to toggle</div>
+                        </div>
+                      )}
+
+                      {/* 22. VCC POWER TERMINAL */}
+                      {part.type === 'vcc' && (
+                        <div className="w-[60px] h-[45px] bg-white border border-rose-300 rounded-lg p-1 shadow-sm flex flex-col items-center justify-center text-rose-600 select-none">
+                          <span className="text-xs font-black">▲</span>
+                          <span className="text-[8px] font-mono font-bold text-rose-700">+5V VCC</span>
+                        </div>
+                      )}
+
                       {/* Fallback for other components */}
-                      {!['arduino_uno', 'ldr', 'resistor', 'potentiometer', 'led', 'led_green', 'buzzer', 'servo', 'lcd16x2', 'dmm', 'gnd', 'solar', 'esp32'].includes(part.type) && (
+                      {!['arduino_uno', 'ldr', 'resistor', 'potentiometer', 'led', 'led_green', 'led_blue', 'led_yellow', 'buzzer', 'servo', 'lcd16x2', 'dmm', 'gnd', 'solar', 'esp32', 'logic_state', 'logic_probe', '7400', '7402', '7404', '7408', '7432', '7486', 'lm741', 'lm358', 'tl072', 'lm393', 'at89c51', 'pic16f877a', 'arduino_nano', '7474', '7476', '74138', '74151', '74193', '7447', '4017', '4066', 'ne555', 'lm317', 'lm7805', 'lm7812', '1n4007', '1n4148', 'zener_5v1', 'bridge_rectifier', 'bc547', '2n2222', 'bc557', '2n7000', 'irf540n', 'irf9540', '7seg_ca', '7seg_cc', 'push_button', 'toggle_switch', 'vcc'].includes(part.type) && (
                         <div className="w-full h-full bg-white border-2 border-slate-400 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <div className="text-[9px] font-mono font-bold text-slate-700 uppercase tracking-wider">{part.name}</div>
                           <div className="text-[8px] font-mono px-1 rounded bg-slate-100 text-slate-600 border border-slate-200">{part.tag || 'IC'}</div>
@@ -3680,6 +6068,17 @@
           {/* PRINT-ONLY BILL OF MATERIALS (BOM) & NETLIST TABLE       */}
           {/* ======================================================== */}
           <BillOfMaterialsTable schematicParts={schematicParts} wires={wires} voltage={voltage} />
+
+          {/* ======================================================== */}
+          {/* PROTEUS ISIS "PICK DEVICES" (HOTKEY 'P') MODAL DIALOG    */}
+          {/* ======================================================== */}
+          <PickDevicesModal
+            isOpen={pickDevicesOpen}
+            onClose={() => setPickDevicesOpen(false)}
+            onSelectPart={(template) => {
+              handleAddComponent(template);
+            }}
+          />
         </div>
       );
     }
