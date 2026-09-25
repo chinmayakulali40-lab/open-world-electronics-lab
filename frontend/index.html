@@ -85,6 +85,136 @@
       background-size: 20px 20px;
     }
 
+    /* =========================================================================
+       PRINT MEDIA STYLESHEET (@media print)
+       Clean, professional report submission formatting
+       ========================================================================= */
+    @media screen {
+      .print-only {
+        display: none !important;
+      }
+    }
+
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 10mm 12mm 12mm 12mm;
+      }
+
+      *, *::before, *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 11pt !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #root,
+      #root > div,
+      main {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+      }
+
+      /* Hide non-circuit UI: top nav, device library, bottom hints, zoom/action bars, modals */
+      header,
+      nav,
+      footer,
+      .print-hide,
+      #device-library-drawer,
+      .schematic-subtoolbar,
+      .schematic-bottom-hints,
+      .floating-controls,
+      .dev-assist-banner,
+      .modal-backdrop,
+      .flash-active,
+      [role="dialog"] {
+        display: none !important;
+      }
+
+      /* Show print-only elements */
+      .print-only {
+        display: block !important;
+      }
+
+      /* Full width canvas wrapper isolation */
+      .schematic-view-container {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .schematic-body-container {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      /* Schematic Canvas Container: crisp white, no dot-grid, full width */
+      #schematic-canvas-container {
+        width: 100% !important;
+        height: 520px !important;
+        min-height: 520px !important;
+        max-height: 520px !important;
+        overflow: hidden !important;
+        position: relative !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        margin-bottom: 16px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      .schematic-canvas-world {
+        transform: none !important;
+      }
+
+      /* Wire line and pin print fidelity */
+      svg path, svg circle {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Prevent ugly table and report splits */
+      .print-bom-section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        width: 100% !important;
+        margin-top: 14px !important;
+      }
+
+      table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+      }
+
+      th, td {
+        border-color: #cbd5e1 !important;
+      }
+    }
+
     /* Range slider custom styling */
     input[type=range] {
       -webkit-appearance: none;
@@ -1297,6 +1427,18 @@
         }
       };
 
+      // Print Schematic / Export PDF directly via browser print dialog
+      const handlePrintSchematic = () => {
+        if (activeView !== '2D Circuit Layer') {
+          setActiveView('2D Circuit Layer');
+          setTimeout(() => {
+            window.print();
+          }, 150);
+        } else {
+          window.print();
+        }
+      };
+
       // Download Netlist JSON Export
       const handleExportJson = () => {
         const netlistData = {
@@ -1564,7 +1706,7 @@
           {/* ======================================================== */}
           {/* 1. PERSISTENT TOP HEADER BAR                              */}
           {/* ======================================================== */}
-          <header className="h-12 w-full z-40 fixed top-0 left-0 flex items-center justify-between px-4 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+          <header className="h-12 w-full z-40 fixed top-0 left-0 flex items-center justify-between px-4 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm print-hide">
             
             {/* Left: Brand & Build Tag & Dashboard Return */}
             <div className="flex items-center space-x-3">
@@ -1684,6 +1826,16 @@
                 <span>📂 Open Project</span>
               </button>
 
+              {/* Print Schematic / Export PDF */}
+              <button
+                onClick={handlePrintSchematic}
+                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-all duration-200 font-semibold text-xs shadow-2xs cursor-pointer"
+                title="Print Schematic / Export PDF Report"
+              >
+                <IconPrinter className="w-3.5 h-3.5 text-emerald-600" />
+                <span>🖨️ Print</span>
+              </button>
+
               {/* Share Project */}
               <button
                 onClick={() => setShareModalOpen(true)}
@@ -1788,7 +1940,7 @@
           {/* ======================================================== */}
           {/* 2. LEFT TOOL RAIL                                        */}
           {/* ======================================================== */}
-          <nav className="absolute left-3 top-16 z-30 flex flex-col items-center pointer-events-auto">
+          <nav className="absolute left-3 top-16 z-30 flex flex-col items-center pointer-events-auto print-hide">
             <div className="w-12 bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl py-3 px-1.5 flex flex-col items-center space-y-2 shadow-xl">
               {[
                 { id: 'Select', icon: IconMousePointer, label: 'Select' },
@@ -1892,6 +2044,10 @@
                 espAdc={espAdc}
                 onSaveProject={handleSaveProject}
                 onOpenProject={() => setOpenProjectModalOpen(true)}
+                onPrintSchematic={handlePrintSchematic}
+                currentSavedProject={currentSavedProject}
+                currentUser={currentUser}
+                currentLocation={currentLocation}
               />
             )}
 
@@ -1998,6 +2154,128 @@
     }
 
     // =========================================================================
+    // BILL OF MATERIALS (BOM) & NETLIST MANIFEST (PRINT REPORT)
+    // =========================================================================
+    function BillOfMaterialsTable({ schematicParts = [], wires = [], voltage = 5.0 }) {
+      if (!schematicParts || schematicParts.length === 0) {
+        return (
+          <div className="print-bom-section print-only hidden mt-6 p-4 border border-dashed border-slate-300 rounded-lg text-center text-xs font-mono text-slate-500">
+            No active components on schematic canvas (Empty Workbench).
+          </div>
+        );
+      }
+
+      const getWireCountForPart = (partId) => {
+        return wires.filter(w => w.fromPart === partId || w.toPart === partId).length;
+      };
+
+      const getConnectedPinNames = (part) => {
+        const connectedWires = wires.filter(w => w.fromPart === part.id || w.toPart === part.id);
+        const pinNames = new Set();
+        connectedWires.forEach(w => {
+          if (w.fromPart === part.id) pinNames.add(w.fromPin);
+          if (w.toPart === part.id) pinNames.add(w.toPin);
+        });
+        return Array.from(pinNames).join(', ') || 'Unconnected';
+      };
+
+      const getPartSpec = (part) => {
+        if (part.resistance) return `${part.resistance >= 1000 ? (part.resistance/1000) + ' kΩ' : part.resistance + ' Ω'} (±5%)`;
+        if (part.type === 'arduino_uno') return 'ATmega328P, 16MHz, 5V Logic';
+        if (part.type === 'esp32') return 'Tensilica Xtensa 240MHz, 3.3V, WiFi/BLE';
+        if (part.type === 'solar') return 'Voc: 0–5.0V, Monocrystalline Silicon';
+        if (part.type === 'ldr') return 'Photoresistor (R_dark ≈ 1MΩ, R_light ≈ 100Ω)';
+        if (part.type === 'dht11') return 'Digital Temp (-20~60°C) & Rel Humidity (20~90%)';
+        if (part.type === 'ultrasonic') return 'HC-SR04 Sonar 40kHz, 2cm–400cm range';
+        if (part.type === 'pir') return 'PIR Motion Sensor, Fresnel Lens, 3.3V Out';
+        if (part.type === 'led') return 'Red 5mm, Vf ≈ 2.0V, If ≈ 20mA';
+        if (part.type === 'led_green') return 'Green 5mm, Vf ≈ 2.2V, If ≈ 20mA';
+        if (part.type === 'buzzer') return 'Piezo Ceramic Buzzer, 2.5kHz Resonant';
+        if (part.type === 'servo') return 'SG90 Micro Servo, 0°–180° PWM (50Hz)';
+        if (part.type === 'lcd16x2') return 'HD44780 + PCF8574 I2C Adapter (0x27)';
+        if (part.type === 'relay') return 'SPDT Relay 5V Coil, 10A 250VAC Switching';
+        if (part.type === 'power_supply') return 'Regulated Bench Source (5V/12V DC)';
+        if (part.type === 'dmm') return 'Auto-Ranging Multimeter (True RMS)';
+        if (part.type === 'gnd') return '0V Ground Reference Potential';
+        return part.tag ? `${part.tag} Component` : 'Standard Discrete Spec';
+      };
+
+      return (
+        <div className="print-bom-section print-only hidden mt-6 w-full print-break-inside-avoid">
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-300 mb-2.5">
+            <h2 className="text-sm font-bold text-slate-900 tracking-wide uppercase font-mono flex items-center space-x-2">
+              <span>📋</span>
+              <span>Bill of Materials (BOM) & Netlist Manifest</span>
+            </h2>
+            <span className="text-xs font-mono text-slate-500">
+              Total Items: <strong className="text-slate-900">{schematicParts.length}</strong> | Total Connections: <strong className="text-slate-900">{wires.length}</strong> wires
+            </span>
+          </div>
+
+          <table className="w-full text-left border-collapse text-xs font-mono border border-slate-300">
+            <thead>
+              <tr className="bg-slate-100 text-slate-800 border-b border-slate-300">
+                <th className="py-1.5 px-2 border-r border-slate-300 w-10 text-center font-bold">#</th>
+                <th className="py-1.5 px-2.5 border-r border-slate-300 w-28 font-bold">Designator</th>
+                <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Component Name</th>
+                <th className="py-1.5 px-2 border-r border-slate-300 w-16 text-center font-bold">Category</th>
+                <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Specification / Values</th>
+                <th className="py-1.5 px-2.5 border-r border-slate-300 w-24 text-center font-bold">Terminals</th>
+                <th className="py-1.5 px-2.5 font-bold">Connected Pins</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 text-slate-700">
+              {schematicParts.map((part, idx) => {
+                const wireCount = getWireCountForPart(part.id);
+                const pinList = getConnectedPinNames(part);
+                return (
+                  <tr key={part.id} className={idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'}>
+                    <td className="py-1.5 px-2 border-r border-slate-200 text-center font-bold text-slate-500">{idx + 1}</td>
+                    <td className="py-1.5 px-2.5 border-r border-slate-200 font-semibold text-blue-700">{part.id}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-200 font-medium text-slate-900">{part.name}</td>
+                    <td className="py-1.5 px-2 border-r border-slate-200 text-center">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-[10px] border border-slate-200">
+                        {part.tag || 'GEN'}
+                      </span>
+                    </td>
+                    <td className="py-1.5 px-3 border-r border-slate-200 text-[11px] text-slate-600">{getPartSpec(part)}</td>
+                    <td className="py-1.5 px-2.5 border-r border-slate-200 text-center">
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${wireCount > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+                        {wireCount} wired
+                      </span>
+                    </td>
+                    <td className="py-1.5 px-2.5 text-[10px] text-slate-600 truncate max-w-[200px]" title={pinList}>
+                      {pinList}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr className="bg-slate-100/80 font-bold border-t border-slate-300 text-slate-800 text-[11px]">
+                <td colSpan="2" className="py-1.5 px-2.5 border-r border-slate-300">
+                  Total Modules: {schematicParts.length}
+                </td>
+                <td colSpan="3" className="py-1.5 px-3 border-r border-slate-300 text-slate-600 font-normal">
+                  Active Schematic Simulation & Verification
+                </td>
+                <td colSpan="2" className="py-1.5 px-2.5 text-right text-blue-700">
+                  Total Netlist Wires: {wires.length}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+          {/* Report Footer Note */}
+          <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+            <span>Verified with Open-World Electronics Lab EDA Simulation Engine</span>
+            <span>Page 1 of 1 • System Generated Report</span>
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
     // VIEW MODE 1: 2D CIRCUIT LAYER (SCHEMATIC CANVAS ENGINE)
     // =========================================================================
     function SchematicCanvasView({
@@ -2029,7 +2307,11 @@
       isEspD2High,
       espAdc,
       onSaveProject,
-      onOpenProject
+      onOpenProject,
+      onPrintSchematic,
+      currentSavedProject,
+      currentUser,
+      currentLocation
     }) {
       const canvasContainerRef = useRef(null);
       const [wiringStartPin, setWiringStartPin] = useState(null); // { partId, pinId, x, y }
@@ -2294,11 +2576,51 @@
         return matchesCategory && matchesSearch;
       });
 
+      const autoCurrentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
       return (
-        <div className="w-full h-full flex flex-col bg-[#f8fafc] relative">
+        <div className="w-full h-full flex flex-col bg-[#f8fafc] relative schematic-view-container">
           
+          {/* ======================================================== */}
+          {/* PRINT-ONLY SCHEMATIC REPORT HEADER                       */}
+          {/* ======================================================== */}
+          <div className="print-report-header print-only hidden w-full px-6 pt-4 pb-3 border-b-2 border-slate-900 font-sans bg-white mb-2">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">⚡</span>
+                  <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+                    Open-World Electronics Lab — Schematic Report
+                  </h1>
+                </div>
+                <div className="text-xs text-slate-600 mt-1 font-mono flex items-center space-x-2">
+                  <span>Project: <strong className="text-slate-900">{currentSavedProject?.title || 'Interactive Circuit Schematic Capture'}</strong></span>
+                  {currentSavedProject?.shareCode && (
+                    <span className="px-1.5 py-0.2 bg-blue-100 text-blue-800 rounded font-bold">[{currentSavedProject.shareCode}]</span>
+                  )}
+                  <span>•</span>
+                  <span>Author: <strong className="text-slate-900">{currentUser?.name || currentUser?.email || 'Engineering Student / Researcher'}</strong></span>
+                </div>
+              </div>
+              <div className="text-right font-mono text-xs">
+                <div className="font-bold text-slate-900 bg-slate-100 px-2 py-1 rounded border border-slate-200 inline-block">
+                  Date: {autoCurrentDate}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">
+                  Location: {currentLocation || 'Classroom Lab'} • Temp: {temperature}°C • DC Solver Online
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Sub-Header Toolbar (Top of 2D canvas) */}
-          <div className="h-10 w-full bg-white/95 border-b border-slate-200 px-4 flex items-center justify-between z-20 text-xs font-mono shadow-sm">
+          <div className="h-10 w-full bg-white/95 border-b border-slate-200 px-4 flex items-center justify-between z-20 text-xs font-mono shadow-sm print-hide schematic-subtoolbar">
             <div className="flex items-center space-x-3 text-slate-600">
               <span className="flex items-center space-x-1.5 text-blue-600 font-semibold">
                 <span className="text-emerald-500 text-sm">■</span>
@@ -2423,6 +2745,16 @@
                 <span>📂 Open Project</span>
               </button>
 
+              {/* 🖨️ Print button */}
+              <button
+                onClick={() => onPrintSchematic ? onPrintSchematic() : window.print()}
+                className="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm transition flex items-center space-x-1 font-semibold text-xs cursor-pointer"
+                title="Print Schematic / Export PDF"
+              >
+                <IconPrinter className="w-3.5 h-3.5 text-slate-600" />
+                <span>🖨️ Print</span>
+              </button>
+
               <button
                 onClick={onExecuteIn3D}
                 className="px-4 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center space-x-1.5 shadow-md shadow-emerald-600/20 transition transform active:scale-95"
@@ -2434,10 +2766,10 @@
           </div>
 
           {/* Central Body: Expanded Device Libraries Drawer + 2D Canvas */}
-          <div className="flex-1 flex overflow-hidden relative">
+          <div className="flex-1 flex overflow-hidden relative schematic-body-container">
             
             {/* Expanded Searchable DEVICE LIBRARIES Drawer */}
-            <div className="w-80 bg-white/95 border-r border-slate-200 flex flex-col z-20 shadow-lg pl-16 pr-3 py-3">
+            <div id="device-library-drawer" className="w-80 bg-white/95 border-r border-slate-200 flex flex-col z-20 shadow-lg pl-16 pr-3 py-3 print-hide">
               
               <div className="flex items-center justify-between pb-2 border-b border-slate-200 mb-2">
                 <div className="font-semibold text-xs tracking-wider uppercase text-slate-800 font-mono flex items-center space-x-1.5">
@@ -2549,7 +2881,7 @@
               className="flex-1 h-full schematic-dot-grid relative cursor-crosshair overflow-hidden"
             >
               <div 
-                className="w-full h-full relative"
+                className="w-full h-full relative schematic-canvas-world"
                 style={{ transform: `translate(${canvasOffset.x}px, ${canvasOffset.y}px)` }}
               >
                 {/* SVG Layer for Connection Wires */}
@@ -3234,13 +3566,18 @@
               </div>
 
               {/* Bottom-left helper text */}
-              <div className="absolute bottom-4 left-6 z-20 pointer-events-none font-mono text-xs text-slate-600 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 shadow-md flex items-center space-x-2">
+              <div className="absolute bottom-4 left-6 z-20 pointer-events-none font-mono text-xs text-slate-600 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 shadow-md flex items-center space-x-2 print-hide schematic-bottom-hints">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>• Click pin and drag to wire &nbsp;|&nbsp; • Drag parts to arrange &nbsp;|&nbsp; • Click wire + Delete key to cut</span>
               </div>
             </div>
 
           </div>
+
+          {/* ======================================================== */}
+          {/* PRINT-ONLY BILL OF MATERIALS (BOM) & NETLIST TABLE       */}
+          {/* ======================================================== */}
+          <BillOfMaterialsTable schematicParts={schematicParts} wires={wires} voltage={voltage} />
         </div>
       );
     }
