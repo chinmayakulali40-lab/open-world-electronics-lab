@@ -2276,6 +2276,123 @@
     }
 
     // =========================================================================
+    // EDA COMPONENT DIMENSIONS & TERMINAL GEOMETRY REGISTRY
+    // =========================================================================
+    const COMPONENT_DIMENSIONS = {
+      arduino_uno: { w: 270, h: 210 },
+      esp32: { w: 200, h: 280 },
+      solar: { w: 176, h: 130 },
+      ldr: { w: 80, h: 90 },
+      resistor: { w: 80, h: 80 },
+      potentiometer: { w: 144, h: 90 },
+      led: { w: 80, h: 90 },
+      led_green: { w: 80, h: 90 },
+      buzzer: { w: 80, h: 80 },
+      servo: { w: 128, h: 90 },
+      lcd16x2: { w: 176, h: 100 },
+      dmm: { w: 160, h: 110 },
+      scope: { w: 160, h: 100 },
+      gnd: { w: 80, h: 50 },
+      dht11: { w: 80, h: 90 },
+      ultrasonic: { w: 150, h: 90 }
+    };
+
+    // =========================================================================
+    // COMPONENT PIN TERMINAL (MAGNETIC SNAP, EXPANDED HITBOX & GLOW FEEDBACK)
+    // =========================================================================
+    function PinTerminal({
+      part,
+      pin,
+      isHovered,
+      isStartPin,
+      isConnected,
+      onPinMouseDown,
+      onPinClick,
+      onPinMouseEnter,
+      onPinMouseLeave
+    }) {
+      const isVcc = ['5V', '3V3', '3.3V', 'VCC', 'VIN', 'v_pos', 'pos', 'vcc', '+'].some(v => 
+        (pin.name && pin.name.includes(v)) || (pin.label && pin.label.includes(v)) || (pin.id && pin.id.includes(v))
+      );
+      const isGnd = ['GND', 'COM', 'v_neg', 'neg', 'gnd', '-'].some(g => 
+        (pin.name && pin.name.includes(g)) || (pin.label && pin.label.includes(g)) || (pin.id && pin.id.includes(g))
+      );
+      const isAnalog = (pin.name && pin.name.startsWith('A')) || (pin.id && pin.id.startsWith('A')) || pin.id === 'wiper';
+
+      let baseBg = 'bg-slate-700 hover:bg-slate-600 border-slate-300';
+      if (isVcc) {
+        baseBg = 'bg-rose-500 hover:bg-rose-400 border-white';
+      } else if (isGnd) {
+        baseBg = 'bg-slate-900 hover:bg-slate-800 border-slate-400';
+      } else if (isAnalog) {
+        baseBg = 'bg-sky-500 hover:bg-sky-400 border-white';
+      } else if ((pin.name && pin.name.startsWith('D')) || (pin.id && pin.id.startsWith('D'))) {
+        baseBg = 'bg-emerald-600 hover:bg-emerald-500 border-emerald-200';
+      }
+
+      let stateRing = '';
+      if (isHovered) {
+        stateRing = 'ring-4 ring-cyan-400 shadow-[0_0_16px_#38bdf8] scale-125 z-40 animate-pulse';
+      } else if (isStartPin) {
+        stateRing = 'ring-4 ring-amber-400 shadow-[0_0_16px_#f59e0b] scale-125 z-40 animate-bounce';
+      }
+
+      return (
+        <div
+          style={{ left: `${pin.relX}px`, top: `${pin.relY}px` }}
+          className="absolute -translate-x-1/2 -translate-y-1/2 z-30 group/pin pointer-events-auto select-none"
+          onMouseEnter={onPinMouseEnter}
+          onMouseLeave={onPinMouseLeave}
+        >
+          <button
+            type="button"
+            onMouseDown={onPinMouseDown}
+            onClick={onPinClick}
+            title={`${part.name || part.type} • Pin ${pin.name || pin.label || pin.id}`}
+            className={`relative w-4 h-4 rounded-full border-2 flex items-center justify-center text-[7px] font-mono font-bold text-white transition-all transform duration-150 cursor-pointer select-none before:absolute before:-inset-2.5 before:rounded-full before:content-[''] ${baseBg} ${stateRing}`}
+          >
+            {isConnected ? (
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 shadow-[0_0_4px_#34d399]"></span>
+            ) : (
+              <span className="text-[6px] pointer-events-none leading-none">
+                {pin.label ? pin.label.slice(0, 2).replace('~', '') : '•'}
+              </span>
+            )}
+          </button>
+
+          {/* Floating pin badge on hover */}
+          <div className={`absolute pointer-events-none opacity-0 group-hover/pin:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap bg-slate-900/95 text-cyan-300 font-mono text-[9px] px-1.5 py-0.5 rounded shadow-lg border border-cyan-500/40 ${
+            pin.relY < 30 ? 'top-5 left-1/2 -translate-x-1/2' : 'bottom-5 left-1/2 -translate-x-1/2'
+          }`}>
+            <span className="font-bold text-white">{pin.name || pin.label || pin.id}</span>
+            {isConnected && <span className="ml-1 text-emerald-400 font-normal">[connected]</span>}
+          </div>
+
+          {/* Pin label hints for ESP32 */}
+          {part.type === 'esp32' && pin.side === 'left' && (
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap">
+              {pin.label}
+            </span>
+          )}
+          {part.type === 'esp32' && pin.side === 'right' && (
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap text-right">
+              {pin.label}
+            </span>
+          )}
+
+          {/* Pin label hints for Solar */}
+          {part.type === 'solar' && (
+            <span className={`absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[8px] font-bold px-1 rounded pointer-events-none border whitespace-nowrap shadow-xs ${
+              pin.id === 'v_pos' ? 'text-rose-600 bg-white border-rose-300' : 'text-slate-700 bg-white border-slate-300'
+            }`}>
+              {pin.id === 'v_pos' ? 'V+' : 'GND'}
+            </span>
+          )}
+        </div>
+      );
+    }
+
+    // =========================================================================
     // VIEW MODE 1: 2D CIRCUIT LAYER (SCHEMATIC CANVAS ENGINE)
     // =========================================================================
     function SchematicCanvasView({
@@ -2314,7 +2431,8 @@
       currentLocation
     }) {
       const canvasContainerRef = useRef(null);
-      const [wiringStartPin, setWiringStartPin] = useState(null); // { partId, pinId, x, y }
+      const [wiringStartPin, setWiringStartPin] = useState(null); // { partId, pinId, x, y, isDragging }
+      const [hoveredPin, setHoveredPin] = useState(null); // { partId, pinId, x, y, pinName, partName }
       const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
       const [dragState, setDragState] = useState(null);
       const [canvasOffset, setCanvasOffset] = useState({ x: 0, y: 0 });
@@ -2346,12 +2464,18 @@
             { id: 'D9', name: 'D9', label: '9~', side: 'top', relX: 110, relY: 0 },
             { id: 'D8', name: 'D8', label: '8', side: 'top', relX: 130, relY: 0 },
             { id: 'D7', name: 'D7', label: '7', side: 'top', relX: 160, relY: 0 },
+            { id: 'D6', name: 'D6', label: '6~', side: 'top', relX: 180, relY: 0 },
+            { id: 'D5', name: 'D5', label: '5~', side: 'top', relX: 200, relY: 0 },
             { id: 'GND_TOP', name: 'GND', label: 'GND', side: 'top', relX: 230, relY: 0 },
             { id: '5V', name: '5V', label: '5V', side: 'bottom', relX: 40, relY: 210 },
             { id: '3V3', name: '3V3', label: '3.3V', side: 'bottom', relX: 65, relY: 210 },
             { id: 'GND_1', name: 'GND', label: 'GND', side: 'bottom', relX: 90, relY: 210 },
+            { id: 'GND_2', name: 'GND', label: 'GND', side: 'bottom', relX: 115, relY: 210 },
+            { id: 'VIN', name: 'VIN', label: 'VIN', side: 'bottom', relX: 140, relY: 210 },
             { id: 'A0', name: 'A0', label: 'A0', side: 'bottom', relX: 175, relY: 210 },
-            { id: 'A1', name: 'A1', label: 'A1', side: 'bottom', relX: 195, relY: 210 }
+            { id: 'A1', name: 'A1', label: 'A1', side: 'bottom', relX: 195, relY: 210 },
+            { id: 'A2', name: 'A2', label: 'A2', side: 'bottom', relX: 215, relY: 210 },
+            { id: 'A3', name: 'A3', label: 'A3', side: 'bottom', relX: 235, relY: 210 }
           ];
         } else if (template.id === 'esp32') {
           newPins = [
@@ -2402,7 +2526,7 @@
         } else if (template.id === 'potentiometer') {
           newPins = [
             { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35 },
-            { id: 'wiper', name: 'WIP', label: '2', side: 'right', relX: 130, relY: 50 },
+            { id: 'wiper', name: 'WIP', label: '2', side: 'right', relX: 144, relY: 50 },
             { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65 }
           ];
         } else if (template.id === 'led' || template.id === 'led_green') {
@@ -2467,10 +2591,15 @@
         setSelectedPartId(newId);
       };
 
-      // Keyboard delete wire or part
+      // Keyboard delete wire or part, and Escape to cancel wiring
       useEffect(() => {
         const handleKeyDown = (e) => {
-          if (e.key === 'Delete' || e.key === 'Backspace') {
+          if (e.key === 'Escape') {
+            setWiringStartPin(null);
+            setHoveredPin(null);
+            setSelectedPartId(null);
+            setSelectedWireId(null);
+          } else if (e.key === 'Delete' || e.key === 'Backspace') {
             if (selectedWireId) {
               setWires(prev => prev.filter(w => w.id !== selectedWireId));
               setSelectedWireId(null);
@@ -2485,34 +2614,147 @@
         return () => window.removeEventListener('keydown', handleKeyDown);
       }, [selectedWireId, selectedPartId]);
 
-      // Pin Clicking & Wiring
-      const handlePinClick = (partId, pinId, pinAbsX, pinAbsY, e) => {
+      // Coordinate converter factoring in canvas bounding box and pan offsets
+      const getCanvasCoords = (e) => {
+        if (!canvasContainerRef.current) return { x: 0, y: 0 };
+        const rect = canvasContainerRef.current.getBoundingClientRect();
+        return {
+          x: e.clientX - rect.left - canvasOffset.x,
+          y: e.clientY - rect.top - canvasOffset.y
+        };
+      };
+
+      // Exact pin coordinate calculator factoring in rotation trigonometry
+      const getPinCoord = (partId, pinId) => {
+        const part = schematicParts.find(p => p.id === partId);
+        if (!part) return { x: 0, y: 0 };
+        const pin = part.pins?.find(p => p.id === pinId);
+        if (!pin) return { x: part.x, y: part.y };
+
+        const dims = COMPONENT_DIMENSIONS[part.type] || { w: 80, h: 80 };
+        const cx = dims.w / 2;
+        const cy = dims.h / 2;
+
+        if (!part.rotation || part.rotation === 0) {
+          return {
+            x: part.x + pin.relX,
+            y: part.y + pin.relY
+          };
+        }
+
+        const rad = (part.rotation * Math.PI) / 180;
+        const dx = pin.relX - cx;
+        const dy = pin.relY - cy;
+        const rx = cx + dx * Math.cos(rad) - dy * Math.sin(rad);
+        const ry = cy + dx * Math.sin(rad) + dy * Math.cos(rad);
+
+        return {
+          x: Math.round(part.x + rx),
+          y: Math.round(part.y + ry)
+        };
+      };
+
+      // Magnetic snap resolver: finds nearest pin within 24px radius
+      const SNAP_RADIUS = 24;
+      const findNearestPin = (canvasX, canvasY, filterPartId = null, filterPinId = null) => {
+        let closest = null;
+        let minDist = SNAP_RADIUS;
+
+        for (const part of schematicParts) {
+          if (!part.pins) continue;
+          for (const pin of part.pins) {
+            if (filterPartId && part.id === filterPartId && pin.id === filterPinId) {
+              continue;
+            }
+            const coord = getPinCoord(part.id, pin.id);
+            const dist = Math.hypot(coord.x - canvasX, coord.y - canvasY);
+            if (dist < minDist) {
+              minDist = dist;
+              closest = {
+                partId: part.id,
+                pinId: pin.id,
+                x: coord.x,
+                y: coord.y,
+                part,
+                pin,
+                dist
+              };
+            }
+          }
+        }
+        return closest;
+      };
+
+      // Wire connection completion
+      const completeWiring = (fromPart, fromPin, toPart, toPin) => {
+        if (fromPart === toPart && fromPin === toPin) return;
+        const exists = wires.some(w =>
+          (w.fromPart === fromPart && w.fromPin === fromPin && w.toPart === toPart && w.toPin === toPin) ||
+          (w.fromPart === toPart && w.fromPin === toPin && w.toPart === fromPart && w.toPin === fromPin)
+        );
+        if (!exists) {
+          const newWire = {
+            id: `wire-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+            fromPart,
+            fromPin,
+            toPart,
+            toPin
+          };
+          setWires(prev => [...prev, newWire]);
+        }
+      };
+
+      // Pin Interaction Handlers
+      const handlePinMouseDown = (partId, pinId, e) => {
+        e.stopPropagation();
+        const coord = getPinCoord(partId, pinId);
+        setWiringStartPin({ partId, pinId, x: coord.x, y: coord.y, isDragging: true });
+      };
+
+      const handlePinClick = (partId, pinId, e) => {
         e.stopPropagation();
         if (!wiringStartPin) {
-          setWiringStartPin({ partId, pinId, x: pinAbsX, y: pinAbsY });
+          const coord = getPinCoord(partId, pinId);
+          setWiringStartPin({ partId, pinId, x: coord.x, y: coord.y, isDragging: false });
         } else {
           if (wiringStartPin.partId === partId && wiringStartPin.pinId === pinId) {
             setWiringStartPin(null);
+            setHoveredPin(null);
             return;
           }
-          const newWire = {
-            id: `wire-${Date.now()}`,
-            fromPart: wiringStartPin.partId,
-            fromPin: wiringStartPin.pinId,
-            toPart: partId,
-            toPin: pinId
-          };
-          setWires(prev => [...prev, newWire]);
+          completeWiring(wiringStartPin.partId, wiringStartPin.pinId, partId, pinId);
           setWiringStartPin(null);
+          setHoveredPin(null);
+        }
+      };
+
+      const handlePinMouseEnter = (partId, pinId) => {
+        if (wiringStartPin) {
+          if (wiringStartPin.partId === partId && wiringStartPin.pinId === pinId) return;
+          const coord = getPinCoord(partId, pinId);
+          const part = schematicParts.find(p => p.id === partId);
+          const pin = part?.pins?.find(p => p.id === pinId);
+          setHoveredPin({
+            partId,
+            pinId,
+            x: coord.x,
+            y: coord.y,
+            pinName: pin?.name || pin?.label || pinId,
+            partName: part?.name || partId
+          });
+        }
+      };
+
+      const handlePinMouseLeave = (partId, pinId) => {
+        if (hoveredPin?.partId === partId && hoveredPin?.pinId === pinId) {
+          setHoveredPin(null);
         }
       };
 
       // Mouse movements
       const handleCanvasMouseMove = (e) => {
-        const rect = canvasContainerRef.current.getBoundingClientRect();
-        const curX = e.clientX - rect.left - canvasOffset.x;
-        const curY = e.clientY - rect.top - canvasOffset.y;
-        setMousePos({ x: curX, y: curY });
+        const coords = getCanvasCoords(e);
+        setMousePos(coords);
 
         if (dragState) {
           const dx = e.clientX - dragState.startMouseX;
@@ -2532,18 +2774,46 @@
             x: e.clientX - panStart.x,
             y: e.clientY - panStart.y
           });
+        } else if (wiringStartPin) {
+          const snapped = findNearestPin(coords.x, coords.y, wiringStartPin.partId, wiringStartPin.pinId);
+          if (snapped) {
+            setHoveredPin({
+              partId: snapped.partId,
+              pinId: snapped.pinId,
+              x: snapped.x,
+              y: snapped.y,
+              pinName: snapped.pin.name || snapped.pin.label || snapped.pin.id,
+              partName: snapped.part.name || snapped.part.type
+            });
+          } else {
+            setHoveredPin(null);
+          }
         }
       };
 
-      const handleCanvasMouseUp = () => {
-        setDragState(null);
-        setIsPanning(false);
+      const handleCanvasMouseUp = (e) => {
+        if (dragState) {
+          setDragState(null);
+        }
+        if (isPanning) {
+          setIsPanning(false);
+        }
+        if (wiringStartPin && wiringStartPin.isDragging) {
+          const coords = getCanvasCoords(e);
+          const target = findNearestPin(coords.x, coords.y, wiringStartPin.partId, wiringStartPin.pinId);
+          if (target) {
+            completeWiring(wiringStartPin.partId, wiringStartPin.pinId, target.partId, target.pinId);
+          }
+          setWiringStartPin(null);
+          setHoveredPin(null);
+        }
       };
 
       const handleCanvasMouseDown = (e) => {
         if (e.target === canvasContainerRef.current || e.target.tagName === 'svg') {
           if (wiringStartPin) {
             setWiringStartPin(null);
+            setHoveredPin(null);
           } else {
             setSelectedPartId(null);
             setSelectedWireId(null);
@@ -2553,16 +2823,58 @@
         }
       };
 
-      const getPinCoord = (partId, pinId) => {
-        const part = schematicParts.find(p => p.id === partId);
-        if (!part) return { x: 0, y: 0 };
-        const pin = part.pins.find(pin => pin.id === pinId);
-        if (!pin) return { x: part.x, y: part.y };
-        return {
-          x: part.x + pin.relX,
-          y: part.y + pin.relY
+      // Window-level drag and pan event synchronization
+      useEffect(() => {
+        const onWinMove = (e) => {
+          if (dragState || isPanning || (wiringStartPin && wiringStartPin.isDragging)) {
+            handleCanvasMouseMove(e);
+          }
         };
-      };
+        const onWinUp = (e) => {
+          if (dragState || isPanning || (wiringStartPin && wiringStartPin.isDragging)) {
+            handleCanvasMouseUp(e);
+          }
+        };
+        window.addEventListener('mousemove', onWinMove);
+        window.addEventListener('mouseup', onWinUp);
+        return () => {
+          window.removeEventListener('mousemove', onWinMove);
+          window.removeEventListener('mouseup', onWinUp);
+        };
+      }, [dragState, isPanning, wiringStartPin]);
+
+      // Detect multi-wire solder junction nodes
+      const junctionNodes = useMemo(() => {
+        const coordCounts = {};
+        wires.forEach(w => {
+          const s = getPinCoord(w.fromPart, w.fromPin);
+          const e = getPinCoord(w.toPart, w.toPin);
+          const sKey = `${s.x},${s.y}`;
+          const eKey = `${e.x},${e.y}`;
+          coordCounts[sKey] = (coordCounts[sKey] || 0) + 1;
+          coordCounts[eKey] = (coordCounts[eKey] || 0) + 1;
+        });
+        return Object.entries(coordCounts)
+          .filter(([_, count]) => count > 1)
+          .map(([key]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y };
+          });
+      }, [wires, schematicParts]);
+
+      const totalPins = useMemo(() => 
+        schematicParts.reduce((acc, p) => acc + (p.pins?.length || 0), 0), 
+        [schematicParts]
+      );
+
+      const connectedPinsCount = useMemo(() => {
+        const set = new Set();
+        wires.forEach(w => {
+          set.add(`${w.fromPart}:${w.fromPin}`);
+          set.add(`${w.toPart}:${w.toPin}`);
+        });
+        return set.size;
+      }, [wires]);
 
       // Filtered component catalog
       const filteredCatalog = COMPONENT_LIBRARY.filter(item => {
@@ -2630,6 +2942,8 @@
               <span className="text-slate-500">Netlist: <strong className="text-slate-800">{wires.length}</strong></span>
               <span className="text-slate-300">|</span>
               <span className="text-slate-500">Parts: <strong className="text-slate-800">{schematicParts.length}</strong></span>
+              <span className="text-slate-300">|</span>
+              <span className="text-slate-500">Terminals: <strong className="text-emerald-700">{connectedPinsCount} / {totalPins}</strong></span>
               <span className="text-slate-300">|</span>
               <span className="text-amber-600 flex items-center space-x-1">
                 <span>MCU D13:</span>
@@ -2884,7 +3198,7 @@
                 className="w-full h-full relative schematic-canvas-world"
                 style={{ transform: `translate(${canvasOffset.x}px, ${canvasOffset.y}px)` }}
               >
-                {/* SVG Layer for Connection Wires */}
+                {/* SVG Layer for Connection Wires & Solder Junction Terminals */}
                 <svg className="absolute inset-0 w-[4000px] h-[4000px] pointer-events-none z-10">
                   {wires.map((wire) => {
                     const start = getPinCoord(wire.fromPart, wire.fromPin);
@@ -2904,14 +3218,14 @@
                         }}
                       >
                         {/* Invisible thick hover target */}
-                        <path d={pathD} fill="none" stroke="transparent" strokeWidth="14" />
+                        <path d={pathD} fill="none" stroke="transparent" strokeWidth="16" />
                         {/* Glow halo */}
                         <path
                           d={pathD}
                           fill="none"
                           stroke={isSelected ? '#38bdf8' : '#10b981'}
-                          strokeWidth={isSelected ? '6' : '4'}
-                          strokeOpacity={isSelected ? '0.6' : '0.2'}
+                          strokeWidth={isSelected ? '7' : '4'}
+                          strokeOpacity={isSelected ? '0.7' : '0.2'}
                           strokeLinecap="round"
                         />
                         {/* Wire core line */}
@@ -2922,28 +3236,82 @@
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
-                        <circle cx={start.x} cy={start.y} r="3" fill={isSelected ? '#2563eb' : '#059669'} />
-                        <circle cx={end.x} cy={end.y} r="3" fill={isSelected ? '#2563eb' : '#059669'} />
+                        {/* Terminal solder dots at endpoints */}
+                        <circle cx={start.x} cy={start.y} r="4" fill="#0f172a" stroke={isSelected ? '#38bdf8' : '#10b981'} strokeWidth="1.5" />
+                        <circle cx={start.x} cy={start.y} r="2" fill={isSelected ? '#38bdf8' : '#34d399'} />
+                        <circle cx={end.x} cy={end.y} r="4" fill="#0f172a" stroke={isSelected ? '#38bdf8' : '#10b981'} strokeWidth="1.5" />
+                        <circle cx={end.x} cy={end.y} r="2" fill={isSelected ? '#38bdf8' : '#34d399'} />
                       </g>
                     );
                   })}
 
-                  {/* Wire dragging preview line */}
-                  {wiringStartPin && (
-                    <path
-                      d={`M ${wiringStartPin.x} ${wiringStartPin.y} L ${wiringStartPin.x + (mousePos.x - wiringStartPin.x)*0.5} ${wiringStartPin.y} L ${wiringStartPin.x + (mousePos.x - wiringStartPin.x)*0.5} ${mousePos.y} L ${mousePos.x} ${mousePos.y}`}
-                      fill="none"
-                      stroke="#2563eb"
-                      strokeWidth="2.5"
-                      strokeDasharray="4,4"
-                      className="animate-pulse"
-                    />
-                  )}
+                  {/* Multi-wire shared junction nodes (solder beads) */}
+                  {junctionNodes.map((node, i) => (
+                    <g key={`junction-${i}`} className="pointer-events-none">
+                      <circle cx={node.x} cy={node.y} r="6" fill="#10b981" fillOpacity="0.4" />
+                      <circle cx={node.x} cy={node.y} r="5" fill="#065f46" stroke="#34d399" strokeWidth="2" />
+                      <circle cx={node.x} cy={node.y} r="2" fill="#ecfdf5" />
+                    </g>
+                  ))}
+
+                  {/* Wire dragging preview line with Magnetic Clamping & Lock Reticle */}
+                  {wiringStartPin && (() => {
+                    const startX = wiringStartPin.x;
+                    const startY = wiringStartPin.y;
+                    const targetX = hoveredPin ? hoveredPin.x : mousePos.x;
+                    const targetY = hoveredPin ? hoveredPin.y : mousePos.y;
+                    const midX = startX + (targetX - startX) * 0.5;
+                    const previewD = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${targetY} L ${targetX} ${targetY}`;
+
+                    return (
+                      <g className="pointer-events-none">
+                        {/* Glow halo */}
+                        <path
+                          d={previewD}
+                          fill="none"
+                          stroke={hoveredPin ? '#38bdf8' : '#3b82f6'}
+                          strokeWidth="6"
+                          strokeOpacity="0.35"
+                          strokeLinecap="round"
+                        />
+                        {/* Animated dashed preview wire */}
+                        <path
+                          d={previewD}
+                          fill="none"
+                          stroke={hoveredPin ? '#0ea5e9' : '#2563eb'}
+                          strokeWidth="2.5"
+                          strokeDasharray="6,4"
+                          className="animate-pulse"
+                        />
+                        {/* Start pin indicator */}
+                        <circle cx={startX} cy={startY} r="5" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" />
+
+                        {/* Clamped magnetic lock indicator & reticle */}
+                        {hoveredPin ? (
+                          <g>
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="14" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4,4" className="animate-spin" />
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="7" fill="#0284c7" stroke="#ffffff" strokeWidth="2" />
+                            
+                            {/* Junction lock badge */}
+                            <g transform={`translate(${hoveredPin.x + 14}, ${hoveredPin.y - 12})`}>
+                              <rect x="0" y="0" width={Math.max(90, hoveredPin.pinName.length * 8 + 44)} height="22" rx="4" fill="#0f172a" fillOpacity="0.95" stroke="#38bdf8" strokeWidth="1.5" />
+                              <text x="8" y="15" fill="#38bdf8" fontSize="10" fontFamily="monospace" fontWeight="bold">
+                                ⚡ LOCK: {hoveredPin.pinName}
+                              </text>
+                            </g>
+                          </g>
+                        ) : (
+                          <circle cx={targetX} cy={targetY} r="4" fill="#2563eb" stroke="#ffffff" strokeWidth="1.5" />
+                        )}
+                      </g>
+                    );
+                  })()}
                 </svg>
 
                 {/* Placed Component Nodes */}
                 {schematicParts.map((part) => {
                   const isSelected = selectedPartId === part.id;
+                  const dims = COMPONENT_DIMENSIONS[part.type] || { w: 80, h: 80 };
                   
                   return (
                     <div
@@ -2951,9 +3319,14 @@
                       style={{
                         left: `${part.x}px`,
                         top: `${part.y}px`,
-                        transform: `rotate(${part.rotation}deg)`
+                        width: `${dims.w}px`,
+                        height: `${dims.h}px`,
+                        transform: `rotate(${part.rotation || 0}deg)`
                       }}
                       onMouseDown={(e) => {
+                        if (e.target.closest('input') || e.target.closest('button') || e.target.closest('.group\\/pin')) {
+                          return;
+                        }
                         e.stopPropagation();
                         setSelectedPartId(part.id);
                         setSelectedWireId(null);
@@ -2969,15 +3342,10 @@
                         isSelected ? 'ring-2 ring-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.35)]' : ''
                       }`}
                     >
-                      
-                      {/* =================================================== */}
-                      {/* 1. ARDUINO UNO R3 COMPONENT BLOCK                   */}
-                      {/* =================================================== */}
+                      {/* 1. ARDUINO UNO R3 COMPONENT */}
                       {part.type === 'arduino_uno' && (
-                        <div className="w-[270px] bg-[#00878F] border-2 border-teal-300/60 rounded-xl p-3 shadow-2xl relative text-white">
-                          
-                          {/* Board Header & Branding */}
-                          <div className="flex items-center justify-between pb-1.5 border-b border-teal-400/40 mb-2">
+                        <div className="w-[270px] h-[210px] bg-[#00878F] border-2 border-teal-300/60 rounded-xl p-3 shadow-2xl relative text-white flex flex-col justify-between select-none">
+                          <div className="flex items-center justify-between pb-1.5 border-b border-teal-400/40 mb-1">
                             <div className="flex items-center space-x-1.5">
                               <span className="font-mono font-bold text-xs tracking-wider">ARDUINO</span>
                               <span className="text-[10px] font-bold text-teal-200">UNO R3</span>
@@ -2985,14 +3353,10 @@
                             <span className="text-[9px] font-mono px-1 rounded bg-teal-900/60 text-teal-200">ATmega328P</span>
                           </div>
 
-                          {/* IC Chip & Status LEDs */}
-                          <div className="bg-[#005f66] rounded-lg p-2 mb-2 flex items-center justify-between border border-teal-400/30">
-                            {/* ATmega IC */}
+                          <div className="bg-[#005f66] rounded-lg p-2 flex items-center justify-between border border-teal-400/30">
                             <div className="w-24 h-6 bg-slate-900 rounded border border-slate-700 flex items-center justify-center text-[9px] font-mono text-slate-300">
                               ATMEGA328P
                             </div>
-
-                            {/* Status Indicators: ON, L (D13), TX/RX */}
                             <div className="flex items-center space-x-2 text-[8px] font-mono">
                               <div className="flex flex-col items-center">
                                 <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]"></span>
@@ -3009,161 +3373,71 @@
                             </div>
                           </div>
 
-                          {/* Pin Labels Display */}
-                          <div className="flex justify-between text-[8px] font-mono text-teal-100 px-1 pb-1">
+                          <div className="flex justify-between text-[8px] font-mono text-teal-100 px-1">
                             <span>DIGITAL (PWM ~)</span>
                             <span>POWER / ANALOG IN</span>
-                          </div>
-
-                          {/* Render Top Pin Terminals (Digital Pins D13-D0) */}
-                          <div className="absolute top-0 left-0 right-0 flex justify-between px-3 -translate-y-1/2">
-                            {part.pins.filter(p => p.side === 'top').map(pin => (
-                              <button
-                                key={pin.id}
-                                onClick={(e) => handlePinClick(part.id, pin.id, part.x + pin.relX, part.y + pin.relY, e)}
-                                title={`Arduino Pin ${pin.name}`}
-                                className="w-4 h-4 rounded-full bg-slate-900 border-2 border-emerald-400 hover:scale-125 flex items-center justify-center text-[7px] font-mono font-bold text-white transition shadow"
-                              >
-                                {pin.label.replace('~', '')}
-                              </button>
-                            ))}
-                          </div>
-
-                          {/* Render Bottom Pin Terminals (Power & Analog) */}
-                          <div className="absolute bottom-0 left-0 right-0 flex justify-between px-3 translate-y-1/2">
-                            {part.pins.filter(p => p.side === 'bottom').map(pin => (
-                              <button
-                                key={pin.id}
-                                onClick={(e) => handlePinClick(part.id, pin.id, part.x + pin.relX, part.y + pin.relY, e)}
-                                title={`Arduino Pin ${pin.name}`}
-                                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center text-[7px] font-mono font-bold text-white hover:scale-125 transition shadow ${
-                                  pin.name === '5V' ? 'bg-rose-600 border-white' :
-                                  pin.name.includes('GND') ? 'bg-slate-900 border-slate-400' :
-                                  'bg-slate-900 border-sky-400'
-                                }`}
-                              >
-                                {pin.label}
-                              </button>
-                            ))}
                           </div>
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 2. LDR PHOTORESISTOR COMPONENT BLOCK               */}
-                      {/* =================================================== */}
+                      {/* 2. LDR PHOTORESISTOR */}
                       {part.type === 'ldr' && (
-                        <div className="w-20 bg-white border-2 border-amber-400 rounded-xl p-2 shadow-lg flex flex-col items-center relative text-slate-800">
+                        <div className="w-[80px] h-[90px] bg-white border-2 border-amber-400 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <span className="text-[9px] font-bold text-amber-600 font-mono">LDR</span>
-                          
-                          {/* Photoconductive serpentine cell */}
-                          <div className="w-10 h-10 rounded-full border-2 border-amber-400 bg-amber-50 my-1 flex items-center justify-center relative shadow-inner">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2">
+                          <div className="w-9 h-9 rounded-full border-2 border-amber-400 bg-amber-50 flex items-center justify-center shadow-inner">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2">
                               <path d="M4 12 Q8 6 12 12 T20 12" />
                             </svg>
                           </div>
                           <span className="text-[8px] font-mono text-amber-700 font-bold">{sunlight} W/m²</span>
-
-                          {/* Top / Bottom Pins */}
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'p1', part.x + 40, part.y + 0, e)}
-                            className="absolute top-0 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white hover:scale-125 transition shadow-sm"
-                            title="LDR Lead 1"
-                          />
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'p2', part.x + 40, part.y + 90, e)}
-                            className="absolute bottom-0 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white hover:scale-125 transition shadow-sm"
-                            title="LDR Lead 2"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 3. RESISTOR COMPONENT BLOCK                         */}
-                      {/* =================================================== */}
+                      {/* 3. RESISTOR */}
                       {part.type === 'resistor' && (
-                        <div className="w-20 bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center relative text-slate-800">
+                        <div className="w-[80px] h-[80px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <span className="text-[9px] font-mono font-bold text-slate-800">10kΩ</span>
-                          
-                          {/* Resistor color stripes */}
-                          <div className="w-5 h-10 bg-amber-100 rounded-sm my-1 flex flex-col justify-around py-1 px-0.5 border border-slate-400 shadow-inner">
-                            <div className="h-1 bg-amber-800"></div>
-                            <div className="h-1 bg-black"></div>
-                            <div className="h-1 bg-orange-500"></div>
-                            <div className="h-1 bg-yellow-400"></div>
+                          <div className="w-5 h-8 bg-amber-100 rounded-sm flex flex-col justify-around py-0.5 px-0.5 border border-slate-400 shadow-inner">
+                            <div className="h-0.5 bg-amber-800"></div>
+                            <div className="h-0.5 bg-black"></div>
+                            <div className="h-0.5 bg-orange-500"></div>
+                            <div className="h-0.5 bg-yellow-400"></div>
                           </div>
                           <span className="text-[7px] font-mono text-slate-500 font-bold">RESISTOR</span>
-
-                          {/* Pins */}
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'p1', part.x + 40, part.y + 0, e)}
-                            className="absolute top-0 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-slate-500 border-2 border-white hover:scale-125 transition shadow-sm"
-                          />
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'p2', part.x + 40, part.y + 80, e)}
-                            className="absolute bottom-0 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-slate-500 border-2 border-white hover:scale-125 transition shadow-sm"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 4. POTENTIOMETER (INTERACTIVE SLIDER)               */}
-                      {/* =================================================== */}
+                      {/* 4. POTENTIOMETER */}
                       {part.type === 'potentiometer' && (
-                        <div className="w-36 bg-white border-2 border-sky-400 rounded-xl p-2.5 shadow-lg relative text-slate-800">
-                          <div className="flex items-center justify-between text-[9px] font-mono text-sky-700 font-bold mb-1">
+                        <div className="w-[144px] h-[90px] bg-white border-2 border-sky-400 rounded-xl p-2 shadow-lg flex flex-col justify-between text-slate-800 select-none">
+                          <div className="flex items-center justify-between text-[9px] font-mono text-sky-700 font-bold">
                             <span>POTENTIOMETER</span>
                             <span className="bg-sky-50 text-sky-700 px-1 rounded border border-sky-200">{potValue}%</span>
                           </div>
-
-                          <div className="pt-1">
+                          <div className="py-1">
                             <input
                               type="range"
                               min="0"
                               max="100"
                               value={potValue}
                               onChange={(e) => setPotValue(parseInt(e.target.value))}
-                              className="w-full thumb-cyan h-2"
+                              className="w-full thumb-cyan h-2 cursor-pointer"
                             />
                           </div>
-
-                          <div className="text-[8px] font-mono text-slate-600 flex justify-between mt-1">
-                            <span className="font-semibold text-blue-700">V_out: {(5.0 * (potValue/100)).toFixed(2)}V</span>
+                          <div className="text-[8px] font-mono text-slate-600 flex justify-between">
+                            <span className="font-semibold text-blue-700">V: {(5.0 * (potValue/100)).toFixed(2)}V</span>
                             <span>10 kΩ</span>
                           </div>
-
-                          {/* Pins */}
-                          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-around -translate-x-1/2">
-                            <button
-                              onClick={(e) => handlePinClick(part.id, 'vcc', part.x + 0, part.y + 35, e)}
-                              className="w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-white hover:scale-125 shadow-sm"
-                              title="VCC"
-                            />
-                            <button
-                              onClick={(e) => handlePinClick(part.id, 'gnd', part.x + 0, part.y + 65, e)}
-                              className="w-3.5 h-3.5 rounded-full bg-slate-700 border-2 border-white hover:scale-125 shadow-sm"
-                              title="GND"
-                            />
-                          </div>
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'wiper', part.x + 130, part.y + 50, e)}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 rounded-full bg-sky-500 border-2 border-white hover:scale-125 shadow-sm"
-                            title="WIPER"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 5. LED COMPONENT (WITH GLOW STATE)                  */}
-                      {/* =================================================== */}
+                      {/* 5. LED */}
                       {(part.type === 'led' || part.type === 'led_green') && (
-                        <div className="w-24 bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center relative text-slate-800">
+                        <div className="w-[80px] h-[90px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <span className="text-[9px] font-mono font-bold text-slate-700">
                             {part.color === 'green' ? 'LED (GRN)' : 'LED (RED)'}
                           </span>
-
-                          {/* Visual glowing bulb */}
-                          <div className="relative my-1">
+                          <div className="relative my-0.5">
                             <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
                               isD13High
                                 ? part.color === 'green'
@@ -3176,133 +3450,63 @@
                               </span>
                             </div>
                           </div>
-
                           <span className="text-[7px] font-mono text-slate-500 font-semibold">
                             {isD13High ? 'VF: 2.1V' : '0.0V'}
                           </span>
-
-                          {/* Pins: Anode Left, Cathode Right */}
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'anode', part.x + 0, part.y + 45, e)}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-white hover:scale-125 shadow-sm"
-                            title="Anode (+)"
-                          />
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'cathode', part.x + 80, part.y + 45, e)}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 rounded-full bg-slate-700 border-2 border-white hover:scale-125 shadow-sm"
-                            title="Cathode (-)"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 6. PIEZO BUZZER COMPONENT                           */}
-                      {/* =================================================== */}
+                      {/* 6. BUZZER */}
                       {part.type === 'buzzer' && (
-                        <div className="w-24 bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center relative text-slate-800">
+                        <div className="w-[80px] h-[80px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <span className="text-[9px] font-mono font-bold text-slate-700">BUZZER</span>
-                          <div className="w-8 h-8 rounded-full bg-slate-100 border-2 border-slate-300 my-1 flex items-center justify-center relative">
+                          <div className="w-8 h-8 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center relative">
                             <IconVolume2 className={`w-4 h-4 ${isD13High ? 'text-amber-500 animate-bounce' : 'text-slate-400'}`} />
                           </div>
                           <span className="text-[7px] font-mono text-slate-500 font-semibold">{isD13High ? '2.4 kHz' : 'SILENT'}</span>
-
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'pos', part.x + 0, part.y + 40, e)}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-white hover:scale-125 shadow-sm"
-                            title="Positive (+)"
-                          />
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'neg', part.x + 80, part.y + 40, e)}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 rounded-full bg-slate-700 border-2 border-white hover:scale-125 shadow-sm"
-                            title="Negative (-)"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 7. SG90 MICRO SERVO MOTOR                           */}
-                      {/* =================================================== */}
+                      {/* 7. SERVO */}
                       {part.type === 'servo' && (
-                        <div className="w-32 bg-[#0284c7] border-2 border-sky-300 rounded-xl p-2 shadow-2xl relative text-white">
+                        <div className="w-[128px] h-[90px] bg-[#0284c7] border-2 border-sky-300 rounded-xl p-2 shadow-2xl relative text-white flex flex-col justify-between select-none">
                           <div className="flex justify-between text-[9px] font-bold font-mono">
                             <span>SG90 SERVO</span>
                             <span>{servoAngle}°</span>
                           </div>
-
-                          {/* Visual Rotating Horn */}
-                          <div className="h-10 my-1 flex items-center justify-center relative">
+                          <div className="h-8 flex items-center justify-center relative">
                             <div className="w-6 h-6 rounded-full bg-white border border-slate-400 flex items-center justify-center">
                               <div 
-                                className="w-8 h-1.5 bg-slate-900 rounded origin-left transition-transform duration-300"
+                                className="w-7 h-1.5 bg-slate-900 rounded origin-left transition-transform duration-300"
                                 style={{ transform: `rotate(${servoAngle - 90}deg)` }}
                               />
                             </div>
                           </div>
-
-                          <div className="text-[7px] font-mono text-sky-100 text-center">PWM CONTROL (0°-180°)</div>
-
-                          {/* 3 Pins: SIG, 5V, GND */}
-                          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-around -translate-x-1/2">
-                            <button
-                              onClick={(e) => handlePinClick(part.id, 'sig', part.x + 0, part.y + 30, e)}
-                              className="w-3.5 h-3.5 rounded-full bg-amber-500 border border-white hover:scale-125"
-                              title="SIG (PWM)"
-                            />
-                            <button
-                              onClick={(e) => handlePinClick(part.id, 'vcc', part.x + 0, part.y + 55, e)}
-                              className="w-3.5 h-3.5 rounded-full bg-rose-500 border border-white hover:scale-125"
-                              title="5V"
-                            />
-                            <button
-                              onClick={(e) => handlePinClick(part.id, 'gnd', part.x + 0, part.y + 80, e)}
-                              className="w-3.5 h-3.5 rounded-full bg-slate-900 border border-white hover:scale-125"
-                              title="GND"
-                            />
-                          </div>
+                          <div className="text-[7px] font-mono text-sky-100 text-center">PWM (0°-180°)</div>
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 8. 16x2 I2C LCD DISPLAY                             */}
-                      {/* =================================================== */}
+                      {/* 8. LCD 16x2 */}
                       {part.type === 'lcd16x2' && (
-                        <div className="w-44 bg-[#064e3b] border-2 border-emerald-300 rounded-xl p-2 shadow-2xl relative text-white font-mono">
-                          <div className="text-[9px] font-bold text-emerald-200 mb-1">16x2 I2C LCD (0x27)</div>
-                          
-                          {/* LCD Screen with matrix characters */}
-                          <div className="bg-[#042f2e] border border-emerald-500/50 rounded p-1.5 text-[9px] text-emerald-300 leading-tight">
+                        <div className="w-[176px] h-[100px] bg-[#064e3b] border-2 border-emerald-300 rounded-xl p-2 shadow-2xl relative text-white font-mono flex flex-col justify-between select-none">
+                          <div className="text-[9px] font-bold text-emerald-200">16x2 I2C LCD (0x27)</div>
+                          <div className="bg-[#042f2e] border border-emerald-500/50 rounded p-1 text-[8px] text-emerald-300 leading-tight">
                             <div>A0:{Math.floor((voltage/5)*1023)} ({voltage.toFixed(2)}V)</div>
                             <div>D13:{isD13High ? 'HIGH' : 'LOW'} S:{sunlight}</div>
                           </div>
-
-                          {/* Bottom Pins: GND, VCC, SDA, SCL */}
-                          <div className="absolute bottom-0 left-0 right-0 flex justify-around translate-y-1/2">
-                            {part.pins.map(p => (
-                              <button
-                                key={p.id}
-                                onClick={(e) => handlePinClick(part.id, p.id, part.x + p.relX, part.y + p.relY, e)}
-                                className="w-3.5 h-3.5 rounded-full bg-slate-900 border border-emerald-400 hover:scale-125 text-[7px] text-white flex items-center justify-center"
-                                title={p.name}
-                              >
-                                {p.label[0]}
-                              </button>
-                            ))}
-                          </div>
+                          <div className="text-[7px] text-emerald-300/80 text-center">GND • VCC • SDA • SCL</div>
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 9. DIGITAL MULTIMETER (DMM)                         */}
-                      {/* =================================================== */}
+                      {/* 9. DMM */}
                       {part.type === 'dmm' && (
-                        <div className="w-40 bg-white border-2 border-sky-400 rounded-xl p-2.5 shadow-xl relative text-slate-800">
-                          <div className="flex items-center justify-between pb-1 border-b border-slate-200 mb-2">
+                        <div className="w-[160px] h-[110px] bg-white border-2 border-sky-400 rounded-xl p-2 shadow-xl relative text-slate-800 flex flex-col justify-between select-none">
+                          <div className="flex items-center justify-between pb-0.5 border-b border-slate-200">
                             <span className="text-[10px] font-bold text-sky-700 font-mono">MULTIMETER</span>
                             <span className="text-[8px] font-mono px-1 rounded bg-sky-100 text-sky-800 border border-sky-200">DMM [V]</span>
                           </div>
-
-                          <div className="bg-[#0f172a] border border-slate-700 rounded p-1.5 text-center shadow-inner">
-                            <div className="text-xl font-mono font-black text-amber-400 tracking-wider">
+                          <div className="bg-[#0f172a] border border-slate-700 rounded p-1 text-center shadow-inner my-1">
+                            <div className="text-lg font-mono font-black text-amber-400 tracking-wider">
                               {voltage.toFixed(2)} V
                             </div>
                             <div className="text-[8px] font-mono text-slate-400 flex justify-between px-1">
@@ -3310,29 +3514,16 @@
                               <span>{currentVal.toFixed(1)} mA</span>
                             </div>
                           </div>
-
-                          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-around py-3 -translate-x-1/2">
-                            {part.pins.map(pin => (
-                              <button
-                                key={pin.id}
-                                onClick={(e) => handlePinClick(part.id, pin.id, part.x + pin.relX, part.y + pin.relY, e)}
-                                className={`w-4 h-4 rounded-full border-2 border-white flex items-center justify-center text-[7px] font-bold text-white hover:scale-125 transition shadow-sm ${
-                                  pin.id === 'dmm_v' ? 'bg-rose-500' : 'bg-slate-700'
-                                }`}
-                                title={pin.name}
-                              >
-                                {pin.label}
-                              </button>
-                            ))}
+                          <div className="text-[8px] font-mono text-slate-500 flex justify-between px-1">
+                            <span className="text-rose-600 font-bold">VΩ (+)</span>
+                            <span className="text-slate-700 font-bold">COM (-)</span>
                           </div>
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 10. GROUND (GND) COMPONENT                          */}
-                      {/* =================================================== */}
+                      {/* 10. GND */}
                       {part.type === 'gnd' && (
-                        <div className="w-16 bg-white border-2 border-slate-300 rounded-lg p-1.5 shadow-md flex flex-col items-center relative text-slate-700">
+                        <div className="w-[80px] h-[50px] bg-white border-2 border-slate-300 rounded-lg p-1 shadow-md flex flex-col items-center justify-center text-slate-700 select-none">
                           <span className="text-[8px] font-mono font-bold text-slate-600 mb-0.5">GND</span>
                           <svg width="20" height="12" viewBox="0 0 24 16">
                             <line x1="12" y1="0" x2="12" y2="6" stroke="#475569" strokeWidth="2"/>
@@ -3340,50 +3531,35 @@
                             <line x1="6" y1="10" x2="18" y2="10" stroke="#475569" strokeWidth="2"/>
                             <line x1="9" y1="14" x2="15" y2="14" stroke="#475569" strokeWidth="2"/>
                           </svg>
-
-                          <button
-                            onClick={(e) => handlePinClick(part.id, 'gnd_pin', part.x + 40, part.y + 0, e)}
-                            className="absolute top-0 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-slate-600 border-2 border-white hover:scale-125 transition shadow-sm"
-                            title="Ground Lead"
-                          />
                         </div>
                       )}
 
-                      {/* =================================================== */}
-                      {/* 11. SOLAR PV PANEL COMPONENT                        */}
-                      {/* =================================================== */}
+                      {/* 11. SOLAR PV PANEL */}
                       {part.type === 'solar' && (() => {
                         const effectiveSun = Math.max(0, sunlight * (1 - (clouds || 0) * 0.0085));
                         const panelVoc = Math.min(5.00, Math.max(0.00, (effectiveSun / 1000) * 5.0));
                         const panelPower = Math.min(250.0, Math.max(0.0, panelVoc * 50 * (effectiveSun / 1000)));
 
                         return (
-                          <div className="w-[176px] bg-white border-2 border-sky-400 rounded-xl p-2.5 shadow-xl relative select-none text-slate-800 overflow-visible">
-                            {/* Header with Title & Tag */}
-                            <div className="flex items-center justify-between pb-1 border-b border-slate-200 mb-1.5">
-                              <div className="flex items-center space-x-1.5">
-                                <IconSun className="w-3.5 h-3.5 text-amber-500 animate-[spin_10s_linear_infinite]" />
-                                <span className="font-mono font-bold text-[10px] text-sky-800 tracking-wider">SOLAR PV PANEL</span>
+                          <div className="w-[176px] h-[130px] bg-white border-2 border-sky-400 rounded-xl p-2 shadow-xl relative select-none text-slate-800 flex flex-col justify-between">
+                            <div className="flex items-center justify-between pb-0.5 border-b border-slate-200">
+                              <div className="flex items-center space-x-1">
+                                <IconSun className="w-3 h-3 text-amber-500 animate-[spin_10s_linear_infinite]" />
+                                <span className="font-mono font-bold text-[9px] text-sky-800 tracking-wider">SOLAR PV PANEL</span>
                               </div>
-                              <span className="text-[8px] font-mono px-1 rounded bg-sky-100 text-sky-800 border border-sky-200">PWR</span>
+                              <span className="text-[7px] font-mono px-1 rounded bg-sky-100 text-sky-800 border border-sky-200">PWR</span>
                             </div>
 
-                            {/* Photovoltaic Cells Grid Graphic (Monocrystalline Silicon Wafers) */}
-                            <div className="w-full h-16 bg-[#040d18] border border-sky-400/40 rounded-lg p-1 relative overflow-hidden flex flex-col justify-between shadow-inner">
-                              {/* Glossy glint reflection */}
-                              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-sky-400/10 to-amber-300/15 pointer-events-none"></div>
-
-                              {/* 2x4 Photovoltaic cell matrix */}
-                              <div className="grid grid-cols-4 gap-1 h-full">
+                            <div className="w-full h-11 bg-[#040d18] border border-sky-400/40 rounded p-0.5 relative overflow-hidden flex flex-col justify-between shadow-inner">
+                              <div className="grid grid-cols-4 gap-0.5 h-full">
                                 {[...Array(8)].map((_, i) => (
                                   <div 
                                     key={i} 
-                                    className="bg-[#0b2447] border border-sky-400/30 rounded-[2px] relative flex flex-col justify-between p-0.5 overflow-hidden transition-all duration-300"
+                                    className="bg-[#0b2447] border border-sky-400/30 rounded-[1px] relative flex flex-col justify-between p-0.5"
                                     style={{
                                       boxShadow: effectiveSun > 300 ? `inset 0 0 6px rgba(56, 189, 248, ${(effectiveSun / 1000) * 0.4})` : 'none'
                                     }}
                                   >
-                                    <div className="w-full h-[1px] bg-slate-300/40"></div>
                                     <div className="w-full h-[1px] bg-slate-300/40"></div>
                                     <div className="absolute inset-y-0 left-1/2 w-[1px] bg-amber-400/50 -translate-x-1/2"></div>
                                   </div>
@@ -3391,72 +3567,17 @@
                               </div>
                             </div>
 
-                            {/* Live Readout on Panel Body: Voc and P */}
-                            <div className="mt-2 bg-[#0f172a] border border-slate-700 rounded-lg px-2 py-1 flex items-center justify-between font-mono shadow-inner">
-                              <div className="flex flex-col">
-                                <span className="text-[8px] text-slate-400">OPEN CIRCUIT</span>
-                                <span className="text-xs font-bold text-amber-400 tracking-wider">
-                                  Voc: {panelVoc.toFixed(2)} V
-                                </span>
-                              </div>
-                              <div className="flex flex-col items-end">
-                                <span className="text-[8px] text-slate-400">OUTPUT POWER</span>
-                                <span className="text-[11px] font-bold text-emerald-400 tracking-wider">
-                                  P: {panelPower.toFixed(1)} mW
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Irradiance indicator footer */}
-                            <div className="flex items-center justify-between text-[8px] font-mono text-slate-500 mt-1 px-0.5">
-                              <span className="flex items-center space-x-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                                <span className="text-slate-700 font-semibold">{sunlight} W/m²</span>
-                              </span>
-                              <span className="text-sky-700 font-semibold">Si Mono • 5V Max</span>
-                            </div>
-
-                            {/* Terminal Connection Pins: V+ (Red) and GND / V- (Black/Blue) */}
-                            <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-around py-5 translate-x-1/2">
-                              {/* V+ Terminal Pin */}
-                              <div className="relative flex items-center">
-                                <button
-                                  onClick={(e) => handlePinClick(part.id, 'v_pos', part.x + 176, part.y + 42, e)}
-                                  className="w-4 h-4 rounded-full bg-rose-500 border-2 border-white flex items-center justify-center text-[8px] font-bold text-white hover:scale-125 transition shadow-md"
-                                  title="Positive Terminal (V+)"
-                                >
-                                  +
-                                </button>
-                                <span className="absolute right-5 font-mono text-[8px] font-bold text-rose-600 bg-white px-1 rounded pointer-events-none border border-rose-300 shadow-xs">
-                                  V+
-                                </span>
-                              </div>
-
-                              {/* GND / V- Terminal Pin */}
-                              <div className="relative flex items-center">
-                                <button
-                                  onClick={(e) => handlePinClick(part.id, 'v_neg', part.x + 176, part.y + 82, e)}
-                                  className="w-4 h-4 rounded-full bg-slate-800 border-2 border-white flex items-center justify-center text-[8px] font-bold text-sky-300 hover:scale-125 transition shadow-md"
-                                  title="Negative / Ground Terminal (GND / V-)"
-                                >
-                                  -
-                                </button>
-                                <span className="absolute right-5 font-mono text-[8px] font-bold text-slate-700 bg-white px-1 rounded pointer-events-none border border-slate-300 whitespace-nowrap shadow-xs">
-                                  GND
-                                </span>
-                              </div>
+                            <div className="bg-[#0f172a] border border-slate-700 rounded px-1.5 py-0.5 flex items-center justify-between font-mono shadow-inner text-[8px]">
+                              <span className="text-amber-400 font-bold">Voc: {panelVoc.toFixed(2)}V</span>
+                              <span className="text-emerald-400 font-bold">P: {panelPower.toFixed(1)}mW</span>
                             </div>
                           </div>
                         );
                       })()}
 
-                      {/* =================================================== */}
-                      {/* 12. ESP32 NODEMCU / DEVKIT V1 COMPONENT             */}
-                      {/* =================================================== */}
+                      {/* 12. ESP32 DEVKIT V1 */}
                       {part.type === 'esp32' && (
-                        <div className="w-[200px] h-[280px] bg-[#18181b] border-2 border-amber-500/60 rounded-xl p-2.5 shadow-2xl relative select-none text-white font-mono flex flex-col justify-between">
-                          
-                          {/* Board Header & Title */}
+                        <div className="w-[200px] h-[280px] bg-[#18181b] border-2 border-amber-500/60 rounded-xl p-2 shadow-2xl relative select-none text-white font-mono flex flex-col justify-between">
                           <div className="flex items-center justify-between pb-1 border-b border-zinc-700">
                             <div className="flex items-center space-x-1">
                               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
@@ -3465,110 +3586,91 @@
                             <span className="text-[7px] px-1 rounded bg-zinc-800 text-amber-400 border border-zinc-700">Tensilica</span>
                           </div>
 
-                          {/* Gold Meandered PCB Antenna (Top) */}
                           <div className="w-full h-5 bg-[#09090b] rounded border border-amber-600/40 p-0.5 flex items-center justify-center overflow-hidden">
                             <svg width="150" height="14" viewBox="0 0 150 14" fill="none">
                               <path d="M2 12 L10 2 L20 12 L30 2 L40 12 L50 2 L60 12 L70 2 L80 12 L90 2 L100 12 L110 2 L120 12 L130 2 L140 12" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round" />
                             </svg>
                           </div>
 
-                          {/* Silver Metallic RF Shield Can (ESP-WROOM-32) */}
-                          <div className="w-full bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 border border-slate-100 rounded-lg p-1.5 text-slate-900 shadow-md flex flex-col items-center">
-                            <span className="font-black text-[10px] tracking-wide text-slate-900">ESP-WROOM-32</span>
-                            <span className="text-[7px] text-slate-700 font-semibold">WiFi • BLE 4.2 • dual core</span>
-                            <div className="w-full flex justify-between text-[6px] text-slate-600 mt-1 px-1 border-t border-slate-300/80 pt-0.5">
-                              <span>FCC: 2AC7Z</span>
-                              <span>CE 0700</span>
-                            </div>
+                          <div className="w-full bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 border border-slate-100 rounded p-1 text-slate-900 shadow-md flex flex-col items-center">
+                            <span className="font-black text-[9px] tracking-wide text-slate-900">ESP-WROOM-32</span>
+                            <span className="text-[6px] text-slate-700 font-semibold">WiFi • BLE 4.2 • dual core</span>
                           </div>
 
-                          {/* Controls & SMD LEDs */}
-                          <div className="bg-zinc-900/90 rounded border border-zinc-800 p-1.5 flex items-center justify-between text-[8px]">
-                            {/* EN & BOOT Buttons */}
+                          <div className="bg-zinc-900/90 rounded border border-zinc-800 p-1 flex items-center justify-between text-[7px]">
                             <div className="flex space-x-1">
-                              <span className="px-1 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[6px] text-zinc-300">EN</span>
-                              <span className="px-1 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[6px] text-zinc-300">BOOT</span>
+                              <span className="px-1 py-0.2 rounded bg-zinc-800 border border-zinc-700 text-[6px] text-zinc-300">EN</span>
+                              <span className="px-1 py-0.2 rounded bg-zinc-800 border border-zinc-700 text-[6px] text-zinc-300">BOOT</span>
                             </div>
-
-                            {/* LEDs: PWR (Red) & GPIO 2 (Blue) */}
                             <div className="flex items-center space-x-2 text-[7px]">
-                              <div className="flex flex-col items-center">
-                                <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+                              <div className="flex items-center space-x-0.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
                                 <span className="text-[6px] text-zinc-400">PWR</span>
                               </div>
-                              <div className="flex flex-col items-center">
-                                <span className={`w-2 h-2 rounded-full transition-all ${isEspD2High ? 'bg-blue-400 shadow-[0_0_8px_#38bdf8]' : 'bg-blue-950'}`}></span>
+                              <div className="flex items-center space-x-0.5">
+                                <span className={`w-1.5 h-1.5 rounded-full transition-all ${isEspD2High ? 'bg-blue-400 shadow-[0_0_8px_#38bdf8]' : 'bg-blue-950'}`}></span>
                                 <span className="text-[6px] text-blue-300 font-bold">IO2</span>
                               </div>
                             </div>
                           </div>
 
-                          {/* ADC Live Telemetry Bar */}
-                          <div className="bg-black/80 rounded px-1.5 py-0.5 border border-zinc-800 flex justify-between text-[7px] text-zinc-300">
-                            <span>ADC(12b): <strong className="text-amber-400">{espAdc}</strong></span>
+                          <div className="bg-black/80 rounded px-1 py-0.5 border border-zinc-800 flex justify-between text-[7px] text-zinc-300">
+                            <span>ADC: <strong className="text-amber-400">{espAdc}</strong></span>
                             <span>3.3V Ref</span>
                           </div>
 
-                          {/* Micro-USB Port at Bottom Edge */}
-                          <div className="w-full flex justify-center -mb-2">
-                            <div className="w-8 h-2.5 bg-slate-300 border border-slate-500 rounded-b flex items-center justify-center shadow">
+                          <div className="w-full flex justify-center -mb-1">
+                            <div className="w-8 h-2 bg-slate-300 border border-slate-500 rounded-b flex items-center justify-center shadow">
                               <span className="text-[5px] text-slate-700">USB</span>
                             </div>
                           </div>
-
-                          {/* Left Pin Terminals */}
-                          <div className="absolute left-0 top-0 bottom-0 pointer-events-auto">
-                            {part.pins.filter(p => p.side === 'left').map(pin => (
-                              <div key={pin.id} className="absolute left-0 -translate-x-1/2 -translate-y-1/2 flex items-center" style={{ top: `${pin.relY}px` }}>
-                                <button
-                                  onClick={(e) => handlePinClick(part.id, pin.id, part.x + pin.relX, part.y + pin.relY, e)}
-                                  className={`w-3.5 h-3.5 rounded-full border border-white flex items-center justify-center text-[6px] font-bold text-white hover:scale-125 transition shadow-sm ${
-                                    pin.id === '3V3' ? 'bg-rose-500' :
-                                    pin.id.includes('GND') ? 'bg-slate-800' :
-                                    pin.id === 'D2' ? 'bg-blue-500 border-blue-200' :
-                                    'bg-slate-700'
-                                  }`}
-                                  title={`ESP32 Pin ${pin.name}`}
-                                >
-                                  •
-                                </button>
-                                <span className="ml-1 text-[7px] text-slate-300 font-mono pointer-events-none select-none">{pin.label}</span>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* Right Pin Terminals */}
-                          <div className="absolute right-0 top-0 bottom-0 pointer-events-auto">
-                            {part.pins.filter(p => p.side === 'right').map(pin => (
-                              <div key={pin.id} className="absolute right-0 translate-x-1/2 -translate-y-1/2 flex items-center flex-row-reverse" style={{ top: `${pin.relY}px` }}>
-                                <button
-                                  onClick={(e) => handlePinClick(part.id, pin.id, part.x + pin.relX, part.y + pin.relY, e)}
-                                  className={`w-3.5 h-3.5 rounded-full border border-white flex items-center justify-center text-[6px] font-bold text-white hover:scale-125 transition shadow-sm ${
-                                    pin.id === 'VIN' ? 'bg-rose-600' :
-                                    pin.id.includes('GND') ? 'bg-slate-800' :
-                                    'bg-slate-700'
-                                  }`}
-                                  title={`ESP32 Pin ${pin.name}`}
-                                >
-                                  •
-                                </button>
-                                <span className="mr-1 text-[7px] text-slate-300 font-mono pointer-events-none select-none">{pin.label}</span>
-                              </div>
-                            ))}
-                          </div>
-
                         </div>
                       )}
 
+                      {/* Fallback for other components */}
+                      {!['arduino_uno', 'ldr', 'resistor', 'potentiometer', 'led', 'led_green', 'buzzer', 'servo', 'lcd16x2', 'dmm', 'gnd', 'solar', 'esp32'].includes(part.type) && (
+                        <div className="w-full h-full bg-white border-2 border-slate-400 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
+                          <div className="text-[9px] font-mono font-bold text-slate-700 uppercase tracking-wider">{part.name}</div>
+                          <div className="text-[8px] font-mono px-1 rounded bg-slate-100 text-slate-600 border border-slate-200">{part.tag || 'IC'}</div>
+                        </div>
+                      )}
+
+                      {/* All Pin Terminals with Magnetic Hitboxes, Rings & Tooltips */}
+                      {part.pins && part.pins.map(pin => (
+                        <PinTerminal
+                          key={pin.id}
+                          part={part}
+                          pin={pin}
+                          isHovered={hoveredPin?.partId === part.id && hoveredPin?.pinId === pin.id}
+                          isStartPin={wiringStartPin?.partId === part.id && wiringStartPin?.pinId === pin.id}
+                          isConnected={wires.some(w => (w.fromPart === part.id && w.fromPin === pin.id) || (w.toPart === part.id && w.toPin === pin.id))}
+                          onPinMouseDown={(e) => handlePinMouseDown(part.id, pin.id, e)}
+                          onPinClick={(e) => handlePinClick(part.id, pin.id, e)}
+                          onPinMouseEnter={() => handlePinMouseEnter(part.id, pin.id)}
+                          onPinMouseLeave={() => handlePinMouseLeave(part.id, pin.id)}
+                        />
+                      ))}
                     </div>
                   );
                 })}
               </div>
 
-              {/* Bottom-left helper text */}
+              {/* Bottom-left helper text with dynamic wiring and magnetic lock status */}
               <div className="absolute bottom-4 left-6 z-20 pointer-events-none font-mono text-xs text-slate-600 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 shadow-md flex items-center space-x-2 print-hide schematic-bottom-hints">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>• Click pin and drag to wire &nbsp;|&nbsp; • Drag parts to arrange &nbsp;|&nbsp; • Click wire + Delete key to cut</span>
+                {wiringStartPin ? (
+                  <>
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                    <span className="text-amber-800 font-bold">WIRING ACTIVE:</span>
+                    <span className="text-slate-800">
+                      From <strong className="text-blue-600 font-mono">{wiringStartPin.partId}:{wiringStartPin.pinId}</strong> • Hover near any pin to magnetically snap • Click or release to connect • ESC to cancel
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>• Click pin or drag to wire &nbsp;|&nbsp; • Magnetic 24px Snap Active &nbsp;|&nbsp; • Drag parts to arrange &nbsp;|&nbsp; • Click wire + Delete key to cut</span>
+                  </>
+                )}
               </div>
             </div>
 
