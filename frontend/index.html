@@ -331,17 +331,44 @@
   </div>
 
   <script>
-    // Global safety timer: ensure fallback transition if compilation takes longer than 2.5s
-    window.__INIT_SAFEGUARD__ = setTimeout(function() {
-      var spinner = document.getElementById('initial-loading-spinner');
-      if (spinner) {
-        console.warn('[Root Init] Initial spinner fallback timeout reached (2.5s).');
+    // 1. Safe global environment fallback before any script executes
+    window.ENV = window.ENV || {};
+    window.ENV.VITE_API_URL = window.ENV.VITE_API_URL || 'https://open-world-electronics-lab.onrender.com';
+
+    // 2. Guaranteed loading screen dismissal helper
+    window.dismissInitialLoadingScreen = function() {
+      try {
+        var spinner = document.getElementById('initial-loading-spinner');
+        if (spinner) {
+          spinner.style.display = 'none';
+          if (spinner.parentNode) {
+            spinner.parentNode.removeChild(spinner);
+          }
+        }
+      } catch (e) {
+        console.warn('[Init Guard] Error dismissing initial loading spinner:', e);
       }
+    };
+
+    // 3. Immediately dismiss spinner if any script or syntax errors occur
+    window.addEventListener('error', function(event) {
+      console.warn('[Global Error Guard] Script error detected, dismissing loading screen:', event.error || event.message);
+      window.dismissInitialLoadingScreen();
+    });
+    window.addEventListener('unhandledrejection', function(event) {
+      console.warn('[Global Rejection Guard] Unhandled rejection detected, dismissing loading screen:', event.reason);
+      window.dismissInitialLoadingScreen();
+    });
+
+    // 4. Automatic fallback timeout: maximum 2.5 seconds guarantee
+    window.__INIT_SAFEGUARD__ = setTimeout(function() {
+      console.warn('[Root Init] Initial spinner fallback timeout reached (2.5s). Dismissing loading screen.');
+      window.dismissInitialLoadingScreen();
     }, 2500);
   </script>
 
-  <!-- React Code with Babel -->
-  <script type="text/babel">
+  <!-- React Code with Babel (ES Module Mode) -->
+  <script type="text/babel" data-type="module">
     const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
     // =========================================================================
@@ -771,21 +798,19 @@
     // BACKEND API CLIENT CONFIGURATION (EXPRESS + POSTGRESQL)
     // =========================================================================
     const getApiBaseUrl = () => {
-      let viteUrl = null;
-      try {
-        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) {
-          viteUrl = import.meta.env.VITE_API_URL;
-        }
-      } catch (e) {}
-      if (!viteUrl && typeof window !== 'undefined' && window.VITE_API_URL) {
-        viteUrl = window.VITE_API_URL;
+      // 1. Safe reference using window.ENV fallback without direct import.meta.env dependency
+      let viteUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) || window.ENV?.VITE_API_URL || '';
+
+      // 2. Localhost vs same-origin production resolution
+      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      if (isLocal && (!window.ENV || window.ENV.VITE_API_URL === 'https://open-world-electronics-lab.onrender.com')) {
+        return window.location.port === '5000' ? '' : 'http://localhost:5000';
       }
+
       if (viteUrl) {
         return String(viteUrl).replace(/\/+$/, '');
       }
 
-      // 2. Localhost vs same-origin production resolution
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       if (isLocal) {
         return window.location.port === '5000' ? '' : 'http://localhost:5000';
       }
@@ -2832,9 +2857,11 @@
         const a = document.createElement('a');
         a.href = url;
         a.download = `schematic-${currentSavedProject?.shareCode || 'export'}-${Date.now()}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        if (document.body) {
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
         URL.revokeObjectURL(url);
       };
 
@@ -11052,9 +11079,9 @@ void loop() {
     // ROOT APP COORDINATOR (AUTH, DASHBOARD, SIMULATION)
     // =========================================================================
     function App() {
-      // Automatic fallback timeout (max 2.5s) & loading state
-      const [isLoading, setIsLoading] = useState(true);
-      const [isReady, setIsReady] = useState(false);
+      // Guaranteed ready state: default directly to ready so Proteus workbench mounts immediately
+      const [isLoading, setIsLoading] = useState(false);
+      const [isReady, setIsReady] = useState(true);
 
       const [currentUser, setCurrentUser] = useState(() => {
         try {
@@ -11099,12 +11126,23 @@ void loop() {
       useEffect(() => {
         let isMounted = true;
 
+        // Dismiss the raw HTML loading spinner immediately upon component mount
+        if (typeof window.dismissInitialLoadingScreen === 'function') {
+          window.dismissInitialLoadingScreen();
+        }
+        if (window.__INIT_SAFEGUARD__) {
+          clearTimeout(window.__INIT_SAFEGUARD__);
+        }
+
         // Guaranteed automatic fallback timeout: maximum 2.5 seconds
         const fallbackTimer = setTimeout(() => {
           if (isMounted) {
             console.warn('[Engine Init] Automatic fallback timeout triggered (2.5s). Halting spinner and forcing Proteus workbench ready.');
             setIsLoading(false);
             setIsReady(true);
+            if (typeof window.dismissInitialLoadingScreen === 'function') {
+              window.dismissInitialLoadingScreen();
+            }
           }
         }, 2500);
 
@@ -11149,6 +11187,9 @@ void loop() {
               setIsLoading(false);
               setIsReady(true);
               clearTimeout(fallbackTimer);
+              if (typeof window.dismissInitialLoadingScreen === 'function') {
+                window.dismissInitialLoadingScreen();
+              }
             }
           }
         };
@@ -11478,9 +11519,58 @@ void loop() {
       );
     }
 
-    // Mount the Application
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    // Error Boundary: catches runtime render errors and recovers gracefully
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
+      componentDidCatch(error, errorInfo) {
+        console.warn('[React ErrorBoundary caught error]', error, errorInfo);
+        if (typeof window.dismissInitialLoadingScreen === 'function') {
+          window.dismissInitialLoadingScreen();
+        }
+      }
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-900 text-white font-sans p-6 text-center">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold mb-4">⚠️</div>
+              <h2 className="text-lg font-semibold text-slate-100">Lab Workbench Resumed with Fallback</h2>
+              <p className="text-xs text-slate-400 max-w-md mt-2 mb-4">An error occurred during component initialization. The session has been safely recovered.</p>
+              <button 
+                onClick={() => { localStorage.clear(); window.location.reload(); }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg shadow transition"
+              >
+                Reset & Reload Workbench
+              </button>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+
+    // Mount the Application safely
+    try {
+      const rootContainer = document.getElementById('root');
+      if (rootContainer) {
+        const root = ReactDOM.createRoot(rootContainer);
+        root.render(
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        );
+      }
+    } catch (mountErr) {
+      console.warn('[Mount Guard] Error rendering root React component:', mountErr);
+      if (typeof window.dismissInitialLoadingScreen === 'function') {
+        window.dismissInitialLoadingScreen();
+      }
+    }
   </script>
 </body>
 </html>
