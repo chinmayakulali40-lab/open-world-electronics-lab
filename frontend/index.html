@@ -3408,21 +3408,9 @@
                 servoAngle={servoAngle}
                 potValue={potValue}
                 setPotValue={setPotValue}
-                onResetSample={() => {
-                  setSchematicParts(INITIAL_SCHEMATIC_PARTS);
-                  setWires(INITIAL_WIRES);
-                  setSelectedPartId(null);
-                  setSelectedWireId(null);
-                }}
                 onLoadSolarSample={() => {
                   setSchematicParts(SOLAR_SAMPLE_PARTS);
                   setWires(SOLAR_SAMPLE_WIRES);
-                  setSelectedPartId(null);
-                  setSelectedWireId(null);
-                }}
-                onLoadEspSample={() => {
-                  setSchematicParts(ESP32_SAMPLE_PARTS);
-                  setWires(ESP32_SAMPLE_WIRES);
                   setSelectedPartId(null);
                   setSelectedWireId(null);
                 }}
@@ -4536,9 +4524,7 @@
       servoAngle,
       potValue,
       setPotValue,
-      onResetSample,
       onLoadSolarSample,
-      onLoadEspSample,
       isEspD2High,
       espAdc,
       onSaveProject,
@@ -5155,29 +5141,12 @@
               </button>
 
               <button
-                onClick={onResetSample}
-                className="px-2.5 py-1 rounded bg-white hover:bg-slate-50 text-blue-600 border border-blue-200 shadow-sm transition"
-                title="Load Arduino Uno + LDR Sensor Circuit"
-              >
-                Sample (Arduino + LDR)
-              </button>
-
-              <button
                 onClick={onLoadSolarSample}
                 className="px-2.5 py-1 rounded bg-white hover:bg-slate-50 text-amber-600 border border-amber-200 shadow-sm transition flex items-center space-x-1"
                 title="Load Solar PV Panel + DMM Circuit"
               >
                 <IconSun className="w-3.5 h-3.5 text-amber-500" />
                 <span>Sample (Solar PV)</span>
-              </button>
-
-              <button
-                onClick={onLoadEspSample}
-                className="px-2.5 py-1 rounded bg-white hover:bg-slate-50 text-indigo-600 border border-indigo-200 shadow-sm transition flex items-center space-x-1"
-                title="Load ESP32 DevKit V1 + Solar PV Panel Circuit"
-              >
-                <IconCpu className="w-3.5 h-3.5 text-indigo-500" />
-                <span>Sample (ESP32 IoT)</span>
               </button>
 
               <div className="h-4 w-px bg-slate-300 mx-0.5"></div>
