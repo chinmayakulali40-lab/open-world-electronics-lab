@@ -1820,6 +1820,23 @@
         ]
       },
       {
+        id: 'breadboard',
+        name: 'Solderless Breadboard (830 Point)',
+        category: 'Passives & Discrete',
+        subcategory: 'Prototyping',
+        tag: 'PROTO',
+        library: 'PROTO.LIB',
+        package: 'MB-102',
+        icon: IconLayers,
+        desc: 'Full-size 830-point solderless breadboard with dual power distribution rails',
+        pins: [
+          { id: 'vcc_t', name: '+', label: '+', side: 'top', relX: 50, relY: 0, type: 'power' },
+          { id: 'gnd_t', name: '-', label: '-', side: 'top', relX: 100, relY: 0, type: 'power' },
+          { id: 'vcc_b', name: '+', label: '+', side: 'bottom', relX: 50, relY: 140, type: 'power' },
+          { id: 'gnd_b', name: '-', label: '-', side: 'bottom', relX: 100, relY: 140, type: 'power' }
+        ]
+      },
+      {
         id: 'capacitor',
         name: 'Electrolytic Cap (10µF CAP-POL)',
         category: 'Passives & Discrete',
@@ -3528,6 +3545,926 @@
     }
 
     // =========================================================================
+    // COMPONENT PRICING CATALOG (INR ₹) & COMMERCIAL SPECIFICATIONS
+    // =========================================================================
+    const COMPONENT_PRICES_INR = {
+      arduino_uno: {
+        name: 'Arduino Uno R3 Microcontroller Board',
+        refPrefix: 'U',
+        spec: 'ATmega328P DIP-28, 16MHz, 5V, USB-B',
+        mfr: 'Arduino LLC / Microchip',
+        package: 'DIP-28 / Shield Form',
+        unitPrice: 2850.00
+      },
+      arduino_nano: {
+        name: 'Arduino Nano V3.0 Microcontroller Board',
+        refPrefix: 'U',
+        spec: 'ATmega328P, 16MHz, 5V Logic, Mini-USB',
+        mfr: 'Gravitech / Arduino',
+        package: 'DIP-30 / Breadboard Friendly',
+        unitPrice: 380.00
+      },
+      esp32: {
+        name: 'ESP32 DevKit V1 IoT Development Board',
+        refPrefix: 'U',
+        spec: 'Tensilica Xtensa Dual-Core 240MHz, WiFi + BLE 4.2',
+        mfr: 'Espressif Systems',
+        package: 'NodeMCU-30 / SMD-Module',
+        unitPrice: 450.00
+      },
+      at89c51: {
+        name: 'AT89C51 8-bit Microcontroller',
+        refPrefix: 'U',
+        spec: '8051 Architecture, 4KB Flash, 128B RAM, 12MHz',
+        mfr: 'Atmel / Microchip',
+        package: 'PDIP-40',
+        unitPrice: 165.00
+      },
+      pic16f877a: {
+        name: 'PIC16F877A Flash Microcontroller',
+        refPrefix: 'U',
+        spec: '14KB Flash, 368B RAM, 10-bit ADC, 20MHz',
+        mfr: 'Microchip Technology',
+        package: 'PDIP-40',
+        unitPrice: 240.00
+      },
+      breadboard: {
+        name: 'Solderless Breadboard (830 Point MB-102)',
+        refPrefix: 'BB',
+        spec: '830 Tie-Points, Dual Power Bus Rails, Nickel Phosphor Bronze',
+        mfr: 'ElecFreaks / OEM',
+        package: 'MB-102 165×55mm',
+        unitPrice: 180.00
+      },
+      resistor: {
+        name: 'Metal Film Precision Resistor 1/4W',
+        refPrefix: 'R',
+        spec: '10kΩ (±1% Tol), Low Noise, Flame Proof',
+        mfr: 'Vishay / Yageo',
+        package: 'Axial-0207',
+        unitPrice: 2.50
+      },
+      potentiometer: {
+        name: 'Rotary Potentiometer 10kΩ Linear',
+        refPrefix: 'RV',
+        spec: '10kΩ B10K, 3-Terminal Single Turn with Knurled Shaft',
+        mfr: 'Bourns / Alps',
+        package: 'Panel Mount 3-Pin',
+        unitPrice: 25.00
+      },
+      capacitor: {
+        name: 'Radial Electrolytic Capacitor 100µF 25V',
+        refPrefix: 'C',
+        spec: '100µF, 25V DC, 105°C High Temp, Low ESR',
+        mfr: 'Nichicon / Panasonic',
+        package: 'Radial Can 6.3×11mm',
+        unitPrice: 4.50
+      },
+      cap_ceramic: {
+        name: 'Multilayer Ceramic Disc Capacitor 0.1µF',
+        refPrefix: 'C',
+        spec: '100nF (104), 50V, X7R Dielectric (±10%)',
+        mfr: 'Murata / TDK',
+        package: 'Radial Disc 5.0mm',
+        unitPrice: 2.00
+      },
+      inductor: {
+        name: 'Radial Peaking Choke Inductor 100µH',
+        refPrefix: 'L',
+        spec: '100µH, 1.0A Saturation Current, Ferrite Core',
+        mfr: 'Fastron / Wurth',
+        package: 'Radial Leaded 8×10mm',
+        unitPrice: 8.00
+      },
+      transformer: {
+        name: 'Step-Down Center Tapped Transformer',
+        refPrefix: 'T',
+        spec: 'Primary 230V AC, Secondary 12V-0-12V AC @ 1A',
+        mfr: 'Miracle Electronic',
+        package: 'Chassis Mount EI-Core',
+        unitPrice: 260.00
+      },
+      led: {
+        name: 'High-Luminosity Red 5mm LED',
+        refPrefix: 'D',
+        spec: 'Diffused Red, Vf ≈ 2.0V, If = 20mA, 625nm',
+        mfr: 'Kingbright / Everlight',
+        package: 'Radial 5mm Round T-1 3/4',
+        unitPrice: 3.00
+      },
+      led_green: {
+        name: 'High-Luminosity Green 5mm LED',
+        refPrefix: 'D',
+        spec: 'Diffused Green, Vf ≈ 2.2V, If = 20mA, 525nm',
+        mfr: 'Kingbright / Everlight',
+        package: 'Radial 5mm Round T-1 3/4',
+        unitPrice: 3.00
+      },
+      led_blue: {
+        name: 'Ultra-Bright Blue 5mm LED',
+        refPrefix: 'D',
+        spec: 'Clear Blue InGaN, Vf ≈ 3.0V, If = 20mA, 470nm',
+        mfr: 'Cree / Kingbright',
+        package: 'Radial 5mm Round T-1 3/4',
+        unitPrice: 3.50
+      },
+      led_yellow: {
+        name: 'High-Luminosity Yellow 5mm LED',
+        refPrefix: 'D',
+        spec: 'Diffused Yellow, Vf ≈ 2.1V, If = 20mA, 590nm',
+        mfr: 'Kingbright / Everlight',
+        package: 'Radial 5mm Round T-1 3/4',
+        unitPrice: 3.00
+      },
+      '7seg_ca': {
+        name: '0.56" 7-Segment LED Display (Common Anode)',
+        refPrefix: 'DISP',
+        spec: 'Super Red, 1-Digit, Common Anode Pinout',
+        mfr: 'Lite-On / Kingbright',
+        package: 'DIP-10',
+        unitPrice: 45.00
+      },
+      '7seg_cc': {
+        name: '0.56" 7-Segment LED Display (Common Cathode)',
+        refPrefix: 'DISP',
+        spec: 'Super Red, 1-Digit, Common Cathode Pinout',
+        mfr: 'Lite-On / Kingbright',
+        package: 'DIP-10',
+        unitPrice: 45.00
+      },
+      buzzer: {
+        name: '5V Continuous Active Piezo Buzzer',
+        refPrefix: 'BZ',
+        spec: '5V DC, Resonant Freq 2.4kHz, SPL ≥ 85dB',
+        mfr: 'Murata / CUI Devices',
+        package: 'DIP-2 Pin 12mm',
+        unitPrice: 18.00
+      },
+      speaker: {
+        name: 'Miniature 8Ω 0.5W Mylar Speaker',
+        refPrefix: 'SPK',
+        spec: '8 Ohm Impedance, 0.5 Watt RMS, 40mm Diameter',
+        mfr: 'PUI Audio',
+        package: 'Chassis Mount 40mm',
+        unitPrice: 35.00
+      },
+      lcd16x2: {
+        name: '16x2 Alphanumeric LCD with I2C Backpack',
+        refPrefix: 'LCD',
+        spec: 'HD44780 Controller + PCF8574 I2C Adapter (Address 0x27)',
+        mfr: 'Hitachi / SunFounder',
+        package: 'Module 80×36mm 4-Pin',
+        unitPrice: 220.00
+      },
+      servo: {
+        name: 'TowerPro SG90 9g Micro Servo Motor',
+        refPrefix: 'M',
+        spec: '4.8V–6V, Torque 1.8kg-cm, 180° Rotation, PWM 50Hz',
+        mfr: 'TowerPro',
+        package: 'Micro Servo 3-Pin Dupont',
+        unitPrice: 145.00
+      },
+      motor_dc: {
+        name: 'Miniature 3V–6V DC Hobby Toy Motor',
+        refPrefix: 'M',
+        spec: '3V–6V DC, 8000 RPM, Brushed Carbon Commutator',
+        mfr: 'Mabuchi / OEM',
+        package: 'Cylindrical 130 Form',
+        unitPrice: 65.00
+      },
+      stepper: {
+        name: '28BYJ-48 5V Stepper Motor + ULN2003 Driver',
+        refPrefix: 'M',
+        spec: '5V DC, 4-Phase 5-Wire, 64:1 Reduction Gear Ratio',
+        mfr: 'Songle / Elegoo',
+        package: 'Motor + Driver Board Kit',
+        unitPrice: 160.00
+      },
+      relay: {
+        name: '5V SPDT Relay Module with Optocoupler',
+        refPrefix: 'K',
+        spec: 'Coil 5V DC, Contact Rating 10A 250VAC / 10A 30VDC',
+        mfr: 'Songle Relay',
+        package: 'PCB Module 3-Pin Screw Term',
+        unitPrice: 75.00
+      },
+      ldr: {
+        name: 'GL5528 5mm LDR Light Dependent Resistor',
+        refPrefix: 'R_LDR',
+        spec: 'Cadmium Sulfide (CdS), Dark ≈ 1MΩ, 10 Lux ≈ 10–20kΩ',
+        mfr: 'Shenzhen Senba Optical',
+        package: 'Radial 5mm Epoxy Coated',
+        unitPrice: 15.00
+      },
+      thermistor: {
+        name: 'NTC 10kΩ Thermistor B3950 Temperature Sensor',
+        refPrefix: 'TH',
+        spec: 'R25 = 10kΩ ±1%, Beta B25/50 = 3950K, Glass Bead',
+        mfr: 'Epcos / TDK',
+        package: 'Radial Glass Bead 2-Pin',
+        unitPrice: 18.00
+      },
+      solar: {
+        name: '5V 1.5W Monocrystalline Solar PV Panel',
+        refPrefix: 'PV',
+        spec: 'Voc ≈ 5.0V, Isc ≈ 300mA, High-Efficiency Monocrystalline Silicon',
+        mfr: 'Waveshare / SunPower OEM',
+        package: 'Epoxy Encapsulated 110×69mm',
+        unitPrice: 420.00
+      },
+      dht11: {
+        name: 'DHT11 Digital Temperature & Humidity Sensor',
+        refPrefix: 'SENS',
+        spec: 'Temp: 0–50°C (±2°C), Humidity: 20–90% RH (±5%), 1-Wire Digital',
+        mfr: 'Aosong Electronics',
+        package: 'Module 3-Pin',
+        unitPrice: 110.00
+      },
+      ultrasonic: {
+        name: 'HC-SR04 Ultrasonic Sonar Distance Sensor',
+        refPrefix: 'SENS',
+        spec: 'Range 2cm–400cm, 40kHz Ultrasound, Trigger & Echo TTL',
+        mfr: 'Cytron / ElecFreaks',
+        package: 'Module 4-Pin Dual Transducer',
+        unitPrice: 95.00
+      },
+      pir: {
+        name: 'HC-SR501 PIR Pyroelectric Infrared Motion Sensor',
+        refPrefix: 'SENS',
+        spec: 'BISS0001 IC, Fresnel Lens, 3–7m Sensing Range, 3.3V Output',
+        mfr: 'HC Sensors',
+        package: 'Dome Module 3-Pin',
+        unitPrice: 125.00
+      },
+      push_button: {
+        name: '6×6×5mm PCB Tactile Push Button Switch',
+        refPrefix: 'SW',
+        spec: 'SPST Normally Open, 50mA 12VDC, Snap Action',
+        mfr: 'Omron / C&K',
+        package: 'Through-Hole 4-Pin Tact',
+        unitPrice: 3.00
+      },
+      toggle_switch: {
+        name: 'Miniature SPDT Slide/Toggle Switch',
+        refPrefix: 'SW',
+        spec: '1P2T On-On, Rating 0.5A 50VDC, Latching',
+        mfr: 'Dailywell / C&K',
+        package: 'Through-Hole 3-Pin Sub-Mini',
+        unitPrice: 12.00
+      },
+      '7400': {
+        name: '74LS00 Quad 2-Input NAND Gate IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 4 Independent NAND Gates, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 32.00
+      },
+      '7402': {
+        name: '74LS02 Quad 2-Input NOR Gate IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 4 Independent NOR Gates, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 32.00
+      },
+      '7404': {
+        name: '74LS04 Hex Inverter (NOT Gate) IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 6 Inverters, 5V VCC',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 28.00
+      },
+      '7408': {
+        name: '74LS08 Quad 2-Input AND Gate IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 4 Independent AND Gates, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 32.00
+      },
+      '7432': {
+        name: '74LS32 Quad 2-Input OR Gate IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 4 Independent OR Gates, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 32.00
+      },
+      '7486': {
+        name: '74LS86 Quad 2-Input Exclusive-OR (XOR) Gate IC',
+        refPrefix: 'U',
+        spec: 'Low Power Schottky TTL, 4 Independent XOR Gates, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 36.00
+      },
+      '7474': {
+        name: '74LS74 Dual D-Type Positive Edge-Triggered Flip-Flop',
+        refPrefix: 'U',
+        spec: 'With Clear and Preset Inputs, TTL Compatible, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 38.00
+      },
+      '7476': {
+        name: '74LS76 Dual JK Flip-Flop with Set/Reset',
+        refPrefix: 'U',
+        spec: 'Dual Negative Edge-Triggered JK Flip-Flop, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-16',
+        unitPrice: 42.00
+      },
+      '74138': {
+        name: '74LS138 3-to-8 Line Decoder / Demultiplexer',
+        refPrefix: 'U',
+        spec: 'High-Speed Inverting Outputs, 3 Enable Inputs, 5V',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-16',
+        unitPrice: 45.00
+      },
+      '74151': {
+        name: '74LS151 8-Input Data Selector / Multiplexer',
+        refPrefix: 'U',
+        spec: 'Binary Decode Inputs, True and Complementary Outputs',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-16',
+        unitPrice: 48.00
+      },
+      '74193': {
+        name: '74LS193 Synchronous 4-Bit Up/Down Binary Counter',
+        refPrefix: 'U',
+        spec: 'Dual Clock Inputs, Direct Clear and Preset',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-16',
+        unitPrice: 55.00
+      },
+      '7447': {
+        name: '74LS47 BCD to 7-Segment Decoder / Driver',
+        refPrefix: 'U',
+        spec: 'Active-Low Open-Collector Outputs for Common Anode Displays',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-16',
+        unitPrice: 52.00
+      },
+      '4017': {
+        name: 'CD4017B CMOS Decade Counter with 10 Decoded Outputs',
+        refPrefix: 'U',
+        spec: '5-Stage Johnson Counter, Fully Static Operation 3V–15V',
+        mfr: 'Texas Instruments / OnSemi',
+        package: 'PDIP-16',
+        unitPrice: 40.00
+      },
+      '4066': {
+        name: 'CD4066B Quad Bilateral Analog Switch',
+        refPrefix: 'U',
+        spec: '4 Independent Bidirectional CMOS Switches, Low On-Resistance',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-14',
+        unitPrice: 38.00
+      },
+      ne555: {
+        name: 'NE555 Precision General Purpose Timer IC',
+        refPrefix: 'U',
+        spec: 'Monostable / Astable Multivibrator, Timing from µs to Hours',
+        mfr: 'Texas Instruments / ST',
+        package: 'PDIP-8',
+        unitPrice: 15.00
+      },
+      lm741: {
+        name: 'LM741 General Purpose Operational Amplifier',
+        refPrefix: 'U',
+        spec: 'Single Op-Amp, Internal Frequency Compensation, Short Circuit Protected',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-8',
+        unitPrice: 25.00
+      },
+      lm358: {
+        name: 'LM358 Dual Low-Power Operational Amplifier',
+        refPrefix: 'U',
+        spec: 'Dual Op-Amp, Single Supply 3V–32V, Ground Sensing',
+        mfr: 'Texas Instruments / ST',
+        package: 'PDIP-8',
+        unitPrice: 22.00
+      },
+      tl072: {
+        name: 'TL072 Low-Noise JFET-Input Dual Op-Amp',
+        refPrefix: 'U',
+        spec: 'High Slew Rate 13V/µs, Low Harmonic Distortion, High Input Z',
+        mfr: 'Texas Instruments',
+        package: 'PDIP-8',
+        unitPrice: 35.00
+      },
+      lm393: {
+        name: 'LM393 Dual Low-Power Voltage Comparator',
+        refPrefix: 'U',
+        spec: 'Open Collector Output, Wide Supply 2V–36V, Low Offset 1mV',
+        mfr: 'Texas Instruments / OnSemi',
+        package: 'PDIP-8',
+        unitPrice: 24.00
+      },
+      lm317: {
+        name: 'LM317T 1.5A Adjustable Positive Voltage Regulator',
+        refPrefix: 'U',
+        spec: 'Output 1.25V–37V @ 1.5A, Internal Thermal Overload Protection',
+        mfr: 'STMicroelectronics / TI',
+        package: 'TO-220',
+        unitPrice: 28.00
+      },
+      lm7805: {
+        name: 'L7805CV +5V 1.5A Fixed Positive Voltage Regulator',
+        refPrefix: 'U',
+        spec: 'Output 5.0V Fixed @ 1.5A, Thermal Shutdown, Short Circuit Proof',
+        mfr: 'STMicroelectronics',
+        package: 'TO-220',
+        unitPrice: 24.00
+      },
+      lm7812: {
+        name: 'L7812CV +12V 1.5A Fixed Positive Voltage Regulator',
+        refPrefix: 'U',
+        spec: 'Output 12.0V Fixed @ 1.5A, Thermal Shutdown, TO-220',
+        mfr: 'STMicroelectronics',
+        package: 'TO-220',
+        unitPrice: 24.00
+      },
+      '1n4007': {
+        name: '1N4007 1000V 1A Silicon Rectifier Diode',
+        refPrefix: 'D',
+        spec: 'Vrrm = 1000V, If(av) = 1.0A, Low Forward Voltage Drop',
+        mfr: 'Vishay / Diodes Inc',
+        package: 'DO-41 Axial',
+        unitPrice: 2.00
+      },
+      '1n4148': {
+        name: '1N4148 High-Speed Small Signal Switching Diode',
+        refPrefix: 'D',
+        spec: 'Vr = 100V, Trr = 4ns, Fast Recovery Silicon Diode',
+        mfr: 'Nexperia / Vishay',
+        package: 'DO-35 Glass Axial',
+        unitPrice: 1.50
+      },
+      zener_5v1: {
+        name: 'BZX55C5V1 5.1V 0.5W Zener Voltage Reference Diode',
+        refPrefix: 'DZ',
+        spec: 'Vz = 5.1V (±5%), Ptot = 500mW, Low Leakage',
+        mfr: 'Vishay / OnSemi',
+        package: 'DO-35 Glass Axial',
+        unitPrice: 2.50
+      },
+      bridge_rectifier: {
+        name: 'W04M 1.5A 400V Single-Phase Bridge Rectifier',
+        refPrefix: 'BR',
+        spec: 'Vrrm = 400V, If = 1.5A, Glass Passivated Diode Matrix',
+        mfr: 'Diodes Inc / Vishay',
+        package: 'WOB Radial 4-Pin',
+        unitPrice: 18.00
+      },
+      bc547: {
+        name: 'BC547B NPN General Purpose BJT Transistor',
+        refPrefix: 'Q',
+        spec: 'Vceo = 45V, Ic = 100mA, hFE ≈ 200–450, Low Noise',
+        mfr: 'OnSemi / Nexperia',
+        package: 'TO-92-3',
+        unitPrice: 3.50
+      },
+      '2n2222': {
+        name: '2N2222A NPN High-Current Switching Transistor',
+        refPrefix: 'Q',
+        spec: 'Vceo = 40V, Ic = 800mA, fT = 300MHz, Fast Switching',
+        mfr: 'Central Semi / ST',
+        package: 'TO-92-3',
+        unitPrice: 4.50
+      },
+      bc557: {
+        name: 'BC557B PNP General Purpose BJT Transistor',
+        refPrefix: 'Q',
+        spec: 'Vceo = -45V, Ic = -100mA, hFE ≈ 200–450',
+        mfr: 'OnSemi / Nexperia',
+        package: 'TO-92-3',
+        unitPrice: 3.50
+      },
+      '2n7000': {
+        name: '2N7000 N-Channel Small-Signal MOSFET',
+        refPrefix: 'Q',
+        spec: 'Vds = 60V, Id = 200mA, Rds(on) = 5Ω, Logic Level Gate',
+        mfr: 'Microchip / OnSemi',
+        package: 'TO-92-3',
+        unitPrice: 12.00
+      },
+      irf540n: {
+        name: 'IRF540N 100V 33A N-Channel HEXFET Power MOSFET',
+        refPrefix: 'Q',
+        spec: 'Vds = 100V, Id = 33A, Rds(on) = 44mΩ, Fast Switching',
+        mfr: 'Infineon / International Rectifier',
+        package: 'TO-220AB',
+        unitPrice: 55.00
+      },
+      irf9540: {
+        name: 'IRF9540N -100V -23A P-Channel Power MOSFET',
+        refPrefix: 'Q',
+        spec: 'Vds = -100V, Id = -23A, Rds(on) = 117mΩ, TO-220',
+        mfr: 'Infineon / International Rectifier',
+        package: 'TO-220AB',
+        unitPrice: 65.00
+      }
+    };
+
+    // =========================================================================
+    // COMPUTE LIVE BILL OF MATERIALS (BOM) & COMMERCE PRICING ENGINE
+    // =========================================================================
+    function computeBomData(schematicParts = [], wires = []) {
+      const typeGroups = {};
+      const refCounters = {};
+
+      schematicParts.forEach((part) => {
+        const type = part.type;
+        const catalogInfo = COMPONENT_PRICES_INR[type] || {
+          name: part.name || 'Electronic Component',
+          refPrefix: 'U',
+          spec: part.desc || part.tag || 'Standard Discrete Spec',
+          mfr: 'Generic Lab Spec',
+          package: part.package || 'Through-Hole / Module',
+          unitPrice: 10.00
+        };
+
+        // Specific overrides for dynamic resistor values
+        let displaySpec = catalogInfo.spec;
+        if (part.resistance) {
+          const rStr = part.resistance >= 1000 ? `${(part.resistance / 1000)} kΩ` : `${part.resistance} Ω`;
+          displaySpec = `${rStr} Metal Film Resistor (±1% Tol)`;
+        }
+
+        const groupKey = `${type}_${displaySpec}`;
+
+        if (!typeGroups[groupKey]) {
+          const prefix = catalogInfo.refPrefix || 'U';
+          typeGroups[groupKey] = {
+            type,
+            name: catalogInfo.name,
+            spec: displaySpec,
+            mfr: catalogInfo.mfr,
+            package: catalogInfo.package,
+            unitPrice: catalogInfo.unitPrice,
+            qty: 0,
+            refDesList: [],
+            prefix
+          };
+        }
+
+        const grp = typeGroups[groupKey];
+        grp.qty += 1;
+        const count = (refCounters[grp.prefix] || 0) + 1;
+        refCounters[grp.prefix] = count;
+        grp.refDesList.push(`${grp.prefix}${count}`);
+      });
+
+      const items = Object.values(typeGroups).map(item => ({
+        ...item,
+        refDes: item.refDesList.length <= 4 
+          ? item.refDesList.join(', ') 
+          : `${item.refDesList[0]}..${item.refDesList[item.refDesList.length - 1]} (${item.qty} pcs)`,
+        extendedPrice: item.qty * item.unitPrice
+      }));
+
+      // Accessory item: Dupont Jumper Connecting Wires (Qty × ₹2.50)
+      if (wires && wires.length > 0) {
+        items.push({
+          type: 'wire_accessory',
+          name: 'Flexible Jumper Wire (20cm Dupont M/M & M/F)',
+          spec: 'Multi-Strand Copper Core, PVC Insulated 24AWG, 2.54mm Pitch',
+          mfr: 'Dupont / Lab Prototyping Grade',
+          package: 'Dupont 2.54mm Pin',
+          refDes: wires.length === 1 ? 'W1' : `W1–W${wires.length}`,
+          qty: wires.length,
+          unitPrice: 2.50,
+          extendedPrice: wires.length * 2.50
+        });
+      }
+
+      const totalParts = schematicParts.length;
+      const totalWires = wires.length;
+      const subtotal = items.reduce((sum, item) => sum + item.extendedPrice, 0);
+      const gstRate = 0.18; // 18% GST as requested
+      const gstAmount = subtotal * gstRate;
+      const grandTotal = subtotal + gstAmount;
+
+      return {
+        items,
+        totalParts,
+        totalWires,
+        subtotal,
+        gstRate: 18,
+        gstAmount,
+        grandTotal
+      };
+    }
+
+    // =========================================================================
+    // COMPONENTS USED & PRICE QUOTATION MODAL
+    // =========================================================================
+    function PriceQuotationModal({
+      isOpen,
+      onClose,
+      bomData,
+      schematicParts = [],
+      wires = [],
+      currentSavedProject,
+      currentUser,
+      currentLocation
+    }) {
+      const [rfqState, setRfqState] = useState({ code: null, copied: false, generatedAt: null });
+
+      if (!isOpen) return null;
+
+      const handleExportCSV = () => {
+        const headers = ['#', 'RefDes', 'Component Name', 'Specification', 'Manufacturer', 'Package', 'Qty', 'Unit Price (INR)', 'Extended Price (INR)'];
+        const rows = bomData.items.map((item, idx) => [
+          idx + 1,
+          `"${item.refDes}"`,
+          `"${item.name.replace(/"/g, '""')}"`,
+          `"${item.spec.replace(/"/g, '""')}"`,
+          `"${item.mfr.replace(/"/g, '""')}"`,
+          `"${item.package.replace(/"/g, '""')}"`,
+          item.qty,
+          item.unitPrice.toFixed(2),
+          item.extendedPrice.toFixed(2)
+        ]);
+
+        rows.push([]);
+        rows.push(['', '', '', '', '', '', 'Subtotal (INR)', '', bomData.subtotal.toFixed(2)]);
+        rows.push(['', '', '', '', '', '', 'GST (18%) (INR)', '', bomData.gstAmount.toFixed(2)]);
+        rows.push(['', '', '', '', '', '', 'Total Estimated BOM Cost (INR)', '', bomData.grandTotal.toFixed(2)]);
+
+        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `proteus_eda_bom_quotation_${Date.now()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const handleGenerateRfq = () => {
+        const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const rfqCode = `RFQ-${new Date().getFullYear()}-IND-${randomHex}${Math.floor(100 + Math.random() * 900)}`;
+        setRfqState({
+          code: rfqCode,
+          copied: false,
+          generatedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        });
+      };
+
+      const handleCopyRfq = () => {
+        if (!rfqState.code) return;
+        navigator.clipboard.writeText(rfqState.code);
+        setRfqState(prev => ({ ...prev, copied: true }));
+        setTimeout(() => setRfqState(prev => ({ ...prev, copied: false })), 2500);
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden text-slate-800 font-sans">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 text-white flex items-center justify-between border-b border-indigo-800/50">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl shadow-inner">
+                  🧾
+                </div>
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-base font-bold tracking-tight uppercase font-mono text-white">
+                      COMPONENTS USED & PRICE QUOTATION
+                    </h2>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+                      LIVE EDA BOM
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 mt-0.5 font-mono">
+                    Real-time Bill of Materials, Component Procurement Catalog & Netlist Cost Estimation (INR ₹)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-white/10 text-emerald-300 border border-emerald-400/20">
+                  ⚡ 18% GST Included
+                </span>
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-base transition"
+                  title="Close Quotation"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Top Metrics Cards Banner */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-slate-50 border-b border-slate-200 text-xs font-mono">
+              <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                <span className="text-slate-500 text-[11px]">ACTIVE MODULES</span>
+                <span className="text-xl font-bold text-slate-900 mt-1">{bomData.totalParts} Components</span>
+                <span className="text-[10px] text-slate-400">On Schematic Canvas</span>
+              </div>
+
+              <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                <span className="text-slate-500 text-[11px]">CONNECTION WIRES</span>
+                <span className="text-xl font-bold text-blue-600 mt-1">{bomData.totalWires} Wires</span>
+                <span className="text-[10px] text-slate-400">@ ₹2.50 / Jumper wire</span>
+              </div>
+
+              <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                <span className="text-slate-500 text-[11px]">SUBTOTAL (EXCL. TAX)</span>
+                <span className="text-xl font-bold text-slate-900 mt-1">₹{bomData.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-[10px] text-slate-400">Base Catalog Valuation</span>
+              </div>
+
+              <div className="bg-gradient-to-br from-amber-50 to-emerald-50 p-3 rounded-xl border border-amber-200 shadow-xs flex flex-col justify-between">
+                <span className="text-amber-800 text-[11px] font-bold flex items-center justify-between">
+                  <span>TOTAL BOM (INCL. GST)</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-200/80 text-amber-900">INR ₹</span>
+                </span>
+                <span className="text-xl font-black text-emerald-700 mt-1">
+                  ₹{bomData.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+                <span className="text-[10px] text-slate-500">Includes 18% GST (₹{bomData.gstAmount.toFixed(2)})</span>
+              </div>
+            </div>
+
+            {/* RFQ Confirmation Banner (if generated) */}
+            {rfqState.code && (
+              <div className="mx-4 mt-3 p-3 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center justify-between font-mono text-xs shadow-xs animate-fadeIn">
+                <div className="flex items-center space-x-3">
+                  <span className="text-lg">📦</span>
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-emerald-900 font-bold">RFQ GENERATED:</span>
+                      <strong className="text-emerald-800 text-sm tracking-wide bg-emerald-200/70 px-2 py-0.5 rounded border border-emerald-300">
+                        {rfqState.code}
+                      </strong>
+                    </div>
+                    <p className="text-[11px] text-emerald-700 mt-0.5">
+                      Procurement request logged at {rfqState.generatedAt} • In-Stock Lab Grade Components • Same-Day Dispatch
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCopyRfq}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center space-x-1.5 transition shadow-xs"
+                >
+                  <span>{rfqState.copied ? '✓ Copied!' : 'Copy RFQ Code'}</span>
+                </button>
+              </div>
+            )}
+
+            {/* Scrollable Itemized Table */}
+            <div className="flex-1 overflow-y-auto p-4">
+              {bomData.items.length === 0 ? (
+                <div className="p-12 text-center text-slate-400 font-mono text-xs border border-dashed border-slate-200 rounded-xl">
+                  <div className="text-3xl mb-2">🔌</div>
+                  No active components placed on the schematic canvas.
+                  <div className="text-[11px] text-slate-500 mt-1">
+                    Drag parts from the library drawer or pick from library (P) to generate a live quotation.
+                  </div>
+                </div>
+              ) : (
+                <table className="w-full text-left border-collapse text-xs font-mono border border-slate-200 rounded-lg overflow-hidden shadow-xs">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-700 border-b border-slate-200">
+                      <th className="py-2.5 px-3 border-r border-slate-200 w-10 text-center font-bold">#</th>
+                      <th className="py-2.5 px-3 border-r border-slate-200 w-24 font-bold">RefDes</th>
+                      <th className="py-2.5 px-3.5 border-r border-slate-200 font-bold">Component Name</th>
+                      <th className="py-2.5 px-3 border-r border-slate-200 font-bold">Specification / Package</th>
+                      <th className="py-2.5 px-3 border-r border-slate-200 font-bold w-36">Manufacturer</th>
+                      <th className="py-2.5 px-2.5 border-r border-slate-200 w-14 text-center font-bold">Qty</th>
+                      <th className="py-2.5 px-3 border-r border-slate-200 w-28 text-right font-bold">Unit Price</th>
+                      <th className="py-2.5 px-3.5 w-32 text-right font-bold text-emerald-800">Extended (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    {bomData.items.map((item, idx) => {
+                      const isWire = item.type === 'wire_accessory';
+                      return (
+                        <tr 
+                          key={`${item.type}-${idx}`} 
+                          className={`hover:bg-blue-50/50 transition-colors ${
+                            isWire ? 'bg-amber-50/40' : (idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white')
+                          }`}
+                        >
+                          <td className="py-2 px-3 border-r border-slate-100 text-center text-slate-400 font-bold">
+                            {idx + 1}
+                          </td>
+                          <td className="py-2 px-3 border-r border-slate-100 font-bold text-blue-700">
+                            {item.refDes}
+                          </td>
+                          <td className="py-2 px-3.5 border-r border-slate-100 font-medium text-slate-900">
+                            {item.name}
+                            {isWire && (
+                              <span className="ml-2 px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">
+                                Lab Accessory
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3 border-r border-slate-100 text-[11px] text-slate-600">
+                            {item.spec}
+                          </td>
+                          <td className="py-2 px-3 border-r border-slate-100 text-[11px] text-slate-500">
+                            {item.mfr}
+                          </td>
+                          <td className="py-2 px-2.5 border-r border-slate-100 text-center font-bold text-slate-900">
+                            {item.qty}
+                          </td>
+                          <td className="py-2 px-3 border-r border-slate-100 text-right text-slate-600">
+                            ₹{item.unitPrice.toFixed(2)}
+                          </td>
+                          <td className="py-2 px-3.5 text-right font-bold text-slate-900">
+                            ₹{item.extendedPrice.toFixed(2)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                  <tfoot>
+                    {/* Subtotal */}
+                    <tr className="bg-slate-50 border-t border-slate-300 text-slate-700 font-bold">
+                      <td colSpan="6" className="py-2 px-3 text-right border-r border-slate-200">
+                        Subtotal (Excluding Taxes):
+                      </td>
+                      <td colSpan="2" className="py-2 px-3.5 text-right text-slate-900 font-bold">
+                        ₹{bomData.subtotal.toFixed(2)}
+                      </td>
+                    </tr>
+                    {/* GST */}
+                    <tr className="bg-slate-50 border-t border-slate-200 text-slate-600">
+                      <td colSpan="6" className="py-1.5 px-3 text-right border-r border-slate-200 text-[11px]">
+                        Applicable Goods & Services Tax (GST @ 18%):
+                      </td>
+                      <td colSpan="2" className="py-1.5 px-3.5 text-right text-slate-700 font-medium text-[11px]">
+                        ₹{bomData.gstAmount.toFixed(2)}
+                      </td>
+                    </tr>
+                    {/* Grand Total */}
+                    <tr className="bg-gradient-to-r from-amber-50 to-emerald-50 border-t-2 border-slate-400 text-slate-900">
+                      <td colSpan="5" className="py-3 px-3 border-r border-slate-300 font-bold text-xs uppercase tracking-wider text-slate-800">
+                        Total Estimated BOM Cost (INR)
+                      </td>
+                      <td className="py-3 px-2.5 text-center font-black text-slate-900 border-r border-slate-300">
+                        {bomData.items.reduce((s, it) => s + it.qty, 0)} pcs
+                      </td>
+                      <td colSpan="2" className="py-3 px-3.5 text-right font-black text-base text-emerald-800 font-mono">
+                        ₹{bomData.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              )}
+            </div>
+
+            {/* Modal Actions Footer */}
+            <div className="px-6 py-3.5 bg-slate-100 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
+              <div className="text-slate-500 text-[11px] flex items-center space-x-2">
+                <span>🛡️ Prices benchmarked to current Indian electronics component distributors.</span>
+                <span>• Same-day dispatch ready.</span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleExportCSV}
+                  disabled={bomData.items.length === 0}
+                  className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-xs font-semibold flex items-center space-x-1.5 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Download CSV spreadsheet of this quotation"
+                >
+                  <span>📥 Export CSV / Quotation</span>
+                </button>
+
+                <button
+                  onClick={() => window.print()}
+                  className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-xs font-semibold flex items-center space-x-1.5 transition active:scale-95"
+                  title="Print commercial BOM report or export PDF"
+                >
+                  <span>🖨️ Print BOM</span>
+                </button>
+
+                <button
+                  onClick={handleGenerateRfq}
+                  disabled={bomData.items.length === 0}
+                  className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold shadow-md shadow-blue-500/20 flex items-center space-x-1.5 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Generate official RFQ code for immediate parts procurement"
+                >
+                  <span>📋 Get Full Quotation (RFQ)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // =========================================================================
     // BILL OF MATERIALS (BOM) & NETLIST MANIFEST (PRINT REPORT)
     // =========================================================================
     function BillOfMaterialsTable({ schematicParts = [], wires = [], voltage = 5.0 }) {
@@ -3538,6 +4475,8 @@
           </div>
         );
       }
+
+      const bomData = computeBomData(schematicParts, wires);
 
       const getWireCountForPart = (partId) => {
         return wires.filter(w => w.fromPart === partId || w.toPart === partId).length;
@@ -3553,36 +4492,66 @@
         return Array.from(pinNames).join(', ') || 'Unconnected';
       };
 
-      const getPartSpec = (part) => {
-        if (part.resistance) return `${part.resistance >= 1000 ? (part.resistance/1000) + ' kΩ' : part.resistance + ' Ω'} (±5%)`;
-        if (part.type === 'arduino_uno') return 'ATmega328P, 16MHz, 5V Logic';
-        if (part.type === 'esp32') return 'Tensilica Xtensa 240MHz, 3.3V, WiFi/BLE';
-        if (part.type === 'solar') return 'Voc: 0–5.0V, Monocrystalline Silicon';
-        if (part.type === 'ldr') return 'Photoresistor (R_dark ≈ 1MΩ, R_light ≈ 100Ω)';
-        if (part.type === 'dht11') return 'Digital Temp (-20~60°C) & Rel Humidity (20~90%)';
-        if (part.type === 'ultrasonic') return 'HC-SR04 Sonar 40kHz, 2cm–400cm range';
-        if (part.type === 'pir') return 'PIR Motion Sensor, Fresnel Lens, 3.3V Out';
-        if (part.type === 'led') return 'Red 5mm, Vf ≈ 2.0V, If ≈ 20mA';
-        if (part.type === 'led_green') return 'Green 5mm, Vf ≈ 2.2V, If ≈ 20mA';
-        if (part.type === 'buzzer') return 'Piezo Ceramic Buzzer, 2.5kHz Resonant';
-        if (part.type === 'servo') return 'SG90 Micro Servo, 0°–180° PWM (50Hz)';
-        if (part.type === 'lcd16x2') return 'HD44780 + PCF8574 I2C Adapter (0x27)';
-        if (part.type === 'relay') return 'SPDT Relay 5V Coil, 10A 250VAC Switching';
-        if (part.type === 'power_supply') return 'Regulated Bench Source (5V/12V DC)';
-        if (part.type === 'dmm') return 'Auto-Ranging Multimeter (True RMS)';
-        if (part.type === 'gnd') return '0V Ground Reference Potential';
-        return part.tag ? `${part.tag} Component` : 'Standard Discrete Spec';
-      };
-
       return (
         <div className="print-bom-section print-only hidden mt-6 w-full print-break-inside-avoid">
+          {/* Section 1: Commercial Bill of Materials (BOM) & Price Quotation */}
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-300 mb-2.5">
+            <h2 className="text-sm font-bold text-slate-900 tracking-wide uppercase font-mono flex items-center space-x-2">
+              <span>🧾</span>
+              <span>Commercial Bill of Materials (BOM) & Price Quotation (INR ₹)</span>
+            </h2>
+            <span className="text-xs font-mono text-slate-500">
+              Total Estimated Cost: <strong className="text-emerald-700">₹{bomData.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> (Incl. 18% GST)
+            </span>
+          </div>
+
+          <table className="w-full text-left border-collapse text-xs font-mono border border-slate-300 mb-6">
+            <thead>
+              <tr className="bg-slate-100 text-slate-800 border-b border-slate-300">
+                <th className="py-1.5 px-2 border-r border-slate-300 w-10 text-center font-bold">#</th>
+                <th className="py-1.5 px-2.5 border-r border-slate-300 w-24 font-bold">Designator</th>
+                <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Component Name</th>
+                <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Specification / Package</th>
+                <th className="py-1.5 px-2.5 border-r border-slate-300 w-28 font-bold">Manufacturer</th>
+                <th className="py-1.5 px-2 border-r border-slate-300 w-14 text-center font-bold">Qty</th>
+                <th className="py-1.5 px-2.5 border-r border-slate-300 w-24 text-right font-bold">Unit Price</th>
+                <th className="py-1.5 px-3 w-28 text-right font-bold">Extended (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 text-slate-700">
+              {bomData.items.map((item, idx) => (
+                <tr key={`print-bom-${idx}`} className={idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'}>
+                  <td className="py-1.5 px-2 border-r border-slate-200 text-center font-bold text-slate-500">{idx + 1}</td>
+                  <td className="py-1.5 px-2.5 border-r border-slate-200 font-semibold text-blue-700">{item.refDes}</td>
+                  <td className="py-1.5 px-3 border-r border-slate-200 font-medium text-slate-900">{item.name}</td>
+                  <td className="py-1.5 px-3 border-r border-slate-200 text-[11px] text-slate-600">{item.spec}</td>
+                  <td className="py-1.5 px-2.5 border-r border-slate-200 text-[11px] text-slate-600">{item.mfr}</td>
+                  <td className="py-1.5 px-2 border-r border-slate-200 text-center font-bold text-slate-900">{item.qty}</td>
+                  <td className="py-1.5 px-2.5 border-r border-slate-200 text-right">₹{item.unitPrice.toFixed(2)}</td>
+                  <td className="py-1.5 px-3 text-right font-bold text-slate-900">₹{item.extendedPrice.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="bg-slate-50 font-bold border-t border-slate-300 text-slate-800 text-[11px]">
+                <td colSpan="6" className="py-1.5 px-2.5 text-right border-r border-slate-300">
+                  Subtotal: ₹{bomData.subtotal.toFixed(2)} &nbsp;|&nbsp; Applicable GST (18%): ₹{bomData.gstAmount.toFixed(2)}
+                </td>
+                <td colSpan="2" className="py-1.5 px-3 text-right text-emerald-800 font-black">
+                  Total (INR): ₹{bomData.grandTotal.toFixed(2)}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+          {/* Section 2: Detailed Netlist & Pin Terminals */}
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-300 mb-2.5">
             <h2 className="text-sm font-bold text-slate-900 tracking-wide uppercase font-mono flex items-center space-x-2">
               <span>📋</span>
-              <span>Bill of Materials (BOM) & Netlist Manifest</span>
+              <span>Netlist Manifest & Pin Wiring Interconnections</span>
             </h2>
             <span className="text-xs font-mono text-slate-500">
-              Total Items: <strong className="text-slate-900">{schematicParts.length}</strong> | Total Connections: <strong className="text-slate-900">{wires.length}</strong> wires
+              Total Modules: <strong className="text-slate-900">{schematicParts.length}</strong> | Total Connections: <strong className="text-slate-900">{wires.length}</strong> wires
             </span>
           </div>
 
@@ -3593,7 +4562,6 @@
                 <th className="py-1.5 px-2.5 border-r border-slate-300 w-28 font-bold">Designator</th>
                 <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Component Name</th>
                 <th className="py-1.5 px-2 border-r border-slate-300 w-16 text-center font-bold">Category</th>
-                <th className="py-1.5 px-3 border-r border-slate-300 font-bold">Specification / Values</th>
                 <th className="py-1.5 px-2.5 border-r border-slate-300 w-24 text-center font-bold">Terminals</th>
                 <th className="py-1.5 px-2.5 font-bold">Connected Pins</th>
               </tr>
@@ -3612,7 +4580,6 @@
                         {part.tag || 'GEN'}
                       </span>
                     </td>
-                    <td className="py-1.5 px-3 border-r border-slate-200 text-[11px] text-slate-600">{getPartSpec(part)}</td>
                     <td className="py-1.5 px-2.5 border-r border-slate-200 text-center">
                       <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${wireCount > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
                         {wireCount} wired
@@ -3630,7 +4597,7 @@
                 <td colSpan="2" className="py-1.5 px-2.5 border-r border-slate-300">
                   Total Modules: {schematicParts.length}
                 </td>
-                <td colSpan="3" className="py-1.5 px-3 border-r border-slate-300 text-slate-600 font-normal">
+                <td colSpan="2" className="py-1.5 px-3 border-r border-slate-300 text-slate-600 font-normal">
                   Active Schematic Simulation & Verification
                 </td>
                 <td colSpan="2" className="py-1.5 px-2.5 text-right text-blue-700">
@@ -3643,7 +4610,7 @@
           {/* Report Footer Note */}
           <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500 font-mono">
             <span>Verified with Open-World Electronics Lab EDA Simulation Engine</span>
-            <span>Page 1 of 1 • System Generated Report</span>
+            <span>Commercial Quotation Generated • Page 1 of 1</span>
           </div>
         </div>
       );
@@ -3658,6 +4625,7 @@
       at89c51: { w: 220, h: 310 },
       pic16f877a: { w: 220, h: 290 },
       esp32: { w: 200, h: 280 },
+      breadboard: { w: 320, h: 140 },
       solar: { w: 176, h: 130 },
       power_supply: { w: 120, h: 100 },
       ldr: { w: 80, h: 90 },
@@ -4536,6 +5504,7 @@
     }) {
       const canvasContainerRef = useRef(null);
       const [pickDevicesOpen, setPickDevicesOpen] = useState(false);
+      const [isBomModalOpen, setIsBomModalOpen] = useState(false);
       const [wiringStartPin, setWiringStartPin] = useState(null); // { partId, pinId, x, y, isDragging }
       const [hoveredPin, setHoveredPin] = useState(null); // { partId, pinId, x, y, pinName, partName }
       const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -4543,6 +5512,9 @@
       const [canvasOffset, setCanvasOffset] = useState({ x: 0, y: 0 });
       const [isPanning, setIsPanning] = useState(false);
       const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+
+      // Live Bill of Materials (BOM) & Pricing Calculation
+      const bomData = useMemo(() => computeBomData(schematicParts, wires), [schematicParts, wires]);
 
       const CATEGORIES = [
         'All',
@@ -5179,6 +6151,18 @@
                 <span>🖨️ Print</span>
               </button>
 
+              {/* 🧾 BOM & Live Price Quotation Button */}
+              <button
+                onClick={() => setIsBomModalOpen(true)}
+                className="px-2.5 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 shadow-sm transition flex items-center space-x-1.5 font-semibold text-xs cursor-pointer"
+                title="Open Live Components Used & Price Quotation (BOM)"
+              >
+                <span>🧾 BOM & Quote</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-amber-200 text-amber-950 font-bold text-[10px] font-mono">
+                  ₹{bomData.grandTotal.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </span>
+              </button>
+
               <button
                 onClick={onExecuteIn3D}
                 className="px-4 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center space-x-1.5 shadow-md shadow-emerald-600/20 transition transform active:scale-95"
@@ -5337,16 +6321,35 @@
                     const fromPinObj = fromPartObj?.pins?.find(p => p.id === wire.fromPin);
                     const toPinObj = toPartObj?.pins?.find(p => p.id === wire.toPin);
 
-                    // 1. Right-Angle (Orthogonal / Manhattan) Routing
+                    // 1. Flexible Curved Natural Wire Routing (Cubic Bezier with tangent guidance)
+                    const dx = end.x - start.x;
+                    const dy = end.y - start.y;
+                    const dist = Math.hypot(dx, dy);
                     let pathD = '';
-                    if (start.y === end.y || start.x === end.x) {
+
+                    if (dist < 6 || (Math.abs(dx) < 2 && Math.abs(dy) < 2)) {
                       pathD = `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
-                    } else if (fromPinObj?.side === 'top' || fromPinObj?.side === 'bottom') {
-                      const midY = start.y + (end.y - start.y) * 0.5;
-                      pathD = `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
                     } else {
-                      const midX = start.x + (end.x - start.x) * 0.5;
-                      pathD = `M ${start.x} ${start.y} L ${midX} ${start.y} L ${midX} ${end.y} L ${end.x} ${end.y}`;
+                      // Calculate smooth natural curvature with tangent handles
+                      const curveOffset = Math.min(80, Math.max(30, dist * 0.3));
+                      let cp1x = start.x;
+                      let cp1y = start.y;
+                      let cp2x = end.x;
+                      let cp2y = end.y;
+
+                      if (fromPinObj?.side === 'top') cp1y -= curveOffset;
+                      else if (fromPinObj?.side === 'bottom') cp1y += curveOffset;
+                      else if (fromPinObj?.side === 'left') cp1x -= curveOffset;
+                      else if (fromPinObj?.side === 'right') cp1x += curveOffset;
+                      else cp1y += (dy >= 0 ? curveOffset : -curveOffset) * 0.4;
+
+                      if (toPinObj?.side === 'top') cp2y -= curveOffset;
+                      else if (toPinObj?.side === 'bottom') cp2y += curveOffset;
+                      else if (toPinObj?.side === 'left') cp2x -= curveOffset;
+                      else if (toPinObj?.side === 'right') cp2x += curveOffset;
+                      else cp2y += (dy >= 0 ? -curveOffset : curveOffset) * 0.4;
+
+                      pathD = `M ${start.x} ${start.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${end.x} ${end.y}`;
                     }
 
                     // 2. Dynamic Logic Level Resolution
@@ -5432,23 +6435,36 @@
                           d={pathD}
                           fill="none"
                           stroke={glowColor}
-                          strokeWidth={isSelected ? '7' : '4'}
-                          strokeOpacity={isSelected ? '0.7' : '0.25'}
+                          strokeWidth={isSelected ? '8' : '5'}
+                          strokeOpacity={isSelected ? '0.75' : '0.22'}
                           strokeLinecap="round"
                         />
-                        {/* Wire core line */}
+                        {/* Outer 3D Insulation Jacket (Physical Dupont Wire) */}
                         <path
                           d={pathD}
                           fill="none"
                           stroke={coreColor}
-                          strokeWidth="2.5"
+                          strokeWidth="3.5"
                           strokeLinecap="round"
                         />
-                        {/* Terminal solder dots at endpoints */}
-                        <circle cx={start.x} cy={start.y} r="4" fill="#0f172a" stroke={glowColor} strokeWidth="1.5" />
-                        <circle cx={start.x} cy={start.y} r="2" fill={dotColor} />
-                        <circle cx={end.x} cy={end.y} r="4" fill="#0f172a" stroke={glowColor} strokeWidth="1.5" />
-                        <circle cx={end.x} cy={end.y} r="2" fill={dotColor} />
+                        {/* Inner 3D Specular Highlight Sheen (Tube Reflection) */}
+                        <path
+                          d={pathD}
+                          fill="none"
+                          stroke="#ffffff"
+                          strokeWidth="1.2"
+                          strokeOpacity="0.45"
+                          strokeLinecap="round"
+                        />
+                        {/* Stripped Bare Copper Core Terminal Tips & Solder Beads */}
+                        {/* Start Terminal Tip */}
+                        <circle cx={start.x} cy={start.y} r="5.5" fill="#0f172a" stroke="#64748b" strokeWidth="1.2" />
+                        <circle cx={start.x} cy={start.y} r="3.5" fill="#d97706" />
+                        <circle cx={start.x} cy={start.y} r="1.8" fill="#fde68a" />
+                        {/* End Terminal Tip */}
+                        <circle cx={end.x} cy={end.y} r="5.5" fill="#0f172a" stroke="#64748b" strokeWidth="1.2" />
+                        <circle cx={end.x} cy={end.y} r="3.5" fill="#d97706" />
+                        <circle cx={end.x} cy={end.y} r="1.8" fill="#fde68a" />
                       </g>
                     );
                   })}
@@ -5456,9 +6472,10 @@
                   {/* Multi-wire shared junction nodes (solder beads) */}
                   {junctionNodes.map((node, i) => (
                     <g key={`junction-${i}`} className="pointer-events-none">
-                      <circle cx={node.x} cy={node.y} r="6" fill="#10b981" fillOpacity="0.4" />
-                      <circle cx={node.x} cy={node.y} r="5" fill="#065f46" stroke="#34d399" strokeWidth="2" />
-                      <circle cx={node.x} cy={node.y} r="2" fill="#ecfdf5" />
+                      <circle cx={node.x} cy={node.y} r="7" fill="#10b981" fillOpacity="0.3" />
+                      <circle cx={node.x} cy={node.y} r="5" fill="#0f172a" stroke="#d97706" strokeWidth="1.5" />
+                      <circle cx={node.x} cy={node.y} r="3" fill="#f59e0b" />
+                      <circle cx={node.x} cy={node.y} r="1.5" fill="#fef08a" />
                     </g>
                   ))}
 
@@ -5468,8 +6485,9 @@
                     const startY = wiringStartPin.y;
                     const targetX = hoveredPin ? hoveredPin.x : mousePos.x;
                     const targetY = hoveredPin ? hoveredPin.y : mousePos.y;
-                    const midX = startX + (targetX - startX) * 0.5;
-                    const previewD = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${targetY} L ${targetX} ${targetY}`;
+                    const pDist = Math.hypot(targetX - startX, targetY - startY);
+                    const pOffset = Math.min(70, Math.max(25, pDist * 0.3));
+                    const previewD = `M ${startX} ${startY} C ${startX} ${startY + pOffset}, ${targetX} ${targetY - pOffset}, ${targetX} ${targetY}`;
 
                     return (
                       <g className="pointer-events-none">
@@ -5478,21 +6496,32 @@
                           d={previewD}
                           fill="none"
                           stroke={hoveredPin ? '#38bdf8' : '#3b82f6'}
-                          strokeWidth="6"
+                          strokeWidth="7"
                           strokeOpacity="0.35"
                           strokeLinecap="round"
                         />
-                        {/* Animated dashed preview wire */}
+                        {/* Outer preview tube */}
                         <path
                           d={previewD}
                           fill="none"
                           stroke={hoveredPin ? '#0ea5e9' : '#2563eb'}
-                          strokeWidth="2.5"
+                          strokeWidth="3.5"
                           strokeDasharray="6,4"
                           className="animate-pulse"
                         />
-                        {/* Start pin indicator */}
-                        <circle cx={startX} cy={startY} r="5" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" />
+                        {/* Specular highlight */}
+                        <path
+                          d={previewD}
+                          fill="none"
+                          stroke="#ffffff"
+                          strokeWidth="1.2"
+                          strokeOpacity="0.5"
+                          strokeLinecap="round"
+                        />
+                        {/* Stripped copper core start pin */}
+                        <circle cx={startX} cy={startY} r="6" fill="#0f172a" stroke="#64748b" strokeWidth="1.5" />
+                        <circle cx={startX} cy={startY} r="3.5" fill="#d97706" />
+                        <circle cx={startX} cy={startY} r="1.8" fill="#fde68a" />
 
                         {/* Clamped magnetic lock indicator & reticle */}
                         {hoveredPin ? (
@@ -5552,38 +6581,235 @@
                     >
                       {/* 1. ARDUINO UNO R3 COMPONENT */}
                       {part.type === 'arduino_uno' && (
-                        <div className="w-[270px] h-[210px] bg-[#00878F] border-2 border-teal-300/60 rounded-xl p-3 shadow-2xl relative text-white flex flex-col justify-between select-none">
-                          <div className="flex items-center justify-between pb-1.5 border-b border-teal-400/40 mb-1">
-                            <div className="flex items-center space-x-1.5">
-                              <span className="font-mono font-bold text-xs tracking-wider">ARDUINO</span>
-                              <span className="text-[10px] font-bold text-teal-200">UNO R3</span>
-                            </div>
-                            <span className="text-[9px] font-mono px-1 rounded bg-teal-900/60 text-teal-200">ATmega328P</span>
-                          </div>
+                        <div className="w-[270px] h-[210px] rounded-xl relative select-none shadow-2xl overflow-hidden bg-[#0c4a6e] border-2 border-[#38bdf8]/60 font-mono text-white">
+                          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 270 210">
+                            <defs>
+                              <linearGradient id={`pcb_blue_${part.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#075985" />
+                                <stop offset="50%" stopColor="#0c4a6e" />
+                                <stop offset="100%" stopColor="#082f49" />
+                              </linearGradient>
+                              <linearGradient id={`metal_usb_${part.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#94a3b8" />
+                                <stop offset="35%" stopColor="#f1f5f9" />
+                                <stop offset="70%" stopColor="#cbd5e1" />
+                                <stop offset="100%" stopColor="#64748b" />
+                              </linearGradient>
+                              <linearGradient id={`crystal_silver_${part.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#cbd5e1" />
+                                <stop offset="50%" stopColor="#f8fafc" />
+                                <stop offset="100%" stopColor="#94a3b8" />
+                              </linearGradient>
+                            </defs>
 
-                          <div className="bg-[#005f66] rounded-lg p-2 flex items-center justify-between border border-teal-400/30">
-                            <div className="w-24 h-6 bg-slate-900 rounded border border-slate-700 flex items-center justify-center text-[9px] font-mono text-slate-300">
-                              ATMEGA328P
+                            {/* PCB Base with Corner Mounting Holes */}
+                            <rect x="0" y="0" width="270" height="210" rx="10" fill={`url(#pcb_blue_${part.id})`} />
+                            
+                            {/* Gold annular PCB mounting holes */}
+                            <circle cx="20" cy="20" r="6" fill="#0f172a" stroke="#d4af37" strokeWidth="2.5" />
+                            <circle cx="20" cy="190" r="6" fill="#0f172a" stroke="#d4af37" strokeWidth="2.5" />
+                            <circle cx="250" cy="38" r="6" fill="#0f172a" stroke="#d4af37" strokeWidth="2.5" />
+                            <circle cx="250" cy="172" r="6" fill="#0f172a" stroke="#d4af37" strokeWidth="2.5" />
+
+                            {/* Decorative Gold & Silk PCB Trace Routing */}
+                            <path d="M 40 40 L 80 40 L 95 65 L 140 65" fill="none" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" />
+                            <path d="M 60 170 L 100 170 L 115 145 L 160 145" fill="none" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" />
+                            <path d="M 210 50 L 230 70 L 230 140" fill="none" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" />
+
+                            {/* Silver USB-B Receptacle Port */}
+                            <g>
+                              <rect x="0" y="26" width="46" height="38" rx="2" fill={`url(#metal_usb_${part.id})`} stroke="#475569" strokeWidth="1" />
+                              <rect x="2" y="30" width="10" height="30" rx="1" fill="#0f172a" />
+                              <rect x="5" y="34" width="4" height="22" rx="0.5" fill="#f8fafc" />
+                              <rect x="22" y="34" width="18" height="22" rx="1" fill="#64748b" fillOpacity="0.4" stroke="#475569" strokeWidth="0.5" />
+                              <text x="24" y="60" fill="#334155" fontSize="6" fontWeight="bold">USB</text>
+                            </g>
+
+                            {/* DC Barrel Power Jack */}
+                            <g>
+                              <rect x="0" y="142" width="42" height="46" rx="3" fill="#1e293b" stroke="#334155" strokeWidth="1.5" />
+                              <rect x="0" y="152" width="14" height="26" rx="2" fill="#090d16" />
+                              <circle cx="18" cy="165" r="4.5" fill="#94a3b8" stroke="#475569" strokeWidth="1" />
+                              <circle cx="18" cy="165" r="2" fill="#0f172a" />
+                              <rect x="36" y="148" width="6" height="12" fill="#d4af37" />
+                              <rect x="36" y="168" width="6" height="12" fill="#d4af37" />
+                            </g>
+
+                            {/* Socketed DIP-28 ATmega328P IC */}
+                            <g>
+                              {/* Socket Carrier */}
+                              <rect x="92" y="96" width="116" height="42" rx="3" fill="#020617" stroke="#334155" strokeWidth="1.5" />
+                              {/* 14 Pins Top & Bottom */}
+                              {[...Array(14)].map((_, i) => (
+                                <g key={`ic-pin-${i}`}>
+                                  <rect x={98 + i * 8} y="93" width="4" height="4" fill="#cbd5e1" stroke="#475569" strokeWidth="0.5" />
+                                  <rect x={98 + i * 8} y="137" width="4" height="4" fill="#cbd5e1" stroke="#475569" strokeWidth="0.5" />
+                                </g>
+                              ))}
+                              {/* IC Epoxy Body */}
+                              <rect x="96" y="99" width="108" height="36" rx="2" fill="#0f172a" stroke="#1e293b" strokeWidth="1" />
+                              {/* Semi-circular notch on left */}
+                              <path d="M 96 112 A 5 5 0 0 0 96 122 Z" fill="#020617" />
+                              {/* Pin 1 orientation dot */}
+                              <circle cx="106" cy="128" r="2" fill="#000000" fillOpacity="0.6" stroke="#334155" strokeWidth="0.5" />
+                              {/* Silkscreen text on chip */}
+                              <text x="114" y="115" fill="#94a3b8" fontSize="8" fontWeight="bold" letterSpacing="0.5">ATMEGA328P-PU</text>
+                              <text x="122" y="126" fill="#64748b" fontSize="6.5">ATMEL 2348</text>
+                            </g>
+
+                            {/* 16.000 MHz Crystal Oscillator (HC-49/S metal can) */}
+                            <g>
+                              <rect x="68" y="78" width="22" height="12" rx="5" fill={`url(#crystal_silver_${part.id})`} stroke="#64748b" strokeWidth="0.8" />
+                              <text x="71" y="86.5" fill="#334155" fontSize="4.5" fontWeight="bold">16.000</text>
+                            </g>
+
+                            {/* Reset Tactile Button */}
+                            <g>
+                              <rect x="18" y="78" width="14" height="14" rx="2" fill="#334155" stroke="#cbd5e1" strokeWidth="1" />
+                              <circle cx="25" cy="85" r="4.5" fill="#dc2626" stroke="#991b1b" strokeWidth="1" />
+                              <text x="17" y="98" fill="#e2e8f0" fontSize="5" fontWeight="bold">RESET</text>
+                            </g>
+
+                            {/* Silkscreen Brand Graphics */}
+                            <g>
+                              <text x="54" y="24" fill="#ffffff" fontSize="13" fontWeight="900" letterSpacing="1">ARDUINO</text>
+                              <text x="128" y="24" fill="#38bdf8" fontSize="11" fontWeight="bold">UNO</text>
+                              <text x="54" y="34" fill="#cbd5e1" fontSize="7" fontWeight="bold">R3</text>
+                              {/* Italian Tricolor Flag Strip */}
+                              <rect x="72" y="29" width="3" height="6" fill="#16a34a" />
+                              <rect x="75" y="29" width="3" height="6" fill="#f8fafc" />
+                              <rect x="78" y="29" width="3" height="6" fill="#dc2626" />
+                              <text x="84" y="34" fill="#94a3b8" fontSize="5">ITALY</text>
+                              <text x="110" y="34" fill="#ffffff" fontSize="9" opacity="0.6">∞</text>
+                            </g>
+
+                            {/* Header Strips - Top Black Socket Strip */}
+                            <rect x="24" y="2" width="222" height="14" rx="1.5" fill="#090d16" stroke="#1e293b" strokeWidth="1" />
+                            {/* Header Strips - Bottom Black Socket Strip */}
+                            <rect x="34" y="194" width="212" height="14" rx="1.5" fill="#090d16" stroke="#1e293b" strokeWidth="1" />
+
+                            {/* Gold Socket Receptacle Holes - Top */}
+                            {[30, 50, 70, 90, 110, 130, 160, 180, 200, 230].map((rx, idx) => (
+                              <g key={`top-hdr-${idx}`}>
+                                <rect x={rx - 2.5} y="6" width="5" height="6" rx="0.5" fill="#000000" stroke="#d4af37" strokeWidth="0.8" />
+                              </g>
+                            ))}
+                            {/* Gold Socket Receptacle Holes - Bottom */}
+                            {[40, 65, 90, 115, 140, 175, 195, 215, 235].map((rx, idx) => (
+                              <g key={`bot-hdr-${idx}`}>
+                                <rect x={rx - 2.5} y="198" width="5" height="6" rx="0.5" fill="#000000" stroke="#d4af37" strokeWidth="0.8" />
+                              </g>
+                            ))}
+
+                            {/* Screen-Printed Pin Labels - Top Header */}
+                            <g fill="#f8fafc" fontSize="6.5" fontWeight="bold">
+                              <text x="27" y="24">13</text>
+                              <text x="47" y="24">12</text>
+                              <text x="66" y="24">~11</text>
+                              <text x="86" y="24">~10</text>
+                              <text x="107" y="24">~9</text>
+                              <text x="128" y="24">8</text>
+                              <text x="158" y="24">7</text>
+                              <text x="177" y="24">~6</text>
+                              <text x="197" y="24">~5</text>
+                              <text x="224" y="24">GND</text>
+                            </g>
+
+                            {/* Screen-Printed Pin Labels - Bottom Header */}
+                            <g fill="#f8fafc" fontSize="6.5" fontWeight="bold">
+                              <text x="36" y="190">5V</text>
+                              <text x="58" y="190">3.3V</text>
+                              <text x="83" y="190">GND</text>
+                              <text x="108" y="190">GND</text>
+                              <text x="134" y="190">VIN</text>
+                              <text x="171" y="190">A0</text>
+                              <text x="191" y="190">A1</text>
+                              <text x="211" y="190">A2</text>
+                              <text x="231" y="190">A3</text>
+                            </g>
+                          </svg>
+
+                          {/* Dynamic Surface-Mount Indicator LEDs */}
+                          <div className="absolute top-[62px] right-[48px] flex items-center space-x-3 bg-slate-900/80 px-2 py-1 rounded border border-slate-700/60 shadow-md">
+                            {/* ON LED */}
+                            <div className="flex flex-col items-center">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+                              <span className="text-[6.5px] font-bold text-slate-300 mt-0.5">ON</span>
                             </div>
-                            <div className="flex items-center space-x-2 text-[8px] font-mono">
-                              <div className="flex flex-col items-center">
-                                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]"></span>
-                                <span className="text-[7px]">ON</span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <span className={`w-2 h-2 rounded-full transition ${isD13High ? 'bg-amber-400 shadow-[0_0_6px_#f59e0b]' : 'bg-amber-950'}`}></span>
-                                <span className="text-[7px]">L(13)</span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                                <span className="text-[7px]">TX</span>
-                              </div>
+                            {/* L (D13) LED */}
+                            <div className="flex flex-col items-center">
+                              <span className={`w-2 h-2 rounded-full transition-all duration-150 ${isD13High ? 'bg-amber-400 shadow-[0_0_10px_#f59e0b]' : 'bg-amber-950 border border-amber-900/50'}`}></span>
+                              <span className="text-[6.5px] font-bold text-slate-300 mt-0.5">L(13)</span>
+                            </div>
+                            {/* TX */}
+                            <div className="flex flex-col items-center">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                              <span className="text-[6.5px] text-slate-400 mt-0.5">TX</span>
+                            </div>
+                            {/* RX */}
+                            <div className="flex flex-col items-center">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/50"></span>
+                              <span className="text-[6.5px] text-slate-400 mt-0.5">RX</span>
                             </div>
                           </div>
+                        </div>
+                      )}
 
-                          <div className="flex justify-between text-[8px] font-mono text-teal-100 px-1">
-                            <span>DIGITAL (PWM ~)</span>
-                            <span>POWER / ANALOG IN</span>
+                      {/* BREADBOARD (830 POINT MB-102) */}
+                      {part.type === 'breadboard' && (
+                        <div className="w-[320px] h-[140px] rounded-lg bg-[#f8fafc] border-2 border-slate-300 shadow-xl relative select-none overflow-hidden font-mono">
+                          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 320 140">
+                            {/* Top Power Distribution Rails */}
+                            <line x1="15" y1="12" x2="305" y2="12" stroke="#ef4444" strokeWidth="1.5" />
+                            <text x="6" y="15" fill="#ef4444" fontSize="9" fontWeight="bold">+</text>
+                            <line x1="15" y1="24" x2="305" y2="24" stroke="#3b82f6" strokeWidth="1.5" />
+                            <text x="7" y="27" fill="#3b82f6" fontSize="10" fontWeight="bold">-</text>
+
+                            {/* Top Power Holes */}
+                            {[...Array(28)].map((_, i) => (
+                              <g key={`bb-top-rail-${i}`}>
+                                <rect x={20 + i * 10} y="9" width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                                <rect x={20 + i * 10} y="21" width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                              </g>
+                            ))}
+
+                            {/* Center IC Divider Trough */}
+                            <rect x="10" y="68" width="300" height="4" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="0.5" />
+                            <text x="12" y="66" fill="#94a3b8" fontSize="5" fontWeight="bold">A B C D E</text>
+                            <text x="12" y="80" fill="#94a3b8" fontSize="5" fontWeight="bold">F G H I J</text>
+
+                            {/* Main Terminal Matrix Points */}
+                            {[...Array(28)].map((_, col) => (
+                              <g key={`bb-col-${col}`}>
+                                {col % 5 === 0 && (
+                                  <text x={22 + col * 10} y="33" fill="#64748b" fontSize="5">{col + 1}</text>
+                                )}
+                                {[36, 42, 48, 54, 60].map((ry, rowIdx) => (
+                                  <rect key={`hole-t-${col}-${rowIdx}`} x={20 + col * 10} y={ry} width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                                ))}
+                                {[76, 82, 88, 94, 100].map((ry, rowIdx) => (
+                                  <rect key={`hole-b-${col}-${rowIdx}`} x={20 + col * 10} y={ry} width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                                ))}
+                              </g>
+                            ))}
+
+                            {/* Bottom Power Distribution Rails */}
+                            <line x1="15" y1="116" x2="305" y2="116" stroke="#ef4444" strokeWidth="1.5" />
+                            <text x="6" y="119" fill="#ef4444" fontSize="9" fontWeight="bold">+</text>
+                            <line x1="15" y1="128" x2="305" y2="128" stroke="#3b82f6" strokeWidth="1.5" />
+                            <text x="7" y="131" fill="#3b82f6" fontSize="10" fontWeight="bold">-</text>
+
+                            {/* Bottom Power Holes */}
+                            {[...Array(28)].map((_, i) => (
+                              <g key={`bb-bot-rail-${i}`}>
+                                <rect x={20 + i * 10} y="113" width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                                <rect x={20 + i * 10} y="125" width="5" height="5" rx="0.5" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
+                              </g>
+                            ))}
+                          </svg>
+
+                          <div className="absolute right-3 bottom-1.5 text-[8px] font-bold text-slate-400">
+                            MB-102 • 830 TIE-POINTS
                           </div>
                         </div>
                       )}
@@ -5601,68 +6827,212 @@
                         </div>
                       )}
 
-                      {/* 3. RESISTOR */}
+                      {/* 3. RESISTOR (PHOTOREALISTIC 3D CERAMIC BODY & 4-BAND CODE) */}
                       {part.type === 'resistor' && (
-                        <div className="w-[80px] h-[80px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
-                          <span className="text-[9px] font-mono font-bold text-slate-800">10kΩ</span>
-                          <div className="w-5 h-8 bg-amber-100 rounded-sm flex flex-col justify-around py-0.5 px-0.5 border border-slate-400 shadow-inner">
-                            <div className="h-0.5 bg-amber-800"></div>
-                            <div className="h-0.5 bg-black"></div>
-                            <div className="h-0.5 bg-orange-500"></div>
-                            <div className="h-0.5 bg-yellow-400"></div>
-                          </div>
-                          <span className="text-[7px] font-mono text-slate-500 font-bold">RESISTOR</span>
-                        </div>
-                      )}
+                        <div className="w-[80px] h-[80px] relative select-none flex flex-col items-center justify-between font-mono">
+                          <svg className="w-full h-full" viewBox="0 0 80 80">
+                            <defs>
+                              <linearGradient id={`lead_shine_${part.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#64748b" />
+                                <stop offset="40%" stopColor="#f8fafc" />
+                                <stop offset="100%" stopColor="#475569" />
+                              </linearGradient>
+                              <linearGradient id={`ceramic_body_${part.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#d2b48c" />
+                                <stop offset="30%" stopColor="#fff8ed" />
+                                <stop offset="60%" stopColor="#e8d3af" />
+                                <stop offset="100%" stopColor="#bfa074" />
+                              </linearGradient>
+                            </defs>
 
-                      {/* 4. POTENTIOMETER */}
-                      {part.type === 'potentiometer' && (
-                        <div className="w-[144px] h-[90px] bg-white border-2 border-sky-400 rounded-xl p-2 shadow-lg flex flex-col justify-between text-slate-800 select-none">
-                          <div className="flex items-center justify-between text-[9px] font-mono text-sky-700 font-bold">
-                            <span>POTENTIOMETER</span>
-                            <span className="bg-sky-50 text-sky-700 px-1 rounded border border-sky-200">{potValue}%</span>
-                          </div>
-                          <div className="py-1">
-                            <input
-                              type="range"
-                              min="0"
-                              max="100"
-                              value={potValue}
-                              onChange={(e) => setPotValue(parseInt(e.target.value))}
-                              className="w-full thumb-cyan h-2 cursor-pointer"
+                            {/* Top Axial Tinned Copper Lead Wire */}
+                            <line x1="40" y1="0" x2="40" y2="20" stroke={`url(#lead_shine_${part.id})`} strokeWidth="3" strokeLinecap="round" />
+                            {/* Bottom Axial Tinned Copper Lead Wire */}
+                            <line x1="40" y1="60" x2="40" y2="80" stroke={`url(#lead_shine_${part.id})`} strokeWidth="3" strokeLinecap="round" />
+
+                            {/* Dogbone / Dumbbell Ceramic Body */}
+                            <path
+                              d="M 33 22 C 33 17 47 17 47 22 L 46 27 C 44 32 44 48 46 53 L 47 58 C 47 63 33 63 33 58 L 34 53 C 36 48 36 32 34 27 Z"
+                              fill={`url(#ceramic_body_${part.id})`}
+                              stroke="#a28358"
+                              strokeWidth="0.8"
                             />
-                          </div>
-                          <div className="text-[8px] font-mono text-slate-600 flex justify-between">
-                            <span className="font-semibold text-blue-700">V: {(5.0 * (potValue/100)).toFixed(2)}V</span>
-                            <span>10 kΩ</span>
+
+                            {/* 4-Band Color Bands (for 10kΩ: Brown, Black, Orange, Gold ±5%) */}
+                            <rect x="34" y="24" width="12" height="3" rx="0.5" fill="#78350f" />
+                            <rect x="35" y="32" width="10" height="3" rx="0.5" fill="#0f172a" />
+                            <rect x="35" y="42" width="10" height="3" rx="0.5" fill="#ea580c" />
+                            <rect x="34" y="52" width="12" height="3.5" rx="0.5" fill="#d4af37" stroke="#b45309" strokeWidth="0.3" />
+
+                            {/* Specular Highlight Streak */}
+                            <line x1="38" y1="21" x2="38" y2="59" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" />
+                          </svg>
+
+                          <div className="absolute inset-x-0 bottom-0 text-center">
+                            <span className="text-[7.5px] font-bold text-slate-700 bg-white/80 px-1 rounded shadow-xs border border-slate-200">
+                              {part.resistance ? (part.resistance >= 1000 ? `${part.resistance/1000}kΩ` : `${part.resistance}Ω`) : '10kΩ'}
+                            </span>
                           </div>
                         </div>
                       )}
 
-                      {/* 5. LED */}
-                      {(part.type === 'led' || part.type === 'led_green') && (
-                        <div className="w-[80px] h-[90px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
-                          <span className="text-[9px] font-mono font-bold text-slate-700">
-                            {part.color === 'green' ? 'LED (GRN)' : 'LED (RED)'}
-                          </span>
-                          <div className="relative my-0.5">
-                            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
-                              isD13High
-                                ? part.color === 'green'
-                                  ? 'bg-emerald-500 border-white shadow-[0_0_16px_#10b981]'
-                                  : 'bg-rose-500 border-white shadow-[0_0_16px_#ef4444]'
-                                : 'bg-slate-200 border-slate-300'
-                            }`}>
-                              <span className={`text-[8px] font-bold ${isD13High ? 'text-white' : 'text-slate-500'}`}>
-                                {isD13High ? 'ON' : 'OFF'}
+                      {/* CAPACITOR (ELECTROLYTIC RADIAL CAN & TOP K-VENT) */}
+                      {(part.type === 'capacitor' || part.type === 'cap_ceramic') && (
+                        <div className="w-[80px] h-[80px] relative select-none flex flex-col items-center justify-between font-mono">
+                          <svg className="w-full h-full" viewBox="0 0 80 80">
+                            <defs>
+                              <linearGradient id={`can_sleeve_${part.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#0f172a" />
+                                <stop offset="35%" stopColor="#1e3a8a" />
+                                <stop offset="70%" stopColor="#1e293b" />
+                                <stop offset="100%" stopColor="#020617" />
+                              </linearGradient>
+                            </defs>
+
+                            {/* Lead Wires */}
+                            <line x1="40" y1="0" x2="40" y2="18" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+                            <line x1="40" y1="62" x2="40" y2="80" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+
+                            {/* Cylindrical Aluminum Can */}
+                            <rect x="25" y="18" width="30" height="44" rx="4" fill={`url(#can_sleeve_${part.id})`} stroke="#334155" strokeWidth="1" />
+
+                            {/* Aluminum Stamped Top Vent */}
+                            <ellipse cx="40" cy="20" rx="14" ry="2.5" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.8" />
+                            <line x1="36" y1="19" x2="44" y2="21" stroke="#475569" strokeWidth="0.8" />
+                            <line x1="36" y1="21" x2="44" y2="19" stroke="#475569" strokeWidth="0.8" />
+
+                            {/* Negative Cathode Polarity Stripe */}
+                            <rect x="47" y="22" width="6" height="38" rx="1" fill="#cbd5e1" />
+                            <text x="49" y="32" fill="#0f172a" fontSize="7" fontWeight="black">-</text>
+                            <text x="49" y="44" fill="#0f172a" fontSize="7" fontWeight="black">-</text>
+                            <text x="49" y="56" fill="#0f172a" fontSize="7" fontWeight="black">-</text>
+
+                            {/* Printed Specification text */}
+                            <text x="27" y="36" fill="#ffffff" fontSize="5.5" fontWeight="bold">100µF</text>
+                            <text x="27" y="44" fill="#93c5fd" fontSize="5">25V</text>
+                            <text x="27" y="52" fill="#cbd5e1" fontSize="4">105°C</text>
+                          </svg>
+
+                          <div className="absolute inset-x-0 bottom-0 text-center">
+                            <span className="text-[7.5px] font-bold text-slate-700 bg-white/80 px-1 rounded shadow-xs border border-slate-200">
+                              100µF
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 4. POTENTIOMETER (REALISTIC ROTARY SHAFT & WIPER CONTACT) */}
+                      {part.type === 'potentiometer' && (() => {
+                        const shaftAngle = -135 + (potValue / 100) * 270;
+                        return (
+                          <div className="w-[144px] h-[90px] bg-slate-900 border-2 border-sky-400/80 rounded-xl p-2 shadow-xl relative select-none flex flex-col justify-between font-mono text-white">
+                            <div className="flex items-center justify-between text-[9px] font-bold">
+                              <span className="text-sky-300">POTENTIOMETER</span>
+                              <span className="bg-sky-950 text-sky-300 px-1.5 py-0.2 rounded border border-sky-600/50">
+                                {potValue}%
                               </span>
                             </div>
+
+                            <div className="flex items-center justify-around py-1">
+                              {/* Knurled Rotating Knob */}
+                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-300 via-slate-500 to-slate-700 p-0.5 shadow-md flex items-center justify-center border border-slate-400">
+                                <div 
+                                  className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-500 relative flex items-center justify-center transition-transform duration-100"
+                                  style={{ transform: `rotate(${shaftAngle}deg)` }}
+                                >
+                                  {/* Pointer Notch */}
+                                  <div className="w-1 h-3.5 bg-amber-400 rounded-full absolute top-0.5 shadow-[0_0_4px_#fbbf24]"></div>
+                                  <div className="w-4 h-4 rounded-full bg-slate-900 border border-slate-600"></div>
+                                </div>
+                              </div>
+
+                              {/* Interactive range slider */}
+                              <div className="flex-1 ml-3 flex flex-col justify-center">
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="100"
+                                  value={potValue}
+                                  onChange={(e) => setPotValue(parseInt(e.target.value))}
+                                  className="w-full thumb-cyan h-2 cursor-pointer"
+                                />
+                                <div className="flex justify-between text-[7px] text-slate-400 mt-1">
+                                  <span>0Ω</span>
+                                  <span>5kΩ</span>
+                                  <span>10kΩ</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="text-[8px] flex justify-between items-center text-slate-300 border-t border-slate-800 pt-0.5">
+                              <span className="font-bold text-amber-400">V_out: {(5.0 * (potValue / 100)).toFixed(2)}V</span>
+                              <span className="text-slate-400">10 kΩ Linear</span>
+                            </div>
                           </div>
-                          <span className="text-[7px] font-mono text-slate-500 font-semibold">
-                            {isD13High ? 'VF: 2.1V' : '0.0V'}
-                          </span>
-                        </div>
-                      )}
+                        );
+                      })()}
+
+                      {/* 5. LEDS (DOMED 5MM EPOXY LENS, ANVIL + POST LEADFRAME & OPTICAL BLOOM) */}
+                      {(part.type === 'led' || part.type === 'led_green') && (() => {
+                        const ledColor = part.type === 'led_green' ? 'green' : 'red';
+                        const colorMap = {
+                          red: { main: '#ef4444', glow: '#f87171', off: '#450a0a', border: '#b91c1c' },
+                          green: { main: '#10b981', glow: '#34d399', off: '#022c22', border: '#047857' }
+                        }[ledColor];
+
+                        return (
+                          <div className="w-[80px] h-[90px] relative select-none flex flex-col items-center justify-between font-mono">
+                            <span className="text-[8px] font-bold text-slate-700 bg-white/80 px-1.5 py-0.2 rounded border border-slate-200">
+                              LED ({ledColor.toUpperCase()})
+                            </span>
+
+                            <svg className="w-14 h-14" viewBox="0 0 60 60">
+                              <defs>
+                                <radialGradient id={`led_glow_${part.id}`} cx="50%" cy="50%" r="50%">
+                                  <stop offset="0%" stopColor="#ffffff" />
+                                  <stop offset="40%" stopColor={colorMap.main} />
+                                  <stop offset="100%" stopColor={colorMap.glow} stopOpacity="0" />
+                                </radialGradient>
+                              </defs>
+
+                              {/* Lead Wires extending horizontally */}
+                              <line x1="0" y1="30" x2="20" y2="30" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+                              <line x1="40" y1="30" x2="60" y2="30" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+
+                              {/* Dynamic Optical Bloom when ON */}
+                              {isD13High && (
+                                <circle cx="30" cy="30" r="24" fill={`url(#led_glow_${part.id})`} opacity="0.85" />
+                              )}
+
+                              {/* 5mm Domed Epoxy Lens Outer Rim */}
+                              <circle 
+                                cx="30" 
+                                cy="30" 
+                                r="16" 
+                                fill={isD13High ? colorMap.main : colorMap.off} 
+                                stroke={colorMap.border} 
+                                strokeWidth="1.5" 
+                              />
+
+                              {/* Flat Cathode Edge Notch on Right */}
+                              <line x1="44" y1="20" x2="44" y2="40" stroke={colorMap.border} strokeWidth="1.5" />
+
+                              {/* Internal Leadframe: Anode Post (left) + Cathode Anvil (right) */}
+                              <polygon points="32,24 38,24 35,36 32,36" fill="#cbd5e1" opacity={isD13High ? 0.9 : 0.4} />
+                              <line x1="26" y1="25" x2="26" y2="36" stroke="#cbd5e1" strokeWidth="1.5" opacity={isD13High ? 0.9 : 0.4} />
+                              {/* Microscopic Gold Bond Wire */}
+                              <line x1="26" y1="26" x2="33" y2="25" stroke="#f59e0b" strokeWidth="0.8" opacity={isD13High ? 1 : 0.6} />
+
+                              {/* Specular Glint Highlight on Epoxy Dome */}
+                              <ellipse cx="25" cy="24" rx="4" ry="2" fill="#ffffff" opacity={isD13High ? 0.8 : 0.4} />
+                            </svg>
+
+                            <span className={`text-[7px] font-bold px-1 rounded ${isD13High ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}`}>
+                              {isD13High ? 'ON (Vf: 2.1V)' : 'OFF (0.0V)'}
+                            </span>
+                          </div>
+                        );
+                      })()}
 
                       {/* 6. BUZZER */}
                       {part.type === 'buzzer' && (
@@ -5985,30 +7355,67 @@
                         </div>
                       )}
 
-                      {/* 19. BLUE & YELLOW LEDS */}
-                      {(part.type === 'led_blue' || part.type === 'led_yellow') && (
-                        <div className="w-[80px] h-[90px] bg-white border-2 border-slate-300 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
-                          <span className="text-[9px] font-mono font-bold text-slate-700">
-                            {part.type === 'led_blue' ? 'LED (BLU)' : 'LED (YEL)'}
-                          </span>
-                          <div className="relative my-0.5">
-                            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
-                              isD13High
-                                ? part.type === 'led_blue'
-                                  ? 'bg-sky-500 border-white shadow-[0_0_16px_#38bdf8]'
-                                  : 'bg-amber-400 border-white shadow-[0_0_16px_#f59e0b]'
-                                : 'bg-slate-200 border-slate-300'
-                            }`}>
-                              <span className={`text-[8px] font-bold ${isD13High ? 'text-white' : 'text-slate-500'}`}>
-                                {isD13High ? 'ON' : 'OFF'}
-                              </span>
-                            </div>
+                      {/* 19. BLUE & YELLOW LEDS (DOMED 5MM EPOXY LENS, ANVIL + POST LEADFRAME & OPTICAL BLOOM) */}
+                      {(part.type === 'led_blue' || part.type === 'led_yellow') && (() => {
+                        const ledColor = part.type === 'led_blue' ? 'blue' : 'yellow';
+                        const colorMap = {
+                          blue: { main: '#38bdf8', glow: '#7dd3fc', off: '#082f49', border: '#0284c7' },
+                          yellow: { main: '#fbbf24', glow: '#fde047', off: '#451a03', border: '#d97706' }
+                        }[ledColor];
+
+                        return (
+                          <div className="w-[80px] h-[90px] relative select-none flex flex-col items-center justify-between font-mono">
+                            <span className="text-[8px] font-bold text-slate-700 bg-white/80 px-1.5 py-0.2 rounded border border-slate-200">
+                              LED ({ledColor.toUpperCase()})
+                            </span>
+
+                            <svg className="w-14 h-14" viewBox="0 0 60 60">
+                              <defs>
+                                <radialGradient id={`led_glow_${part.id}`} cx="50%" cy="50%" r="50%">
+                                  <stop offset="0%" stopColor="#ffffff" />
+                                  <stop offset="40%" stopColor={colorMap.main} />
+                                  <stop offset="100%" stopColor={colorMap.glow} stopOpacity="0" />
+                                </radialGradient>
+                              </defs>
+
+                              {/* Lead Wires extending horizontally */}
+                              <line x1="0" y1="30" x2="20" y2="30" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+                              <line x1="40" y1="30" x2="60" y2="30" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+
+                              {/* Dynamic Optical Bloom when ON */}
+                              {isD13High && (
+                                <circle cx="30" cy="30" r="24" fill={`url(#led_glow_${part.id})`} opacity="0.85" />
+                              )}
+
+                              {/* 5mm Domed Epoxy Lens Outer Rim */}
+                              <circle 
+                                cx="30" 
+                                cy="30" 
+                                r="16" 
+                                fill={isD13High ? colorMap.main : colorMap.off} 
+                                stroke={colorMap.border} 
+                                strokeWidth="1.5" 
+                              />
+
+                              {/* Flat Cathode Edge Notch on Right */}
+                              <line x1="44" y1="20" x2="44" y2="40" stroke={colorMap.border} strokeWidth="1.5" />
+
+                              {/* Internal Leadframe: Anode Post (left) + Cathode Anvil (right) */}
+                              <polygon points="32,24 38,24 35,36 32,36" fill="#cbd5e1" opacity={isD13High ? 0.9 : 0.4} />
+                              <line x1="26" y1="25" x2="26" y2="36" stroke="#cbd5e1" strokeWidth="1.5" opacity={isD13High ? 0.9 : 0.4} />
+                              {/* Microscopic Gold Bond Wire */}
+                              <line x1="26" y1="26" x2="33" y2="25" stroke="#f59e0b" strokeWidth="0.8" opacity={isD13High ? 1 : 0.6} />
+
+                              {/* Specular Glint Highlight on Epoxy Dome */}
+                              <ellipse cx="25" cy="24" rx="4" ry="2" fill="#ffffff" opacity={isD13High ? 0.8 : 0.4} />
+                            </svg>
+
+                            <span className={`text-[7px] font-bold px-1 rounded ${isD13High ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-500'}`}>
+                              {isD13High ? (ledColor === 'blue' ? 'ON (Vf: 3.0V)' : 'ON (Vf: 2.1V)') : 'OFF (0.0V)'}
+                            </span>
                           </div>
-                          <span className="text-[7px] font-mono text-slate-500 font-semibold">
-                            {isD13High ? 'VF: 2.4V' : '0.0V'}
-                          </span>
-                        </div>
-                      )}
+                        );
+                      })()}
 
                       {/* 20. 7-SEGMENT DISPLAY */}
                       {(part.type === '7seg_ca' || part.type === '7seg_cc') && (
@@ -6058,7 +7465,7 @@
                       )}
 
                       {/* Fallback for other components */}
-                      {!['arduino_uno', 'ldr', 'resistor', 'potentiometer', 'led', 'led_green', 'led_blue', 'led_yellow', 'buzzer', 'servo', 'lcd16x2', 'dmm', 'gnd', 'solar', 'esp32', 'logic_state', 'logic_probe', '7400', '7402', '7404', '7408', '7432', '7486', 'lm741', 'lm358', 'tl072', 'lm393', 'at89c51', 'pic16f877a', 'arduino_nano', '7474', '7476', '74138', '74151', '74193', '7447', '4017', '4066', 'ne555', 'lm317', 'lm7805', 'lm7812', '1n4007', '1n4148', 'zener_5v1', 'bridge_rectifier', 'bc547', '2n2222', 'bc557', '2n7000', 'irf540n', 'irf9540', '7seg_ca', '7seg_cc', 'push_button', 'toggle_switch', 'vcc'].includes(part.type) && (
+                      {!['arduino_uno', 'breadboard', 'ldr', 'resistor', 'potentiometer', 'capacitor', 'cap_ceramic', 'led', 'led_green', 'led_blue', 'led_yellow', 'buzzer', 'servo', 'lcd16x2', 'dmm', 'gnd', 'solar', 'esp32', 'logic_state', 'logic_probe', '7400', '7402', '7404', '7408', '7432', '7486', 'lm741', 'lm358', 'tl072', 'lm393', 'at89c51', 'pic16f877a', 'arduino_nano', '7474', '7476', '74138', '74151', '74193', '7447', '4017', '4066', 'ne555', 'lm317', 'lm7805', 'lm7812', '1n4007', '1n4148', 'zener_5v1', 'bridge_rectifier', 'bc547', '2n2222', 'bc557', '2n7000', 'irf540n', 'irf9540', '7seg_ca', '7seg_cc', 'push_button', 'toggle_switch', 'vcc'].includes(part.type) && (
                         <div className="w-full h-full bg-white border-2 border-slate-400 rounded-xl p-2 shadow-lg flex flex-col items-center justify-between text-slate-800 select-none">
                           <div className="text-[9px] font-mono font-bold text-slate-700 uppercase tracking-wider">{part.name}</div>
                           <div className="text-[8px] font-mono px-1 rounded bg-slate-100 text-slate-600 border border-slate-200">{part.tag || 'IC'}</div>
@@ -6120,6 +7527,20 @@
             onSelectPart={(template) => {
               handleAddComponent(template);
             }}
+          />
+
+          {/* ======================================================== */}
+          {/* LIVE BILL OF MATERIALS & PRICE QUOTATION MODAL           */}
+          {/* ======================================================== */}
+          <PriceQuotationModal
+            isOpen={isBomModalOpen}
+            onClose={() => setIsBomModalOpen(false)}
+            bomData={bomData}
+            schematicParts={schematicParts}
+            wires={wires}
+            currentSavedProject={currentSavedProject}
+            currentUser={currentUser}
+            currentLocation={currentLocation}
           />
         </div>
       );
