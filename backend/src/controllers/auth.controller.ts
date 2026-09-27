@@ -346,7 +346,7 @@ export const verifyPhoneOtp = async (req: Request, res: Response): Promise<void>
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        phone: fullPhoneNumber,
+        phone: rawPhone || fullPhoneNumber,
         role: userRole,
         createdAt: user.createdAt,
       },

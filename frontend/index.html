@@ -760,9 +760,15 @@
     // BACKEND API CLIENT CONFIGURATION (EXPRESS + POSTGRESQL)
     // =========================================================================
     const getApiBaseUrl = () => {
-      // 1. Support VITE_API_URL or environment injection if present
-      const viteUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) ||
-                      (typeof window !== 'undefined' && window.VITE_API_URL);
+      let viteUrl = null;
+      try {
+        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) {
+          viteUrl = import.meta.env.VITE_API_URL;
+        }
+      } catch (e) {}
+      if (!viteUrl && typeof window !== 'undefined' && window.VITE_API_URL) {
+        viteUrl = window.VITE_API_URL;
+      }
       if (viteUrl) {
         return String(viteUrl).replace(/\/+$/, '');
       }
@@ -785,17 +791,19 @@
         config.body = JSON.stringify(data);
       }
 
+      const baseUrl = getApiBaseUrl();
+
       // Ensure endpoint starts with a slash
       let cleanPath = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
 
       // Cleanly construct URL without duplicate slashes or duplicate /api
-      if (!cleanPath.startsWith('/api')) {
+      if (baseUrl.endsWith('/api') && cleanPath.startsWith('/api/')) {
+        cleanPath = cleanPath.slice(4);
+      } else if (!baseUrl.endsWith('/api') && !cleanPath.startsWith('/api')) {
         cleanPath = `/api${cleanPath}`;
       }
-      // Remove any double /api/api occurrences
       cleanPath = cleanPath.replace(/^\/api\/api(?=\/|$)/, '/api');
 
-      const baseUrl = getApiBaseUrl();
       const targetUrl = `${baseUrl}${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
 
       try {
