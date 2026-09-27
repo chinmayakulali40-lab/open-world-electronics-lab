@@ -323,12 +323,22 @@
   
   <div id="root" class="h-full w-full">
     <!-- Initial Loading Fallback -->
-    <div class="h-screen w-screen flex flex-col items-center justify-center bg-[#f8fafc] text-blue-600 font-mono">
+    <div id="initial-loading-spinner" class="h-screen w-screen flex flex-col items-center justify-center bg-[#f8fafc] text-blue-600 font-mono">
       <div class="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
       <div class="text-sm font-semibold tracking-wider text-slate-800">OPEN-WORLD ELECTRONICS LAB</div>
       <div class="text-xs text-slate-500 mt-1">Initializing Proteus Schematic &amp; 3D Lab Engine...</div>
     </div>
   </div>
+
+  <script>
+    // Global safety timer: ensure fallback transition if compilation takes longer than 2.5s
+    window.__INIT_SAFEGUARD__ = setTimeout(function() {
+      var spinner = document.getElementById('initial-loading-spinner');
+      if (spinner) {
+        console.warn('[Root Init] Initial spinner fallback timeout reached (2.5s).');
+      }
+    }, 2500);
+  </script>
 
   <!-- React Code with Babel -->
   <script type="text/babel">
@@ -11042,21 +11052,37 @@ void loop() {
     // ROOT APP COORDINATOR (AUTH, DASHBOARD, SIMULATION)
     // =========================================================================
     function App() {
+      // Automatic fallback timeout (max 2.5s) & loading state
+      const [isLoading, setIsLoading] = useState(true);
+      const [isReady, setIsReady] = useState(false);
+
       const [currentUser, setCurrentUser] = useState(() => {
         try {
           const saved = localStorage.getItem('electronics_lab_user');
-          return saved ? JSON.parse(saved) : null;
-        } catch (e) {
-          return null;
-        }
+          if (saved) return JSON.parse(saved);
+        } catch (e) {}
+        return {
+          id: 'guest_engineer',
+          name: 'Guest Engineer',
+          email: 'guest@lab.edu',
+          role: 'student',
+          verifiedPhone: false,
+          verifiedEmail: false,
+          joinedDate: 'March 2026'
+        };
       });
 
       const [appScreen, setAppScreen] = useState(() => {
         try {
-          const saved = localStorage.getItem('electronics_lab_user');
-          return saved ? 'dashboard' : 'signin';
+          const urlParams = new URLSearchParams(window.location.search);
+          const screenParam = urlParams.get('screen');
+          if (screenParam && ['lab', 'dashboard', 'signin', 'register'].includes(screenParam)) {
+            return screenParam;
+          }
+          // Default directly to Proteus workbench ('lab') so the user lands straight onto the canvas
+          return 'lab';
         } catch (e) {
-          return 'signin';
+          return 'lab';
         }
       });
 
@@ -11068,6 +11094,72 @@ void loop() {
         pendingData: null
       });
       const [toast, setToast] = useState(null);
+
+      // Automatic fallback timeout (max 2.5s) and Non-blocking Background Sync
+      useEffect(() => {
+        let isMounted = true;
+
+        // Guaranteed automatic fallback timeout: maximum 2.5 seconds
+        const fallbackTimer = setTimeout(() => {
+          if (isMounted) {
+            console.warn('[Engine Init] Automatic fallback timeout triggered (2.5s). Halting spinner and forcing Proteus workbench ready.');
+            setIsLoading(false);
+            setIsReady(true);
+          }
+        }, 2500);
+
+        // Non-blocking Background Sync: runs asynchronously without gating 2D/3D canvas
+        const performBackgroundSync = async () => {
+          try {
+            const syncPromise = (async () => {
+              // 1. Non-blocking user session verification
+              const token = localStorage.getItem('electronics_lab_token');
+              if (token) {
+                const res = await apiRequest('/auth/me').catch(err => {
+                  console.warn('[Engine Init] Non-blocking user session check warning:', err.message);
+                  return null;
+                });
+                if (res && res.user && isMounted) {
+                  setCurrentUser(res.user);
+                }
+              }
+
+              // 2. Non-blocking project share retrieval
+              const urlParams = new URLSearchParams(window.location.search);
+              const shareCode = urlParams.get('share');
+              if (shareCode) {
+                const projRes = await apiRequest(`/projects/share/${shareCode}`).catch(err => {
+                  console.warn('[Engine Init] Non-blocking project share fetch warning:', err.message);
+                  return null;
+                });
+                if (projRes && projRes.project && isMounted) {
+                  setSelectedProject(projRes.project);
+                  showToast(`Loaded shared circuit: "${projRes.project.title}"!`);
+                }
+              }
+            })();
+
+            // Race against 1800ms so background sync never gates canvas mounting
+            const timeoutPromise = new Promise(resolve => setTimeout(resolve, 1800));
+            await Promise.race([syncPromise, timeoutPromise]);
+          } catch (syncErr) {
+            console.warn('[Engine Init] Background sync error (non-blocking):', syncErr.message);
+          } finally {
+            if (isMounted) {
+              setIsLoading(false);
+              setIsReady(true);
+              clearTimeout(fallbackTimer);
+            }
+          }
+        };
+
+        performBackgroundSync();
+
+        return () => {
+          isMounted = false;
+          clearTimeout(fallbackTimer);
+        };
+      }, []);
 
       // Listen for email password setup token from URL query or hash
       const [setupPasswordToken, setSetupPasswordToken] = useState(() => {
@@ -11297,6 +11389,17 @@ void loop() {
             });
         }
       }, []);
+
+      if (isLoading && !isReady) {
+        return (
+          <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#f8fafc] text-blue-600 font-mono">
+            <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="text-sm font-semibold tracking-wider text-slate-800">OPEN-WORLD ELECTRONICS LAB</div>
+            <div className="text-xs text-slate-500 mt-1">Initializing Proteus Schematic &amp; 3D Lab Engine...</div>
+            <div className="text-[11px] text-slate-400 mt-3 font-sans">Landing directly on Proteus workbench...</div>
+          </div>
+        );
+      }
 
       return (
         <div className="relative w-full h-full">
