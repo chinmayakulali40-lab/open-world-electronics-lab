@@ -32,8 +32,8 @@ Built with **React 18**, **Tailwind CSS**, **Lucide-style vector icons**, **HTML
 - **Far Right (Telemetry Readout)**:
   - High-contrast status pill: `☀️ 12:38 PM` | `📍 City` | `🌡️ 28°C` | `🌧️ Rain (%)` | `📶 ESP32: IO2 ON/OFF (ADC)` | `⚡ [Live Voltage] V`.
 
-### 3. Left Navigation & Expanded Proteus Device Library Drawer
-In the left sidebar, the component drawer features full text search and dedicated EDA / Proteus category filters:
+### 3. Left Navigation & Expanded OWEL Device Library Drawer
+In the left sidebar, the component drawer features full text search and dedicated EDA / OWEL category filters:
 1. **Power Sources**:
    - `Solar PV Panel` (Tag: `PWR`) with live $V_{oc}$ & output power readouts, $V+$ and $\text{GND}/V-$ pin terminals.
    - `DC Power Supply (5V/12V)` (regulated bench source).
@@ -99,7 +99,7 @@ In the left sidebar, the component drawer features full text search and dedicate
   - Surface sheen and active solar energy capture glow that brightens dynamically with sunlight intensity.
   - Curved 3D jumper wires connecting Solar Panel terminals directly to the Digital Multimeter on the bench.
 
-### 6. Interactive 2D Schematic Canvas (Proteus ISIS Inspired)
+### 6. Interactive 2D Schematic Canvas (OWEL Inspired)
 - **Drag-and-Drop & Click-to-Add**:
   - Drag any component directly from the library drawer and drop it anywhere on the schematic canvas at your cursor.
   - Or click `+ Add` to position it automatically.
@@ -166,7 +166,7 @@ In the left sidebar, the component drawer features full text search and dedicate
     1. `Solar PV Irradiance Monitor`: Loads PV panel + DMM circuit with high sunlight ($850\text{ W/m}^2$).
     2. `ESP32 IoT Weather Node`: Loads ESP32 DevKit V1 + Solar Panel + DMM circuit.
     3. `Arduino + LDR Smart Streetlight`: Loads Arduino Uno R3 + LDR photoresistor + LED circuit.
-    4. `Proteus Multi-Instrument Test Bench`: Loads full instrumentation bench setup.
+    4. `OWEL Multi-Instrument Test Bench`: Loads full instrumentation bench setup.
   - **Live Simulation Telemetry Stream**: Real-time log of physical events, solar voltage thresholds, and microcontroller execution logs.
   - **Account & Security Status Card**: Displays session tokens, 2FA status, and engine version.
 - **Bi-Directional Lab Navigation**:
@@ -192,7 +192,7 @@ A dedicated, enterprise-grade backend service built with **Express**, **TypeScri
   - `POST /api/shares` & `DELETE /api/shares/:id`: Grants and revokes collaboration permissions by email.
   - `GET /api/analytics/teacher`: Aggregates active student counts, popular components, environment distributions, and student submissions.
   - `GET /api/export/project/:id/report` & `POST /api/export/direct-report`: Generates styled, printable Engineering Lab Experiment reports with automatic `@media print` dialog for immediate PDF saving.
-  - `GET /api/export/project/:id/json`: Netlist JSON export for Proteus/EDA cross-compatibility.
+  - `GET /api/export/project/:id/json`: Netlist JSON export for OWEL/EDA cross-compatibility.
 
 - **Pre-Seeded Accounts (Password: `Password123!`)**:
   - 👨‍🏫 **Teacher**: `teacher@lab.edu` (Prof. Vikram Rao)

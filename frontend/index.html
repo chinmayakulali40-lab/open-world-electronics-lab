@@ -326,7 +326,7 @@
     <div id="initial-loading-spinner" class="h-screen w-screen flex flex-col items-center justify-center bg-[#f8fafc] text-blue-600 font-mono">
       <div class="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
       <div class="text-sm font-semibold tracking-wider text-slate-800">OPEN-WORLD ELECTRONICS LAB</div>
-      <div class="text-xs text-slate-500 mt-1">Initializing Proteus Schematic &amp; 3D Lab Engine...</div>
+      <div class="text-xs text-slate-500 mt-1">Initializing OWEL Schematic &amp; 3D Lab Engine...</div>
     </div>
   </div>
 
@@ -998,7 +998,7 @@
     ];
 
     // =========================================================================
-    // COMPREHENSIVE PROTEUS COMPONENT CATALOG
+    // COMPREHENSIVE OWEL COMPONENT CATALOG
     // =========================================================================
     const COMPONENT_LIBRARY = [
       // =======================================================================
@@ -2847,7 +2847,7 @@
             title: currentSavedProject?.title || 'Open-World Circuit Netlist',
             author: currentUser?.name || 'Lab Student',
             exportedAt: new Date().toISOString(),
-            version: 'Proteus-v2.4-compatible'
+            version: 'OWEL-v2.4-compatible'
           },
           schematic: {
             parts: schematicParts,
@@ -4200,7 +4200,7 @@
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement('a');
         link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `proteus_eda_bom_quotation_${Date.now()}.csv`);
+        link.setAttribute('download', `owel_eda_bom_quotation_${Date.now()}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -4792,9 +4792,9 @@
     }
 
     // =========================================================================
-    // PROTEUS SCHEMATIC SYMBOL PREVIEW COMPONENT
+    // OWEL SCHEMATIC SYMBOL PREVIEW COMPONENT
     // =========================================================================
-    function ProteusSymbolPreview({ part }) {
+    function OWELSymbolPreview({ part }) {
       if (!part) return <div className="w-full h-36 bg-[#070e1b] rounded-lg border border-slate-800 flex items-center justify-center text-xs text-slate-500 font-mono">No Device Selected</div>;
 
       const id = part.id;
@@ -4993,9 +4993,9 @@
     }
 
     // =========================================================================
-    // PROTEUS PCB FOOTPRINT PREVIEW COMPONENT
+    // OWEL PCB FOOTPRINT PREVIEW COMPONENT
     // =========================================================================
-    function ProteusFootprintPreview({ part }) {
+    function OWELFootprintPreview({ part }) {
       if (!part) return <div className="w-full h-36 bg-[#042417] rounded-lg border border-emerald-900/60 flex items-center justify-center text-xs text-emerald-600 font-mono">No Package Selected</div>;
 
       const pkg = part.package || 'DIP14';
@@ -5123,7 +5123,7 @@
     }
 
     // =========================================================================
-    // PROTEUS "PICK DEVICES" (HOTKEY 'P') 3-COLUMN LIBRARY MODAL
+    // OWEL "PICK DEVICES" (HOTKEY 'P') 3-COLUMN LIBRARY MODAL
     // =========================================================================
     function PickDevicesModal({ isOpen, onClose, onSelectPart }) {
       if (!isOpen) return null;
@@ -5233,14 +5233,14 @@
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none">
           <div className="w-full max-w-5xl h-[650px] bg-[#0b1220] border-2 border-cyan-500/40 rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.2)] flex flex-col text-slate-100 overflow-hidden font-sans">
             
-            {/* Modal Title Bar (Proteus ISIS styling) */}
+            {/* Modal Title Bar (OWEL styling) */}
             <div className="h-11 bg-gradient-to-r from-slate-900 via-[#0f233f] to-slate-900 border-b border-cyan-500/30 px-4 flex items-center justify-between">
               <div className="flex items-center space-x-2.5">
-                <span className="w-6 h-6 rounded bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm shadow-cyan-500/50">
-                  P
+                <span className="w-6 h-6 rounded bg-cyan-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm shadow-cyan-500/50" title="OWEL">
+                  O
                 </span>
                 <span className="font-mono font-bold text-xs tracking-wider text-cyan-300">
-                  PROTEUS ISIS — PICK DEVICES (VSM EDA LIBRARY)
+                  OWEL - PICK DEVICES (VSM EDA LIBRARY)
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-700/50">
                   {filteredParts.length} Parts Available
@@ -5396,10 +5396,10 @@
               {/* Column 3: Schematic Symbol + PCB Footprint Previews */}
               <div className="w-80 bg-[#080e1a] border-l border-slate-800 flex flex-col p-3 space-y-3 overflow-y-auto">
                 {/* 1. Schematic Symbol Preview */}
-                <ProteusSymbolPreview part={selectedPart} />
+                <OWELSymbolPreview part={selectedPart} />
 
                 {/* 2. PCB Footprint Preview */}
-                <ProteusFootprintPreview part={selectedPart} />
+                <OWELFootprintPreview part={selectedPart} />
 
                 {/* 3. Component Details Card */}
                 {selectedPart && (
@@ -6035,7 +6035,7 @@
             <div className="flex items-center space-x-3 text-slate-600">
               <span className="flex items-center space-x-1.5 text-blue-600 font-semibold">
                 <span className="text-emerald-500 text-sm">■</span>
-                <span>PROTEUS ISIS SCHEMATIC</span>
+                <span>OWEL SCHEMATIC</span>
               </span>
               <span className="text-slate-300">|</span>
               <span className="text-slate-500">Netlist: <strong className="text-slate-800">{wires.length}</strong></span>
@@ -6187,11 +6187,11 @@
                 <span className="text-[10px] font-mono text-slate-500">{filteredCatalog.length} Parts</span>
               </div>
 
-              {/* Proteus "Pick Devices" Button (Hotkey P) */}
+              {/* OWEL "Pick Devices" Button (Hotkey P) */}
               <button
                 onClick={() => setPickDevicesOpen(true)}
                 className="w-full mb-2.5 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs font-mono shadow-md shadow-blue-600/30 flex items-center justify-between transition transform active:scale-98 group cursor-pointer"
-                title="Open Proteus Pick Devices Library (Hotkey P)"
+                title="OWEL Device Library (P)"
               >
                 <div className="flex items-center space-x-2">
                   <span className="w-5 h-5 rounded bg-white/20 text-white font-black text-xs flex items-center justify-center border border-white/30 group-hover:bg-white group-hover:text-blue-600 transition">
@@ -6275,7 +6275,7 @@
 
               {/* Drawer Footer Info */}
               <div className="pt-2 border-t border-slate-200 text-[10px] font-mono text-slate-500 flex justify-between">
-                <span>Proteus EDA Engine</span>
+                <span>OWEL EDA Engine</span>
                 <span className="text-blue-600 font-medium">Active v2.4</span>
               </div>
             </div>
@@ -7318,7 +7318,7 @@
                         </div>
                       )}
 
-                      {/* 17. PROTEUS DIP IC BLOCKS (AT89C51, 74138, 74151, NE555, 4017, PIC, ETC) */}
+                      {/* 17. OWEL DIP IC BLOCKS (AT89C51, 74138, 74151, NE555, 4017, PIC, ETC) */}
                       {['at89c51', 'pic16f877a', 'arduino_nano', '7474', '7476', '74138', '74151', '74193', '7447', '4017', '4066', 'ne555', 'lm317', 'lm7805', 'lm7812'].includes(part.type) && (
                         <div className="w-full h-full bg-[#0b1526] border-2 border-cyan-500/60 rounded-xl p-2 select-none shadow-xl relative flex flex-col justify-between text-slate-200">
                           {/* IC Top Notch */}
@@ -7519,7 +7519,7 @@
           <BillOfMaterialsTable schematicParts={schematicParts} wires={wires} voltage={voltage} />
 
           {/* ======================================================== */}
-          {/* PROTEUS ISIS "PICK DEVICES" (HOTKEY 'P') MODAL DIALOG    */}
+          {/* OWEL "PICK DEVICES" (HOTKEY 'P') MODAL DIALOG         */}
           {/* ======================================================== */}
           <PickDevicesModal
             isOpen={pickDevicesOpen}
@@ -11328,7 +11328,7 @@ void loop() {
                 Create Engineer Account
               </h2>
               <p className="text-xs text-slate-500 mt-1 max-w-sm">
-                Get full access to the Proteus component library, ESP32/Arduino firmware compiler, and 3D virtual world.
+                Get full access to the OWEL component library, ESP32/Arduino firmware compiler, and 3D virtual world.
               </p>
             </div>
 
@@ -11643,7 +11643,7 @@ void loop() {
         },
         {
           id: 'new',
-          title: 'Proteus Multi-Instrument Test Bench',
+          title: 'OWEL Multi-Instrument Test Bench',
           category: 'Instrumentation',
           badge: 'BENCH',
           badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -12418,7 +12418,7 @@ void loop() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 font-sans">Proteus Hardware Component Ecosystem</h3>
+                    <h3 className="text-lg font-bold text-slate-900 font-sans">OWEL Hardware Component Ecosystem</h3>
                     <p className="text-xs text-slate-500">Every component has fully synchronized 2D schematic pins, netlist physics, and 3D visual models.</p>
                   </div>
                 </div>
@@ -12469,7 +12469,7 @@ void loop() {
     // ROOT APP COORDINATOR (AUTH, DASHBOARD, SIMULATION)
     // =========================================================================
     function App() {
-      // Guaranteed ready state: default directly to ready so Proteus workbench mounts immediately
+      // Guaranteed ready state: default directly to ready so OWEL workbench mounts immediately
       const [isLoading, setIsLoading] = useState(false);
       const [isReady, setIsReady] = useState(true);
 
@@ -12496,7 +12496,7 @@ void loop() {
           if (screenParam && ['lab', 'dashboard', 'signin', 'register'].includes(screenParam)) {
             return screenParam;
           }
-          // Default directly to Proteus workbench ('lab') so the user lands straight onto the canvas
+          // Default directly to OWEL workbench ('lab') so the user lands straight onto the canvas
           return 'lab';
         } catch (e) {
           return 'lab';
@@ -12527,7 +12527,7 @@ void loop() {
         // Guaranteed automatic fallback timeout: maximum 2.5 seconds
         const fallbackTimer = setTimeout(() => {
           if (isMounted) {
-            console.warn('[Engine Init] Automatic fallback timeout triggered (2.5s). Halting spinner and forcing Proteus workbench ready.');
+            console.warn('[Engine Init] Automatic fallback timeout triggered (2.5s). Halting spinner and forcing OWEL workbench ready.');
             setIsLoading(false);
             setIsReady(true);
             if (typeof window.dismissInitialLoadingScreen === 'function') {
@@ -12826,8 +12826,8 @@ void loop() {
           <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#f8fafc] text-blue-600 font-mono">
             <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
             <div className="text-sm font-semibold tracking-wider text-slate-800">OPEN-WORLD ELECTRONICS LAB</div>
-            <div className="text-xs text-slate-500 mt-1">Initializing Proteus Schematic &amp; 3D Lab Engine...</div>
-            <div className="text-[11px] text-slate-400 mt-3 font-sans">Landing directly on Proteus workbench...</div>
+            <div className="text-xs text-slate-500 mt-1">Initializing OWEL Schematic &amp; 3D Lab Engine...</div>
+            <div className="text-[11px] text-slate-400 mt-3 font-sans">Landing directly on OWEL workbench...</div>
           </div>
         );
       }

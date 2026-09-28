@@ -58,7 +58,7 @@ export const getProjectJson = async (req: AuthenticatedRequest, res: Response): 
         title: project.title,
         author: project.author.fullName,
         exportedAt: new Date().toISOString(),
-        version: 'Proteus-v2.4-compatible',
+        version: 'OWEL-v2.4-compatible',
       },
       schematic: project.schematicData,
       environment: project.environmentData,

@@ -131,7 +131,7 @@ export const generateLabReportHtml = (project: ProjectReportData): string => {
       <div class="text-left sm:text-right font-mono text-xs space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-200">
         <div><strong>Date:</strong> ${new Date(project.updatedAt).toLocaleDateString()}</div>
         <div><strong>Status:</strong> <span class="text-emerald-700 font-bold">VERIFIED COMPLETE</span></div>
-        <div><strong>Engine:</strong> Proteus v2.4 + Three.js 3D</div>
+        <div><strong>Engine:</strong> OWEL v2.4 + Three.js 3D</div>
       </div>
     </div>
 

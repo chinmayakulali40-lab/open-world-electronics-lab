@@ -150,7 +150,7 @@ async function main() {
 
   const project4 = await prisma.project.create({
     data: {
-      title: 'Proteus Multi-Instrument Test Bench',
+      title: 'OWEL Multi-Instrument Test Bench',
       description: 'Comprehensive test-bench setup with Digital Multimeter, 2-Channel Real-time Oscilloscope, DC Power Supply, and Potentiometer.',
       shareCode: 'proj_bench_lab',
       authorId: teacher.id,

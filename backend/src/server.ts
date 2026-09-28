@@ -70,7 +70,7 @@ app.use('/api/shares', shareRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
 
-// Static frontend delivery (Serves Proteus Simulator UI in production)
+// Static frontend delivery (Serves OWEL Simulator UI in production)
 const frontendCandidates = [
   path.resolve(__dirname, '../../frontend'),
   path.resolve(__dirname, '../frontend'),
