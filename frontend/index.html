@@ -1784,9 +1784,9 @@
         icon: IconSliders,
         desc: 'Variable Resistor with Adjustable Wiper Terminal (0-100%)',
         pins: [
-          { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35, type: 'passive' },
-          { id: 'wiper', name: '2', label: 'W', side: 'right', relX: 144, relY: 50, type: 'output' },
-          { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65, type: 'passive' }
+          { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35, x: 0, y: 35, type: 'passive' },
+          { id: 'wiper', name: 'W', label: 'W', side: 'right', relX: 144, relY: 50, x: 144, y: 50, type: 'output' },
+          { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65, x: 0, y: 65, type: 'passive' }
         ]
       },
       {
@@ -4749,7 +4749,7 @@
           data-pin-hitbox="true"
           data-part-id={part.id}
           data-pin-id={pin.id}
-          className="absolute -translate-x-1/2 -translate-y-1/2 z-30 group/pin pointer-events-auto select-none w-9 h-9 flex items-center justify-center cursor-crosshair"
+          className="absolute -translate-x-1/2 -translate-y-1/2 z-50 group/pin pointer-events-auto select-none w-10 h-10 flex items-center justify-center cursor-crosshair"
           onMouseDown={onPinMouseDown}
           onClick={onPinClick}
           onMouseEnter={onPinMouseEnter}
@@ -4800,6 +4800,18 @@
               <span className="font-bold text-white">{pin.name || pin.label || pin.id}</span>
               {isConnected && <span className="ml-1 text-emerald-400 font-normal">[connected]</span>}
             </div>
+          )}
+
+          {/* Pin label hints for Potentiometer */}
+          {part.type === 'potentiometer' && pin.side === 'left' && (
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[8px] text-sky-300 font-mono font-bold pointer-events-none whitespace-nowrap bg-slate-900/90 px-1 rounded border border-sky-500/40 shadow-xs">
+              {pin.label || pin.name}
+            </span>
+          )}
+          {part.type === 'potentiometer' && pin.side === 'right' && (
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[8px] text-amber-400 font-mono font-bold pointer-events-none whitespace-nowrap text-right bg-slate-900/90 px-1 rounded border border-amber-500/40 shadow-xs">
+              {pin.label || pin.name}
+            </span>
           )}
 
           {/* Pin label hints for ESP32 */}
@@ -5658,11 +5670,11 @@
             { id: 'echo', name: 'ECHO', label: 'ECHO', side: 'bottom', relX: 90, relY: 90 },
             { id: 'gnd', name: 'GND', label: 'GND', side: 'bottom', relX: 120, relY: 90 }
           ];
-        } else if (template.id === 'potentiometer') {
+        } else if (template.id === 'potentiometer' || template.type === 'potentiometer') {
           newPins = [
-            { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35 },
-            { id: 'wiper', name: 'WIP', label: '2', side: 'right', relX: 144, relY: 50 },
-            { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65 }
+            { id: 'vcc', name: '1', label: '1', side: 'left', relX: 0, relY: 35, x: 0, y: 35, type: 'passive' },
+            { id: 'wiper', name: 'W', label: 'W', side: 'right', relX: 144, relY: 50, x: 144, y: 50, type: 'output' },
+            { id: 'gnd', name: '3', label: '3', side: 'left', relX: 0, relY: 65, x: 0, y: 65, type: 'passive' }
           ];
         } else if (template.id === 'led' || template.id === 'led_green') {
           extraProps.color = template.id === 'led_green' ? 'green' : 'red';
@@ -5764,14 +5776,32 @@
         };
       };
 
-      // Flexible pin matcher supporting exact IDs and canonical aliases (e.g., 'part-res-1-pin-1' <-> 'pin-1' <-> 'p1' <-> '1')
+      // Flexible pin matcher supporting exact IDs and canonical aliases (e.g., 'part-res-1-pin-1' <-> 'pin-1' <-> 'p1' <-> '1', Potentiometer '1' <-> 'vcc', '3' <-> 'gnd', 'W' <-> 'wiper')
       const isPinMatch = (pin, targetPinId) => {
         if (!pin || !targetPinId) return false;
         if (pin.id === targetPinId) return true;
         if (pin.name === targetPinId || pin.label === targetPinId) return true;
         const targetStr = String(targetPinId).toLowerCase();
         const idStr = String(pin.id).toLowerCase();
+        const nameStr = String(pin.name || '').toLowerCase();
+        const labelStr = String(pin.label || '').toLowerCase();
+
+        if (idStr === targetStr || nameStr === targetStr || labelStr === targetStr) return true;
         if (idStr.endsWith(targetStr) || targetStr.endsWith(idStr)) return true;
+
+        // Potentiometer specific aliases
+        // Pin 1: '1', 'pin-1', 'p1', 'vcc'
+        if (['1', 'pin-1', 'p1', 'vcc'].includes(targetStr) && (idStr === 'vcc' || nameStr === '1' || labelStr === '1' || idStr.includes('pin-1'))) return true;
+        if (['vcc'].includes(idStr) && ['1', 'pin-1', 'p1'].includes(targetStr)) return true;
+
+        // Pin 3: '3', 'pin-3', 'p3', 'gnd'
+        if (['3', 'pin-3', 'p3', 'gnd'].includes(targetStr) && (idStr === 'gnd' || nameStr === '3' || labelStr === '3' || idStr.includes('pin-3'))) return true;
+        if (['gnd'].includes(idStr) && ['3', 'pin-3', 'p3'].includes(targetStr)) return true;
+
+        // Wiper 'W': 'w', 'wiper', 'wip', '2', 'pin-2', 'p2'
+        if (['w', 'wiper', 'wip', '2', 'pin-2', 'p2'].includes(targetStr) && (idStr === 'wiper' || nameStr === 'w' || labelStr === 'w' || nameStr === '2' || labelStr === '2' || idStr.includes('wiper') || idStr.includes('pin-2'))) return true;
+        if (idStr === 'wiper' && ['w', 'wiper', 'wip', '2', 'pin-2', 'p2'].includes(targetStr)) return true;
+
         const numMatch = targetStr.match(/\d+$/);
         if (numMatch) {
           const n = numMatch[0];
@@ -6560,14 +6590,46 @@
                   ))}
 
                   {/* Wire dragging preview line with Magnetic Clamping & Lock Reticle */}
-                  {wiringStartPin && (() => {
+                  {Boolean(wiringStartPin) && (() => {
                     const startX = wiringStartPin.x;
                     const startY = wiringStartPin.y;
-                    const targetX = hoveredPin ? hoveredPin.x : mousePos.x;
-                    const targetY = hoveredPin ? hoveredPin.y : mousePos.y;
-                    const pDist = Math.hypot(targetX - startX, targetY - startY);
-                    const pOffset = Math.min(70, Math.max(25, pDist * 0.3));
-                    const previewD = `M ${startX} ${startY} C ${startX} ${startY + pOffset}, ${targetX} ${targetY - pOffset}, ${targetX} ${targetY}`;
+                    const targetX = (hoveredPin && hoveredPin.x !== undefined) ? hoveredPin.x : mousePos.x;
+                    const targetY = (hoveredPin && hoveredPin.y !== undefined) ? hoveredPin.y : mousePos.y;
+
+                    const startPart = schematicParts.find(p => p.id === wiringStartPin.partId);
+                    const startPinObj = startPart?.pins?.find(p => p.id === wiringStartPin.pinId || isPinMatch(p, wiringStartPin.pinId));
+                    const dx = targetX - startX;
+                    const dy = targetY - startY;
+                    const dist = Math.hypot(dx, dy);
+                    const curveOffset = Math.min(80, Math.max(30, dist * 0.35));
+                    let cp1x = startX;
+                    let cp1y = startY;
+                    let cp2x = targetX;
+                    let cp2y = targetY;
+
+                    if (startPinObj?.side === 'top') cp1y -= curveOffset;
+                    else if (startPinObj?.side === 'bottom') cp1y += curveOffset;
+                    else if (startPinObj?.side === 'left') cp1x -= curveOffset;
+                    else if (startPinObj?.side === 'right') cp1x += curveOffset;
+                    else cp1y += (dy >= 0 ? curveOffset : -curveOffset) * 0.4;
+
+                    if (hoveredPin) {
+                      const endPart = schematicParts.find(p => p.id === hoveredPin.partId);
+                      const endPinObj = endPart?.pins?.find(p => p.id === hoveredPin.pinId || isPinMatch(p, hoveredPin.pinId));
+                      if (endPinObj?.side === 'top') cp2y -= curveOffset;
+                      else if (endPinObj?.side === 'bottom') cp2y += curveOffset;
+                      else if (endPinObj?.side === 'left') cp2x -= curveOffset;
+                      else if (endPinObj?.side === 'right') cp2x += curveOffset;
+                      else cp2y += (dy >= 0 ? -curveOffset : curveOffset) * 0.4;
+                    } else {
+                      if (Math.abs(dx) > Math.abs(dy)) {
+                        cp2x += (dx >= 0 ? -curveOffset : curveOffset) * 0.4;
+                      } else {
+                        cp2y += (dy >= 0 ? -curveOffset : curveOffset) * 0.4;
+                      }
+                    }
+                    const previewD = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
+                    const previewColor = hoveredPin ? '#10b981' : '#2563eb';
 
                     return (
                       <g className="pointer-events-none">
@@ -6575,18 +6637,19 @@
                         <path
                           d={previewD}
                           fill="none"
-                          stroke={hoveredPin ? '#10b981' : '#3b82f6'}
-                          strokeWidth="7"
-                          strokeOpacity={hoveredPin ? '0.5' : '0.35'}
+                          stroke={previewColor}
+                          strokeWidth="8"
+                          strokeOpacity={hoveredPin ? '0.45' : '0.25'}
                           strokeLinecap="round"
                         />
-                        {/* Outer preview tube */}
+                        {/* Dynamic Preview Wire with standard strokeDasharray: "4 4" */}
                         <path
                           d={previewD}
                           fill="none"
-                          stroke={hoveredPin ? '#059669' : '#2563eb'}
+                          stroke={previewColor}
                           strokeWidth="3.5"
-                          strokeDasharray="6,4"
+                          strokeDasharray="4 4"
+                          strokeLinecap="round"
                           className="animate-pulse"
                         />
                         {/* Specular highlight */}
@@ -6595,7 +6658,8 @@
                           fill="none"
                           stroke="#ffffff"
                           strokeWidth="1.2"
-                          strokeOpacity="0.5"
+                          strokeDasharray="4 4"
+                          strokeOpacity="0.6"
                           strokeLinecap="round"
                         />
                         {/* Stripped copper core start pin */}
@@ -6623,7 +6687,12 @@
                             </g>
                           </g>
                         ) : (
-                          <circle cx={targetX} cy={targetY} r="4" fill="#2563eb" stroke="#ffffff" strokeWidth="1.5" />
+                          /* Active cursor follower dot */
+                          <g>
+                            <circle cx={targetX} cy={targetY} r="7" fill="#2563eb" fillOpacity="0.3" className="animate-ping" />
+                            <circle cx={targetX} cy={targetY} r="4.5" fill="#2563eb" stroke="#ffffff" strokeWidth="1.5" />
+                            <circle cx={targetX} cy={targetY} r="2" fill="#93c5fd" />
+                          </g>
                         )}
                       </g>
                     );
@@ -6647,6 +6716,14 @@
                       }}
                       onMouseDown={(e) => {
                         if (e.target.closest('input') || e.target.closest('button') || e.target.closest('.group\\/pin') || e.target.closest('[data-pin-hitbox]')) {
+                          return;
+                        }
+                        if (wiringStartPin) {
+                          if (hoveredPin && hoveredPin.partId !== wiringStartPin.partId) {
+                            completeWiring(wiringStartPin.partId, wiringStartPin.pinId, hoveredPin.partId, hoveredPin.pinId);
+                          }
+                          setWiringStartPin(null);
+                          setHoveredPin(null);
                           return;
                         }
                         e.stopPropagation();
@@ -6935,9 +7012,7 @@
                             {/* Bottom Axial Tinned Copper Lead Wire */}
                             <line x1="40" y1="60" x2="40" y2="80" stroke={`url(#lead_shine_${part.id})`} strokeWidth="3" strokeLinecap="round" />
 
-                            {/* Pin terminal labels 1 and 2 */}
-                            <text x="46" y="12" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">1</text>
-                            <text x="46" y="74" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">2</text>
+
 
                             {/* Dogbone / Dumbbell Ceramic Body */}
                             <path
@@ -7563,7 +7638,9 @@
                       )}
 
                       {/* All Pin Terminals with Magnetic Hitboxes, Rings & Tooltips */}
-                      {part.pins && part.pins.map(pin => (
+                      {part.pins && part.pins.filter((pin, idx, arr) => 
+                        arr.findIndex(p => p.id === pin.id || (Math.abs((p.relX ?? p.x ?? 0) - (pin.relX ?? pin.x ?? 0)) < 3 && Math.abs((p.relY ?? p.y ?? 0) - (pin.relY ?? pin.y ?? 0)) < 3)) === idx
+                      ).map(pin => (
                         <PinTerminal
                           key={pin.id}
                           part={part}
