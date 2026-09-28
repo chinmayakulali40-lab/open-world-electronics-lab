@@ -1769,8 +1769,8 @@
         icon: IconSliders,
         desc: 'Configurable Carbon Film / Metal Film Current Limiter (10kΩ)',
         pins: [
-          { id: 'p1', name: '1', label: '1', side: 'top', relX: 40, relY: 0, type: 'passive' },
-          { id: 'p2', name: '2', label: '2', side: 'bottom', relX: 40, relY: 80, type: 'passive' }
+          { id: 'pin-1', pinNumber: 1, name: '1', label: '1', side: 'top', relX: 40, relY: 0, x: 40, y: 0, type: 'passive' },
+          { id: 'pin-2', pinNumber: 2, name: '2', label: '2', side: 'bottom', relX: 40, relY: 80, x: 40, y: 80, type: 'passive' }
         ]
       },
       {
@@ -2424,8 +2424,8 @@
         rotation: 0,
         resistance: 10000,
         pins: [
-          { id: 'p1', name: 'IN', label: '1', side: 'top', relX: 40, relY: 0 },
-          { id: 'p2', name: 'GND', label: '2', side: 'bottom', relX: 40, relY: 80 }
+          { id: 'part-res-1-pin-1', pinNumber: 1, name: '1', label: '1', side: 'top', relX: 40, relY: 0, x: 40, y: 0, type: 'passive' },
+          { id: 'part-res-1-pin-2', pinNumber: 2, name: '2', label: '2', side: 'bottom', relX: 40, relY: 80, x: 40, y: 80, type: 'passive' }
         ]
       },
       {
@@ -2474,11 +2474,11 @@
       // 1. Arduino 5V to LDR top pin
       { id: 'w-1', fromPart: 'part-uno-1', fromPin: '5V', toPart: 'part-ldr-1', toPin: 'p1' },
       // 2. LDR bottom pin to Resistor top pin (voltage divider node)
-      { id: 'w-2', fromPart: 'part-ldr-1', fromPin: 'p2', toPart: 'part-res-1', toPin: 'p1' },
+      { id: 'w-2', fromPart: 'part-ldr-1', fromPin: 'p2', toPart: 'part-res-1', toPin: 'part-res-1-pin-1' },
       // 3. Voltage divider node to Arduino Analog A0
-      { id: 'w-3', fromPart: 'part-res-1', fromPin: 'p1', toPart: 'part-uno-1', toPin: 'A0' },
+      { id: 'w-3', fromPart: 'part-res-1', fromPin: 'part-res-1-pin-1', toPart: 'part-uno-1', toPin: 'A0' },
       // 4. Resistor bottom pin to GND
-      { id: 'w-4', fromPart: 'part-res-1', fromPin: 'p2', toPart: 'part-gnd-1', toPin: 'gnd_pin' },
+      { id: 'w-4', fromPart: 'part-res-1', fromPin: 'part-res-1-pin-2', toPart: 'part-gnd-1', toPin: 'gnd_pin' },
       // 5. Arduino GND to GND
       { id: 'w-5', fromPart: 'part-uno-1', fromPin: 'GND_1', toPart: 'part-gnd-1', toPin: 'gnd_pin' },
       // 6. Arduino D13 to LED Anode (+)
@@ -4486,8 +4486,9 @@
         const connectedWires = wires.filter(w => w.fromPart === part.id || w.toPart === part.id);
         const pinNames = new Set();
         connectedWires.forEach(w => {
-          if (w.fromPart === part.id) pinNames.add(w.fromPin);
-          if (w.toPart === part.id) pinNames.add(w.toPin);
+          const pinId = w.fromPart === part.id ? w.fromPin : w.toPin;
+          const pinObj = part.pins?.find(p => p.id === pinId || (pinId && p.id.endsWith(pinId)) || p.name === pinId || p.label === pinId);
+          pinNames.add(pinObj?.name || pinObj?.label || (pinId && pinId.includes('pin-1') ? '1' : pinId && pinId.includes('pin-2') ? '2' : pinId));
         });
         return Array.from(pinNames).join(', ') || 'Unconnected';
       };
@@ -4705,6 +4706,7 @@
       isHovered,
       isStartPin,
       isConnected,
+      isWiringActive,
       onPinMouseDown,
       onPinClick,
       onPinMouseEnter,
@@ -4730,58 +4732,91 @@
       }
 
       let stateRing = '';
-      if (isHovered) {
+      const isTargetHovered = isHovered && isWiringActive && !isStartPin;
+      if (isTargetHovered) {
+        stateRing = 'ring-4 ring-emerald-400 shadow-[0_0_24px_#10b981] bg-emerald-500 scale-125 z-40 text-white animate-pulse';
+      } else if (isHovered) {
         stateRing = 'ring-4 ring-cyan-400 shadow-[0_0_16px_#38bdf8] scale-125 z-40 animate-pulse';
       } else if (isStartPin) {
         stateRing = 'ring-4 ring-amber-400 shadow-[0_0_16px_#f59e0b] scale-125 z-40 animate-bounce';
       }
 
+      const pinDisplayLabel = pin.label ? pin.label.slice(0, 2).replace('~', '') : (pin.name ? pin.name.slice(0, 2) : (pin.id && pin.id.includes('pin-1') ? '1' : pin.id && pin.id.includes('pin-2') ? '2' : '•'));
+
       return (
         <div
           style={{ left: `${pin.relX}px`, top: `${pin.relY}px` }}
-          className="absolute -translate-x-1/2 -translate-y-1/2 z-30 group/pin pointer-events-auto select-none"
+          data-pin-hitbox="true"
+          data-part-id={part.id}
+          data-pin-id={pin.id}
+          className="absolute -translate-x-1/2 -translate-y-1/2 z-30 group/pin pointer-events-auto select-none w-9 h-9 flex items-center justify-center cursor-crosshair"
+          onMouseDown={onPinMouseDown}
+          onClick={onPinClick}
           onMouseEnter={onPinMouseEnter}
           onMouseLeave={onPinMouseLeave}
         >
+          {/* Animated Green Snap Reticle & Pulsing Glow Ring on Target Pin Hover during active wiring */}
+          {isTargetHovered && (
+            <>
+              {/* Outer rotating dashed green reticle ring */}
+              <div
+                className="absolute inset-0 rounded-full border-2 border-dashed border-emerald-400 animate-spin pointer-events-none"
+                style={{ animationDuration: '2.5s' }}
+              />
+              {/* Expanding glowing ping halo */}
+              <div className="absolute -inset-1 rounded-full border-2 border-emerald-400 bg-emerald-400/25 animate-ping pointer-events-none" />
+            </>
+          )}
+
           <button
             type="button"
             onMouseDown={onPinMouseDown}
             onClick={onPinClick}
             title={`${part.name || part.type} • Pin ${pin.name || pin.label || pin.id}`}
-            className={`relative w-4 h-4 rounded-full border-2 flex items-center justify-center text-[7px] font-mono font-bold text-white transition-all transform duration-150 cursor-pointer select-none before:absolute before:-inset-2.5 before:rounded-full before:content-[''] ${baseBg} ${stateRing}`}
+            className={`relative w-4 h-4 rounded-full border-2 flex items-center justify-center text-[7px] font-mono font-bold text-white transition-all transform duration-150 cursor-pointer select-none pointer-events-auto ${baseBg} ${stateRing}`}
           >
             {isConnected ? (
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 shadow-[0_0_4px_#34d399]"></span>
             ) : (
-              <span className="text-[6px] pointer-events-none leading-none">
-                {pin.label ? pin.label.slice(0, 2).replace('~', '') : '•'}
+              <span className="text-[6.5px] pointer-events-none leading-none font-bold">
+                {pinDisplayLabel}
               </span>
             )}
           </button>
 
-          {/* Floating pin badge on hover */}
-          <div className={`absolute pointer-events-none opacity-0 group-hover/pin:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap bg-slate-900/95 text-cyan-300 font-mono text-[9px] px-1.5 py-0.5 rounded shadow-lg border border-cyan-500/40 ${
-            pin.relY < 30 ? 'top-5 left-1/2 -translate-x-1/2' : 'bottom-5 left-1/2 -translate-x-1/2'
-          }`}>
-            <span className="font-bold text-white">{pin.name || pin.label || pin.id}</span>
-            {isConnected && <span className="ml-1 text-emerald-400 font-normal">[connected]</span>}
-          </div>
+          {/* Active Wiring Magnetic Snap Badge */}
+          {isTargetHovered ? (
+            <div className={`absolute pointer-events-none transition-all duration-150 z-50 whitespace-nowrap bg-emerald-950/95 text-emerald-300 font-mono text-[9px] px-2 py-0.5 rounded shadow-lg border border-emerald-400 font-bold flex items-center gap-1.5 ${
+              pin.relY < 30 ? 'top-10 left-1/2 -translate-x-1/2' : 'bottom-10 left-1/2 -translate-x-1/2'
+            }`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block"></span>
+              <span>⚡ SNAP: {part.name ? `${part.name} [Pin ${pin.label || pin.name || (pin.id.includes('pin-1') ? '1' : pin.id.includes('pin-2') ? '2' : pin.id)}]` : `Pin ${pin.label || pin.name || pin.id}`}</span>
+            </div>
+          ) : (
+            /* Standard floating pin badge on idle hover */
+            <div className={`absolute pointer-events-none opacity-0 group-hover/pin:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap bg-slate-900/95 text-cyan-300 font-mono text-[9px] px-1.5 py-0.5 rounded shadow-lg border border-cyan-500/40 ${
+              pin.relY < 30 ? 'top-10 left-1/2 -translate-x-1/2' : 'bottom-10 left-1/2 -translate-x-1/2'
+            }`}>
+              <span className="font-bold text-white">{pin.name || pin.label || pin.id}</span>
+              {isConnected && <span className="ml-1 text-emerald-400 font-normal">[connected]</span>}
+            </div>
+          )}
 
           {/* Pin label hints for ESP32 */}
           {part.type === 'esp32' && pin.side === 'left' && (
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap">
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap">
               {pin.label}
             </span>
           )}
           {part.type === 'esp32' && pin.side === 'right' && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap text-right">
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[7px] text-zinc-300 font-mono pointer-events-none whitespace-nowrap text-right">
               {pin.label}
             </span>
           )}
 
           {/* Pin label hints for Solar */}
           {part.type === 'solar' && (
-            <span className={`absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[8px] font-bold px-1 rounded pointer-events-none border whitespace-nowrap shadow-xs ${
+            <span className={`absolute right-6 top-1/2 -translate-y-1/2 font-mono text-[8px] font-bold px-1 rounded pointer-events-none border whitespace-nowrap shadow-xs ${
               pin.id === 'v_pos' ? 'text-rose-600 bg-white border-rose-300' : 'text-slate-700 bg-white border-slate-300'
             }`}>
               {pin.id === 'v_pos' ? 'V+' : 'GND'}
@@ -5535,8 +5570,14 @@
         let newPins = [];
         let extraProps = {};
 
-        // Preferred: Use template.pins if defined directly on catalog item
-        if (template.pins && Array.isArray(template.pins) && template.pins.length > 0) {
+        // Resistor specific registration: Expose valid terminal pin-1 and pin-2 to schematic wiring engine
+        if (template.id === 'resistor' || template.type === 'resistor') {
+          newPins = [
+            { id: `${newId}-pin-1`, pinNumber: 1, name: '1', label: '1', side: 'top', relX: 40, relY: 0, x: 40, y: 0, type: 'passive' },
+            { id: `${newId}-pin-2`, pinNumber: 2, name: '2', label: '2', side: 'bottom', relX: 40, relY: 80, x: 40, y: 80, type: 'passive' }
+          ];
+          extraProps.resistance = template.resistance || 10000;
+        } else if (template.pins && Array.isArray(template.pins) && template.pins.length > 0) {
           newPins = template.pins.map(p => ({ ...p }));
           if (template.id === 'logic_state') {
             extraProps.state = 0;
@@ -5723,27 +5764,54 @@
         };
       };
 
+      // Flexible pin matcher supporting exact IDs and canonical aliases (e.g., 'part-res-1-pin-1' <-> 'pin-1' <-> 'p1' <-> '1')
+      const isPinMatch = (pin, targetPinId) => {
+        if (!pin || !targetPinId) return false;
+        if (pin.id === targetPinId) return true;
+        if (pin.name === targetPinId || pin.label === targetPinId) return true;
+        const targetStr = String(targetPinId).toLowerCase();
+        const idStr = String(pin.id).toLowerCase();
+        if (idStr.endsWith(targetStr) || targetStr.endsWith(idStr)) return true;
+        const numMatch = targetStr.match(/\d+$/);
+        if (numMatch) {
+          const n = numMatch[0];
+          if (
+            idStr.endsWith(`pin-${n}`) ||
+            idStr.endsWith(`p${n}`) ||
+            String(pin.pinNumber) === n ||
+            pin.name === n ||
+            pin.label === n
+          ) {
+            return true;
+          }
+        }
+        return false;
+      };
+
       // Exact pin coordinate calculator factoring in rotation trigonometry
       const getPinCoord = (partId, pinId) => {
         const part = schematicParts.find(p => p.id === partId);
         if (!part) return { x: 0, y: 0 };
-        const pin = part.pins?.find(p => p.id === pinId);
+        const pin = part.pins?.find(p => p.id === pinId || isPinMatch(p, pinId));
         if (!pin) return { x: part.x, y: part.y };
 
         const dims = COMPONENT_DIMENSIONS[part.type] || { w: 80, h: 80 };
         const cx = dims.w / 2;
         const cy = dims.h / 2;
 
+        const pinRelX = pin.relX ?? pin.x ?? 0;
+        const pinRelY = pin.relY ?? pin.y ?? 0;
+
         if (!part.rotation || part.rotation === 0) {
           return {
-            x: part.x + pin.relX,
-            y: part.y + pin.relY
+            x: part.x + pinRelX,
+            y: part.y + pinRelY
           };
         }
 
         const rad = (part.rotation * Math.PI) / 180;
-        const dx = pin.relX - cx;
-        const dy = pin.relY - cy;
+        const dx = pinRelX - cx;
+        const dy = pinRelY - cy;
         const rx = cx + dx * Math.cos(rad) - dy * Math.sin(rad);
         const ry = cy + dx * Math.sin(rad) + dy * Math.cos(rad);
 
@@ -5753,8 +5821,8 @@
         };
       };
 
-      // Magnetic snap resolver: finds nearest pin within 24px radius
-      const SNAP_RADIUS = 24;
+      // Magnetic snap resolver: finds nearest pin within 28px radius
+      const SNAP_RADIUS = 28;
       const findNearestPin = (canvasX, canvasY, filterPartId = null, filterPinId = null) => {
         let closest = null;
         let minDist = SNAP_RADIUS;
@@ -5762,7 +5830,7 @@
         for (const part of schematicParts) {
           if (!part.pins) continue;
           for (const pin of part.pins) {
-            if (filterPartId && part.id === filterPartId && pin.id === filterPinId) {
+            if (filterPartId && part.id === filterPartId && (pin.id === filterPinId || isPinMatch(pin, filterPinId))) {
               continue;
             }
             const coord = getPinCoord(part.id, pin.id);
@@ -5786,18 +5854,25 @@
 
       // Wire connection completion
       const completeWiring = (fromPart, fromPin, toPart, toPin) => {
-        if (fromPart === toPart && fromPin === toPin) return;
+        if (fromPart === toPart) return; // Prevent connecting wire to same part
+        const fromP = schematicParts.find(p => p.id === fromPart);
+        const toP = schematicParts.find(p => p.id === toPart);
+        const actualFromPin = fromP?.pins?.find(p => p.id === fromPin || isPinMatch(p, fromPin))?.id || fromPin;
+        const actualToPin = toP?.pins?.find(p => p.id === toPin || isPinMatch(p, toPin))?.id || toPin;
+
         const exists = wires.some(w =>
-          (w.fromPart === fromPart && w.fromPin === fromPin && w.toPart === toPart && w.toPin === toPin) ||
-          (w.fromPart === toPart && w.fromPin === toPin && w.toPart === fromPart && w.toPin === fromPin)
+          (w.fromPart === fromPart && (w.fromPin === actualFromPin || isPinMatch({ id: actualFromPin }, w.fromPin)) && 
+           w.toPart === toPart && (w.toPin === actualToPin || isPinMatch({ id: actualToPin }, w.toPin))) ||
+          (w.fromPart === toPart && (w.fromPin === actualToPin || isPinMatch({ id: actualToPin }, w.fromPin)) && 
+           w.toPart === fromPart && (w.toPin === actualFromPin || isPinMatch({ id: actualFromPin }, w.toPin)))
         );
         if (!exists) {
           const newWire = {
             id: `wire-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             fromPart,
-            fromPin,
+            fromPin: actualFromPin,
             toPart,
-            toPin
+            toPin: actualToPin
           };
           setWires(prev => [...prev, newWire]);
         }
@@ -5816,7 +5891,7 @@
           const coord = getPinCoord(partId, pinId);
           setWiringStartPin({ partId, pinId, x: coord.x, y: coord.y, isDragging: false });
         } else {
-          if (wiringStartPin.partId === partId && wiringStartPin.pinId === pinId) {
+          if (wiringStartPin.partId === partId && (wiringStartPin.pinId === pinId || isPinMatch({ id: pinId }, wiringStartPin.pinId))) {
             setWiringStartPin(null);
             setHoveredPin(null);
             return;
@@ -5829,13 +5904,13 @@
 
       const handlePinMouseEnter = (partId, pinId) => {
         if (wiringStartPin) {
-          if (wiringStartPin.partId === partId && wiringStartPin.pinId === pinId) return;
+          if (wiringStartPin.partId === partId && (wiringStartPin.pinId === pinId || isPinMatch({ id: pinId }, wiringStartPin.pinId))) return;
           const coord = getPinCoord(partId, pinId);
           const part = schematicParts.find(p => p.id === partId);
-          const pin = part?.pins?.find(p => p.id === pinId);
+          const pin = part?.pins?.find(p => p.id === pinId || isPinMatch(p, pinId));
           setHoveredPin({
             partId,
-            pinId,
+            pinId: pin?.id || pinId,
             x: coord.x,
             y: coord.y,
             pinName: pin?.name || pin?.label || pinId,
@@ -5845,7 +5920,7 @@
       };
 
       const handlePinMouseLeave = (partId, pinId) => {
-        if (hoveredPin?.partId === partId && hoveredPin?.pinId === pinId) {
+        if (hoveredPin?.partId === partId && (hoveredPin?.pinId === pinId || isPinMatch({ id: pinId }, hoveredPin?.pinId))) {
           setHoveredPin(null);
         }
       };
@@ -5899,7 +5974,9 @@
         }
         if (wiringStartPin && wiringStartPin.isDragging) {
           const coords = getCanvasCoords(e);
-          const target = findNearestPin(coords.x, coords.y, wiringStartPin.partId, wiringStartPin.pinId);
+          const target = (hoveredPin && hoveredPin.partId !== wiringStartPin.partId)
+            ? hoveredPin
+            : findNearestPin(coords.x, coords.y, wiringStartPin.partId, wiringStartPin.pinId);
           if (target) {
             completeWiring(wiringStartPin.partId, wiringStartPin.pinId, target.partId, target.pinId);
           }
@@ -5911,6 +5988,9 @@
       const handleCanvasMouseDown = (e) => {
         if (e.target === canvasContainerRef.current || e.target.tagName === 'svg') {
           if (wiringStartPin) {
+            if (hoveredPin && hoveredPin.partId !== wiringStartPin.partId) {
+              completeWiring(wiringStartPin.partId, wiringStartPin.pinId, hoveredPin.partId, hoveredPin.pinId);
+            }
             setWiringStartPin(null);
             setHoveredPin(null);
           } else {
@@ -5925,7 +6005,7 @@
       // Window-level drag and pan event synchronization
       useEffect(() => {
         const onWinMove = (e) => {
-          if (dragState || isPanning || (wiringStartPin && wiringStartPin.isDragging)) {
+          if (dragState || isPanning || wiringStartPin) {
             handleCanvasMouseMove(e);
           }
         };
@@ -6318,8 +6398,8 @@
 
                     const fromPartObj = schematicParts.find(p => p.id === wire.fromPart);
                     const toPartObj = schematicParts.find(p => p.id === wire.toPart);
-                    const fromPinObj = fromPartObj?.pins?.find(p => p.id === wire.fromPin);
-                    const toPinObj = toPartObj?.pins?.find(p => p.id === wire.toPin);
+                    const fromPinObj = fromPartObj?.pins?.find(p => p.id === wire.fromPin || isPinMatch(p, wire.fromPin));
+                    const toPinObj = toPartObj?.pins?.find(p => p.id === wire.toPin || isPinMatch(p, wire.toPin));
 
                     // 1. Flexible Curved Natural Wire Routing (Cubic Bezier with tangent guidance)
                     const dx = end.x - start.x;
@@ -6495,16 +6575,16 @@
                         <path
                           d={previewD}
                           fill="none"
-                          stroke={hoveredPin ? '#38bdf8' : '#3b82f6'}
+                          stroke={hoveredPin ? '#10b981' : '#3b82f6'}
                           strokeWidth="7"
-                          strokeOpacity="0.35"
+                          strokeOpacity={hoveredPin ? '0.5' : '0.35'}
                           strokeLinecap="round"
                         />
                         {/* Outer preview tube */}
                         <path
                           d={previewD}
                           fill="none"
-                          stroke={hoveredPin ? '#0ea5e9' : '#2563eb'}
+                          stroke={hoveredPin ? '#059669' : '#2563eb'}
                           strokeWidth="3.5"
                           strokeDasharray="6,4"
                           className="animate-pulse"
@@ -6523,17 +6603,22 @@
                         <circle cx={startX} cy={startY} r="3.5" fill="#d97706" />
                         <circle cx={startX} cy={startY} r="1.8" fill="#fde68a" />
 
-                        {/* Clamped magnetic lock indicator & reticle */}
+                        {/* Clamped magnetic lock indicator & green rotating snap reticle */}
                         {hoveredPin ? (
                           <g>
-                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="14" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4,4" className="animate-spin" />
-                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="7" fill="#0284c7" stroke="#ffffff" strokeWidth="2" />
+                            {/* Outer pulsing emerald glow halo ring */}
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="22" fill="#10b981" fillOpacity="0.25" className="animate-ping" />
+                            {/* Rotating dashed emerald reticle ring */}
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="15" fill="none" stroke="#10b981" strokeWidth="2.5" strokeDasharray="5,4" className="animate-spin" />
+                            {/* Inner bright emerald snap bullseye */}
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="7.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+                            <circle cx={hoveredPin.x} cy={hoveredPin.y} r="3" fill="#a7f3d0" />
                             
-                            {/* Junction lock badge */}
-                            <g transform={`translate(${hoveredPin.x + 14}, ${hoveredPin.y - 12})`}>
-                              <rect x="0" y="0" width={Math.max(90, hoveredPin.pinName.length * 8 + 44)} height="22" rx="4" fill="#0f172a" fillOpacity="0.95" stroke="#38bdf8" strokeWidth="1.5" />
-                              <text x="8" y="15" fill="#38bdf8" fontSize="10" fontFamily="monospace" fontWeight="bold">
-                                ⚡ LOCK: {hoveredPin.pinName}
+                            {/* Junction snap badge */}
+                            <g transform={`translate(${hoveredPin.x + 16}, ${hoveredPin.y - 13})`}>
+                              <rect x="0" y="0" width={Math.max(90, (hoveredPin.pinName || '').length * 8 + 48)} height="24" rx="4" fill="#064e3b" fillOpacity="0.95" stroke="#10b981" strokeWidth="1.5" />
+                              <text x="8" y="16" fill="#34d399" fontSize="10" fontFamily="monospace" fontWeight="bold">
+                                ⚡ SNAP: {hoveredPin.pinName}
                               </text>
                             </g>
                           </g>
@@ -6561,7 +6646,7 @@
                         transform: `rotate(${part.rotation || 0}deg)`
                       }}
                       onMouseDown={(e) => {
-                        if (e.target.closest('input') || e.target.closest('button') || e.target.closest('.group\\/pin')) {
+                        if (e.target.closest('input') || e.target.closest('button') || e.target.closest('.group\\/pin') || e.target.closest('[data-pin-hitbox]')) {
                           return;
                         }
                         e.stopPropagation();
@@ -6829,8 +6914,8 @@
 
                       {/* 3. RESISTOR (PHOTOREALISTIC 3D CERAMIC BODY & 4-BAND CODE) */}
                       {part.type === 'resistor' && (
-                        <div className="w-[80px] h-[80px] relative select-none flex flex-col items-center justify-between font-mono">
-                          <svg className="w-full h-full" viewBox="0 0 80 80">
+                        <div className="w-[80px] h-[80px] relative select-none flex flex-col items-center justify-between font-mono pointer-events-none">
+                          <svg className="w-full h-full pointer-events-none" viewBox="0 0 80 80">
                             <defs>
                               <linearGradient id={`lead_shine_${part.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#64748b" />
@@ -6850,6 +6935,10 @@
                             {/* Bottom Axial Tinned Copper Lead Wire */}
                             <line x1="40" y1="60" x2="40" y2="80" stroke={`url(#lead_shine_${part.id})`} strokeWidth="3" strokeLinecap="round" />
 
+                            {/* Pin terminal labels 1 and 2 */}
+                            <text x="46" y="12" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">1</text>
+                            <text x="46" y="74" fill="#64748b" fontSize="8" fontFamily="monospace" fontWeight="bold">2</text>
+
                             {/* Dogbone / Dumbbell Ceramic Body */}
                             <path
                               d="M 33 22 C 33 17 47 17 47 22 L 46 27 C 44 32 44 48 46 53 L 47 58 C 47 63 33 63 33 58 L 34 53 C 36 48 36 32 34 27 Z"
@@ -6868,8 +6957,9 @@
                             <line x1="38" y1="21" x2="38" y2="59" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" />
                           </svg>
 
-                          <div className="absolute inset-x-0 bottom-0 text-center">
-                            <span className="text-[7.5px] font-bold text-slate-700 bg-white/80 px-1 rounded shadow-xs border border-slate-200">
+                          {/* Resistance value badge positioned at the side of ceramic body, leaving terminal pins completely clear */}
+                          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 text-center pointer-events-none">
+                            <span className="text-[7.5px] font-bold text-slate-700 bg-white/90 px-1 py-0.5 rounded shadow-xs border border-slate-300">
                               {part.resistance ? (part.resistance >= 1000 ? `${part.resistance/1000}kΩ` : `${part.resistance}Ω`) : '10kΩ'}
                             </span>
                           </div>
@@ -7478,9 +7568,13 @@
                           key={pin.id}
                           part={part}
                           pin={pin}
-                          isHovered={hoveredPin?.partId === part.id && hoveredPin?.pinId === pin.id}
-                          isStartPin={wiringStartPin?.partId === part.id && wiringStartPin?.pinId === pin.id}
-                          isConnected={wires.some(w => (w.fromPart === part.id && w.fromPin === pin.id) || (w.toPart === part.id && w.toPin === pin.id))}
+                          isWiringActive={!!wiringStartPin}
+                          isHovered={hoveredPin?.partId === part.id && (hoveredPin?.pinId === pin.id || isPinMatch(pin, hoveredPin?.pinId))}
+                          isStartPin={wiringStartPin?.partId === part.id && (wiringStartPin?.pinId === pin.id || isPinMatch(pin, wiringStartPin?.pinId))}
+                          isConnected={wires.some(w => 
+                            (w.fromPart === part.id && (w.fromPin === pin.id || isPinMatch(pin, w.fromPin))) || 
+                            (w.toPart === part.id && (w.toPin === pin.id || isPinMatch(pin, w.toPin)))
+                          )}
                           onPinMouseDown={(e) => handlePinMouseDown(part.id, pin.id, e)}
                           onPinClick={(e) => handlePinClick(part.id, pin.id, e)}
                           onPinMouseEnter={() => handlePinMouseEnter(part.id, pin.id)}
